@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNE日常 - 護理實用小工具</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans HK', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            font-size: 16px;
+        }
+        .view-panel {
+            display: none;
+        }
+        .view-panel.active {
+            display: block;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Enlarged font style applied to child pages for clear legibility */
+        .child-view-panel {
+            font-size: 18px;
+        }
+        .child-view-panel label {
+            font-size: 1rem;
+        }
+        .child-view-panel input, .child-view-panel select, .child-view-panel button, .child-view-panel textarea {
+            font-size: 1.05rem;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        .mode-btn {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mode-btn.active {
+            background-color: #f59e0b;
+            border-color: #d97706;
+            color: #ffffff;
+            transform: scale(1.08);
+            box-shadow: 0 10px 20px -3px rgba(245, 158, 11, 0.4);
+        }
+        .draw-tab-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .draw-tab-btn.active {
+            background-color: #6b21a8;
+            color: #ffffff;
+            border-color: #581c87;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3);
+        }
+        /* Wheel Pointer Styling */
+        .wheel-pointer {
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 36px solid #000000;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+            transition: border-top-color 0.3s, filter 0.3s;
+        }
+        .wheel-pointer.gold {
+            border-top-color: #FFD700;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        .animate-pulse-fast { animation: pulse 0.8s infinite; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col selection:bg-teal-100 selection:text-teal-900">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-between p-2 text-white shadow-md shadow-teal-100">
+                    <i data-lucide="cross" class="w-6 h-6 mx-auto"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl leading-tight text-slate-900">CNE日常</h1>
+                    <p class="text-xs text-slate-500 font-medium">護理實用工具庫</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-slate-200 hover:bg-slate-300 text-slate-800 px-3.5 py-1.5 rounded-xl transition-all font-bold border border-slate-300">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-4 md:p-6">
+
+        <!-- ================= PAGE 1: HOME DASHBOARD (Quad-Card Platform) ================= -->
+        <section id="view-home" class="view-panel active space-y-6">
+            <!-- Banner with Dynamic Daily Slang Quote -->
+            <div class="bg-gradient-to-r from-teal-700 to-emerald-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden space-y-3">
+                <div class="relative z-10 space-y-2">
+                    <span class="inline-block bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-50">每日更新 • 護理智慧</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold">歡迎來到 CNE日常 🛠️</h2>
+                    
+                    <!-- Daily Quote Box (Randomized on Page Load / Login) -->
+                    <div class="pt-1">
+                        <div class="bg-amber-400/20 backdrop-blur-md border border-amber-300/40 rounded-xl px-4 py-2.5 text-amber-200 font-extrabold text-sm md:text-base inline-flex items-center gap-2 shadow-inner">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-300 animate-pulse"></i>
+                            <span>每日金句：</span>
+                            <span id="daily-quote-text" class="text-white tracking-wide font-black">--</span>
+                        </div>
+                    </div>
+
+                    <p class="text-teal-100 text-sm md:text-base max-w-lg leading-relaxed font-medium pt-1">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。</p>
+                </div>
+                <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
+            </div>
+
+            <!-- Quad-Card Platform Grid (4 方格平台) -->
+            <div>
+                <h3 class="text-base font-extrabold text-slate-800 mb-3 flex items-center gap-2">
+                    <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
+                    核心項目選單
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+
+                    <!-- Card 1: 行水神器 -->
+                    <div onclick="switchView('drip')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i data-lucide="droplets" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">行水神器</h4>
+                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">設定時間與 2-6 人數，直接試算人員 A、B、C... 之整理裝備時間區段。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-blue-700 font-extrabold">
+                            <span>進入功能</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 煙棚計算 -->
+                    <div onclick="switchView('respiratory')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i data-lucide="flame" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">煙棚計算</h4>
+                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">未申報香煙 Compounding 複合罰款公式（每支$3.306）、駕駛員條例與稅額計算器。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-emerald-700 font-extrabold">
+                            <span>進入計算</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 抽籤模式 -->
+                    <div onclick="switchView('draw')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i data-lucide="dices" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">抽籤模式</h4>
+                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">推薦：新年/長假期同事抽假排位（多人綜合）、畫鬼腳視覺版、二選一輪盤。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-purple-700 font-extrabold">
+                            <span>選擇模式</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: CR金句 -->
+                    <div onclick="switchView('quotes')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i data-lucide="quote" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">C R 金句 100</h4>
+                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">精選穩定型、求進型、健康型三大意向報告評語金句。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-amber-700 font-extrabold">
+                            <span>選擇意向</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Future Expansion Card Placeholder -->
+            <div class="border-2 border-dashed border-slate-300 rounded-2xl p-5 text-center text-slate-500 bg-slate-100/50">
+                <i data-lucide="plus-circle" class="w-8 h-8 mx-auto mb-1.5 text-slate-400"></i>
+                <p class="font-bold text-sm text-slate-700">每日持續新增項目中...</p>
+                <p class="text-xs text-slate-500 mt-0.5">預留版面：未來可隨時於 GitHub 輕鬆加入更多護理小工具！</p>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: 行水神器 ================= -->
+        <section id="view-drip" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-blue-100/70 p-5 rounded-2xl border-2 border-blue-200">
+                <div class="p-3 bg-blue-600 text-white rounded-xl">
+                    <i data-lucide="droplets" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">行水神器</h2>
+                    <p class="text-base text-slate-600 font-medium">整理裝備時間分配計算器</p>
+                </div>
+            </div>
+
+            <!-- Direct Calculator Panel -->
+            <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
+                
+                <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4">
+                    <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
+                        <i data-lucide="calculator" class="w-6 h-6 text-blue-600"></i>
+                        整理裝備時間與人員分配
+                    </h3>
+                    <button onclick="resetEquipmentCalc()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-5">
+                    <!-- Start Time -->
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-5 h-5 text-blue-600"></i>
+                            開始時間
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
+                                <select id="start-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
+                                <select id="start-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Time -->
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="clock-4" class="w-5 h-5 text-blue-600"></i>
+                            結束時間
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
+                                <select id="end-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
+                                <select id="end-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                    <!-- Populated by JS -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Staff Count (Dropdown 2 - 6) -->
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
+                            整理裝備人數
+                        </label>
+                        <div class="pt-1">
+                            <select id="staff-count-select" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900">
+                                <option value="2">2 人 (人員 A, B)</option>
+                                <option value="3" selected>3 人 (人員 A, B, C)</option>
+                                <option value="4">4 人 (人員 A, B, C, D)</option>
+                                <option value="5">5 人 (人員 A, B, C, D, E)</option>
+                                <option value="6">6 人 (人員 A, B, C, D, E, F)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="pt-2">
+                    <button onclick="calculateEquipmentTime()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-blue-200 text-lg flex items-center justify-center gap-2">
+                        <i data-lucide="calculator" class="w-6 h-6"></i>
+                        <span>即刻計算分配時間</span>
+                    </button>
+                </div>
+
+                <!-- Result Area -->
+                <div id="drip-calc-result" class="hidden p-5 md:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-3xl space-y-5">
+                    <div class="flex flex-wrap items-center justify-between border-b-2 border-blue-200/80 pb-4 gap-3 text-base text-slate-700">
+                        <div>總共時間：<span id="res-total-mins" class="font-extrabold text-slate-900 text-xl">0</span> 分鐘</div>
+                        <div>每人平均：<span id="res-per-time" class="font-extrabold text-blue-800 text-xl">0 分鐘</span></div>
+                    </div>
+
+                    <!-- Personnel A, B, C... Time Slot Cards -->
+                    <div class="space-y-3">
+                        <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i>
+                            人員時間分配結果：
+                        </p>
+                        <div id="staff-breakdown-container" class="grid gap-3 sm:grid-cols-2">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: 煙棚計算 ================= -->
+        <section id="view-respiratory" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-emerald-100/70 p-5 rounded-2xl border-2 border-emerald-200">
+                <div class="p-3 bg-emerald-600 text-white rounded-xl">
+                    <i data-lucide="flame" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">煙棚計算</h2>
+                    <p class="text-base text-slate-600 font-medium">檢獲香煙 Compounding（複合罰款）及應繳關稅評估工具</p>
+                </div>
+            </div>
+
+            <!-- Cigarette Duty & Compounding Fine Calculator Container -->
+            <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
+                
+                <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4">
+                    <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
+                        <i data-lucide="file-spreadsheet" class="w-6 h-6 text-emerald-600"></i>
+                        檢獲香煙 Compounding 罰款及關稅評估表
+                    </h3>
+                    <button onclick="resetCigCalc()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+
+                <!-- Input Controls Grid -->
+                <div class="grid md:grid-cols-3 gap-5">
+                    
+                    <!-- 1. Total Quantity Input (Sticks Only) -->
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                        <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                            <i data-lucide="box" class="w-5 h-5 text-emerald-600"></i>
+                            總檢獲香煙支數量 (支)
+                        </label>
+                        <input type="number" id="cig-sticks" min="0" placeholder="例如: 200" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xl bg-white font-extrabold text-slate-900">
+                        <p class="text-xs text-slate-500 font-semibold leading-relaxed">* 請直接輸入香煙總支數 (Sticks)</p>
+                    </div>
+
+                    <!-- 2. Driver Status Choice -->
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                        <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                            <i data-lucide="car" class="w-5 h-5 text-emerald-600"></i>
+                            身份類別 (是否跨境駕駛員)
+                        </label>
+                        <div class="space-y-2 pt-1">
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-emerald-400 transition-colors">
+                                <input type="radio" name="is-driver" value="yes" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-base font-extrabold text-slate-900">🚗 是駕駛員 <span class="text-xs text-red-600 font-bold">(不設免稅優惠)</span></span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-emerald-400 transition-colors">
+                                <input type="radio" name="is-driver" value="no" checked class="w-5 h-5 text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-base font-extrabold text-slate-900">🧳 否 (一般旅客) <span class="text-xs text-emerald-600 font-bold">(享19支免稅)</span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 3. Declaration Channel Choice (Default: Undeclared) -->
+                    <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                        <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                            <i data-lucide="shield-alert" class="w-5 h-5 text-emerald-600"></i>
+                            申報通道狀況 (預設)
+                        </label>
+                        <div class="space-y-2 pt-1">
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-red-400 transition-colors">
+                                <input type="radio" name="cig-declaration" value="undeclared" checked class="w-5 h-5 text-red-600 focus:ring-red-500">
+                                <span class="text-base font-extrabold text-red-800">🟢 未有向海關申報 / 截獲</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-emerald-400 transition-colors">
+                                <input type="radio" name="cig-declaration" value="declared" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500">
+                                <span class="text-base font-extrabold text-emerald-800">🔴 主動向海關人員申報</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Reference Rates Badge -->
+                <div class="bg-emerald-100/80 p-4 rounded-2xl border-2 border-emerald-200 flex flex-wrap items-center justify-between text-base text-emerald-950 gap-3">
+                    <div class="flex items-center gap-2 font-extrabold">
+                        <i data-lucide="scale" class="w-5 h-5 text-emerald-700"></i>
+                        <span>法定標準稅率（香港海關最新標準）：</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-4 text-sm md:text-base font-bold">
+                        <span>當前煙稅稅率：<strong>每支 HK$3.306</strong> (每千支 HK$3,306)</span>
+                        <span>定額罰款金額：<strong>HK$5,000</strong></span>
+                    </div>
+                </div>
+
+                <!-- Calculate Action Button -->
+                <button onclick="calculateCigDuty()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-emerald-200 text-lg flex items-center justify-center gap-2">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                    <span>即刻計算 Compounding 評估結果</span>
+                </button>
+
+                <!-- Detailed Result Display Box -->
+                <div id="cig-calc-result" class="hidden space-y-5 animate-fadeIn">
+                    
+                    <div class="p-6 md:p-8 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white rounded-3xl shadow-xl space-y-6">
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+                            <span class="text-base font-extrabold text-emerald-400 tracking-wider uppercase">Compounding 罰款及關稅明細</span>
+                            <span id="res-cig-status-badge" class="px-4 py-1.5 rounded-full text-sm font-bold bg-red-500/20 text-red-300 border border-red-500/40">未有申報</span>
+                        </div>
+
+                        <!-- Step-by-Step Calculation Breakdown Card (Deep Green Theme) -->
+                        <div id="compounding-steps-box" class="bg-emerald-950/80 p-5 rounded-2xl border border-emerald-700/60 text-sm space-y-3">
+                            <p class="font-extrabold text-emerald-300 flex items-center gap-2 text-base md:text-lg">
+                                <i data-lucide="list-ordered" class="w-5 h-5 text-emerald-400"></i>
+                                Compounding 複合罰款計算公式步驟：
+                            </p>
+                            <div class="space-y-2.5 text-slate-100 font-mono text-sm leading-relaxed">
+                                <p class="p-3 bg-slate-900/90 rounded-xl border border-emerald-800/80">
+                                    <strong class="text-emerald-300">· 第一步 (計算應繳稅款)：</strong><br>
+                                    應繳稅款 ＝ (<span id="step1-sticks">0</span>支 ÷ 1,000支) × HK$3,306 ＝ <strong class="text-emerald-400 text-base font-extrabold">HK$ <span id="step1-tax">0</span></strong> <span class="text-emerald-200/80 text-xs">(即每支 HK$3.306)</span>
+                                </p>
+                                <p class="p-3 bg-slate-900/90 rounded-xl border border-emerald-800/80">
+                                    <strong class="text-emerald-300">· 第二步 (計算五倍稅額罰款部分)：</strong><br>
+                                    罰款部分 ＝ HK$ <span id="step2-tax">0</span> × 5 ＝ <strong class="text-emerald-400 text-base font-extrabold">HK$ <span id="step2-fine5x">0</span></strong>
+                                </p>
+                                <p class="p-3 bg-slate-900/90 rounded-xl border border-emerald-800/80">
+                                    <strong class="text-emerald-300">· 第三步 (加上定額罰款)：</strong><br>
+                                    Compounding 總罰款 ＝ 定額罰款 HK$5,000 ＋ HK$ <span id="step3-fine5x">0</span> ＝ <strong class="text-red-400 text-base font-extrabold">HK$ <span id="step3-totalfine">0</span></strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Amount Breakdown Grid (Deep Green Highlighted Tax & 5x Fine) -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
+                                <p class="text-xs text-slate-400 font-bold">總檢獲數量</p>
+                                <p class="text-xl md:text-2xl font-extrabold text-white mt-1"><span id="res-total-sticks">0</span> 支</p>
+                                <p id="res-driver-tag" class="text-xs text-slate-400 mt-1">一般旅客</p>
+                            </div>
+                            <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
+                                <p class="text-xs text-slate-400 font-bold">應課稅過額支數</p>
+                                <p class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1"><span id="res-excess-sticks">0</span> 支</p>
+                                <p id="res-allowance-tag" class="text-xs text-slate-400 mt-1">(扣減 19支免稅)</p>
+                            </div>
+                            <!-- Deep Green Styled Total Tax -->
+                            <div class="bg-emerald-950/90 p-4 rounded-2xl border border-emerald-600/80 shadow-inner">
+                                <p class="text-xs text-emerald-300 font-bold">第一步：總共稅款</p>
+                                <p class="text-xl md:text-2xl font-black text-emerald-400 mt-1">HK$ <span id="res-tax-amount">0</span></p>
+                                <p class="text-xs text-emerald-200/80 mt-1">(@$3.306/支)</p>
+                            </div>
+                            <!-- Deep Green Styled 5x Tax Fine -->
+                            <div class="bg-emerald-950/90 p-4 rounded-2xl border border-emerald-600/80 shadow-inner">
+                                <p class="text-xs text-emerald-300 font-bold">第二步：五倍稅額總數</p>
+                                <p class="text-xl md:text-2xl font-black text-emerald-400 mt-1">HK$ <span id="res-fine-5x-amount">0</span></p>
+                                <p class="text-xs text-emerald-200/80 mt-1">(稅款 × 5)</p>
+                            </div>
+                        </div>
+
+                        <!-- Single-Line RED Compounding Total Fine Display -->
+                        <div class="bg-red-950/90 p-5 rounded-2xl border-2 border-red-500/80 text-center shadow-lg">
+                            <p class="text-lg md:text-2xl font-black text-red-400 flex items-center justify-center gap-2 flex-wrap">
+                                <i data-lucide="alert-circle" class="w-7 h-7 text-red-500"></i>
+                                <span>Compounding 總罰款：</span>
+                                <span class="text-3xl md:text-4xl text-red-400 font-black tracking-tight">HK$ <span id="res-compounding-total-display">0</span></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Customs & Legal Advisory Box -->
+                    <div id="cig-risk-warning" class="p-5 rounded-3xl text-sm md:text-base space-y-2 border-2">
+                        <!-- Dynamic legal advisory content -->
+                    </div>
+
+                    <!-- Mandatory Official "Helmet" Disclaimer -->
+                    <div class="bg-amber-100/80 p-5 rounded-2xl border-2 border-amber-300 text-amber-950 text-sm md:text-base space-y-1.5">
+                        <div class="flex items-center gap-2 font-extrabold text-amber-950">
+                            <i data-lucide="shield-alert" class="w-6 h-6 text-amber-800"></i>
+                            <span class="text-base md:text-lg">🪖 免責條款聲明 (Official Disclaimer / Draft Notice)：</span>
+                        </div>
+                        <p class="leading-relaxed font-medium">
+                            本網頁所計算之結果僅供參考及初步評估草案（Draft），不具備任何法律約束力。實質應繳稅款金額、Compounding 處罰細則及定額罰款通知書金額，<strong>一律以香港海關稅房（Duty Office）發出之正式稅單／報單及現場海關人員最終裁定為準</strong>。
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: 抽籤模式 (Triple-Mode Selection) ================= -->
+        <section id="view-draw" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-purple-100/70 p-5 rounded-2xl border-2 border-purple-200">
+                <div class="p-3 bg-purple-600 text-white rounded-xl">
+                    <i data-lucide="dices" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">抽籤模式 (Random Picker)</h2>
+                    <p class="text-base text-slate-600 font-medium">包含多人抽籤（適合新年/長假排位）、畫鬼腳視覺版、二選一輪盤三大模式</p>
+                </div>
+            </div>
+
+            <!-- Mode Selector Tabs -->
+            <div class="grid grid-cols-3 gap-2 bg-slate-200 p-1.5 rounded-2xl border border-slate-300 text-center font-extrabold text-sm md:text-base">
+                <button id="tab-draw-multi" onclick="switchDrawMode('multi')" class="draw-tab-btn px-2 py-3 rounded-xl active border border-transparent">
+                    📋 多人抽籤<br><span class="text-xs font-normal opacity-80">(新年/長假排位)</span>
+                </button>
+                <button id="tab-draw-ghost" onclick="switchDrawMode('ghost')" class="draw-tab-btn px-2 py-3 rounded-xl border border-transparent">
+                    🎨 畫鬼腳<br><span class="text-xs font-normal opacity-80">(視覺刺激)</span>
+                </button>
+                <button id="tab-draw-wheel" onclick="switchDrawMode('wheel')" class="draw-tab-btn px-2 py-3 rounded-xl border border-transparent">
+                    🎡 二選一輪盤<br><span class="text-xs font-normal opacity-80">(幸運輪盤)</span>
+                </button>
+            </div>
+
+            <!-- MODE 1: 多人抽籤 (luckydraw.html - Ideal for CNY / Holiday Leave Draw) -->
+            <div id="draw-mode-multi" class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3 flex-wrap gap-2">
+                    <div>
+                        <h3 class="text-xl font-extrabold text-purple-900 flex items-center gap-2">
+                            <i data-lucide="users" class="w-6 h-6 text-purple-600"></i>
+                            同事放假抽籤（多人綜合模式）
+                        </h3>
+                        <p class="text-xs text-purple-700 font-semibold mt-1">🧧 推薦：農曆新年、節慶長假期同事放假抽籤與輪放排位</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="loadCnyPreset()" class="text-sm font-extrabold text-amber-900 bg-amber-100 hover:bg-amber-200 px-3.5 py-2 rounded-xl border border-amber-300 transition-colors flex items-center gap-1 shadow-sm">
+                            <span>🧧 新年抽假預設</span>
+                        </button>
+                        <button onclick="resetMultiForm()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            <span>重置</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-extrabold text-slate-800 mb-1">選擇放假日期</label>
+                        <input type="date" id="multi-date" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-slate-800 mb-1">見證人姓名</label>
+                        <input type="text" id="multi-witness" placeholder="輸入見證人姓名 (例: Charge Nurse)" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-slate-800 mb-1">可放假人數 (名額)</label>
+                        <input type="number" id="multi-quota" value="5" min="1" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block font-extrabold text-slate-800 mb-1">抽籤次數 (幾多輪)</label>
+                        <input type="number" id="multi-rounds" value="1" min="1" placeholder="例: 1" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-slate-50">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-extrabold text-slate-800 mb-1">抽籤名單 (每行一個人名)</label>
+                    <textarea id="multi-names" rows="5" placeholder="輸入人名..." class="w-full p-4 border-2 border-slate-300 rounded-2xl font-mono font-bold bg-slate-50">A&#10;B&#10;C&#10;D&#10;E&#10;F&#10;G&#10;H</textarea>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="resetMultiForm()" class="flex-1 py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold rounded-2xl border border-slate-300">重設</button>
+                    <button onclick="startMultiDraw()" class="flex-2 py-3.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold rounded-2xl shadow-md shadow-purple-200">準備抽籤</button>
+                </div>
+
+                <div id="multi-result-area" class="space-y-4 pt-2"></div>
+            </div>
+
+            <!-- MODE 2: 畫鬼腳 (ghost.html) -->
+            <div id="draw-mode-ghost" class="hidden bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
+                    <h3 class="text-xl font-extrabold text-amber-900 flex items-center gap-2">
+                        <i data-lucide="palette" class="w-6 h-6 text-amber-600"></i>
+                        畫鬼腳（混色視覺版）
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span id="ghost-integrity-badge" class="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">🛡️ 等待生成數據...</span>
+                        <button onclick="resetGhostGame()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                            <span>重置</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ghost Setup Inputs -->
+                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div>
+                        <label class="block font-extrabold text-slate-800 mb-1">📝 參與者名單 (每行一個):</label>
+                        <textarea id="ghost-names" rows="4" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">A&#10;B&#10;C&#10;D&#10;E</textarea>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block font-extrabold text-slate-800 mb-1">🏆 幸運兒數量:</label>
+                            <input type="number" id="ghost-winner-count" value="2" min="1" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">
+                        </div>
+                        <div>
+                            <label class="block font-extrabold text-slate-800 mb-1">👀 見證人姓名:</label>
+                            <input type="text" id="ghost-witness-name" placeholder="例: 經理" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">
+                        </div>
+                        <div>
+                            <label class="block font-extrabold text-slate-800 mb-1">➕ 額外鬼腳數:</label>
+                            <input type="number" id="ghost-witness-count" value="0" min="0" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">
+                        </div>
+                    </div>
+
+                    <div class="pt-1">
+                        <button onclick="initGhostGame()" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-2xl shadow-sm">🔄 1. 生成抽籤圖 (系統自檢)</button>
+                    </div>
+                </div>
+
+                <div id="ghost-status-bar" class="text-center font-extrabold text-amber-700 min-h-[1.5em] text-lg">請點擊「生成抽籤圖」</div>
+
+                <!-- Ghost Canvas (腳鏡) Container -->
+                <div class="ghost-canvas-wrapper w-full overflow-x-auto bg-slate-100 border-2 border-slate-300 rounded-2xl p-3 flex justify-center shadow-inner">
+                    <canvas id="ghostCanvas"></canvas>
+                </div>
+
+                <!-- Action Button 2: Start Drawing placed directly UNDER the Ghost Canvas (腳鏡下便) -->
+                <div>
+                    <button id="ghost-start-btn" onclick="startGhostGame()" disabled class="w-full py-4 bg-red-600 hover:bg-red-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-black text-xl rounded-2xl shadow-lg transition-all active:scale-95">🚀 2. 開始大抽籤</button>
+                </div>
+            </div>
+
+            <!-- MODE 3: 二選一輪盤 (2vs1.html) -->
+            <div id="draw-mode-wheel" class="hidden bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
+                    <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="disc" class="w-6 h-6 text-red-500"></i>
+                        無敵幸運輪（特別適合二選一）
+                    </h3>
+                    <button onclick="resetWheelGame()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+
+                <!-- 1. Input Controls & Setup Options (Top Area) -->
+                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                    <div>
+                        <label class="block font-extrabold text-slate-800 mb-1">幸運兒名單 (每行一個，輸入兩人將啟動黑白對決模式):</label>
+                        <textarea id="wheel-names" rows="3" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">A&#10;B</textarea>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-extrabold text-slate-800 mb-1">見證人:</label>
+                            <input type="text" id="wheel-witness" placeholder="請輸入見證人姓名" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">
+                        </div>
+                        <div>
+                            <label class="block font-extrabold text-slate-800 mb-1">放手後滑行時間 (秒):</label>
+                            <input type="number" id="wheel-duration" value="5" min="1" max="20" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">
+                        </div>
+                    </div>
+
+                    <button onclick="resetWheelGame()" class="w-full py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-xl">↺ 重置設定</button>
+                </div>
+
+                <!-- 2. Rotating Wheel Canvas and Spin Button Directly Below -->
+                <div class="flex flex-col items-center justify-center space-y-5 pt-2">
+                    <!-- Wheel Canvas Container -->
+                    <div class="flex flex-col items-center justify-center relative py-2">
+                        <div id="wheelPointer" class="wheel-pointer absolute top-0 z-20"></div>
+                        <div class="w-72 h-72 md:w-80 md:h-80 relative flex items-center justify-center">
+                            <canvas id="wheelCanvas" width="800" height="800" class="w-full h-full rounded-full shadow-2xl border-4 border-white"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Spin Button directly underneath the wheel -->
+                    <button id="wheelSpinBtn" class="w-full max-w-md py-4 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-black text-xl rounded-2xl shadow-lg transition-all active:scale-95">按住不放 開始旋轉！</button>
+                </div>
+            </div>
+
+            <!-- Ghost Overlay Winner Modal -->
+            <div id="ghostOverlay" class="fixed inset-0 bg-slate-950/90 hidden flex-col items-center justify-center p-6 z-50 text-center">
+                <div id="ghostCountdownDisplay" class="text-7xl md:text-9xl font-black text-amber-400 animate-pulse-fast">3</div>
+                <div id="ghostWinnerContent" class="hidden max-w-md w-full space-y-4">
+                    <h3 class="text-2xl font-extrabold text-white">🎉 恭喜以下幸運兒！ 🎉</h3>
+                    <div id="ghostWinnerText" class="text-4xl md:text-5xl font-black text-amber-400 py-3 word-break">???</div>
+                    <div id="ghostWitnessCredit" class="text-base text-slate-300 italic"></div>
+                    <button onclick="closeGhostOverlay()" class="px-8 py-3 bg-transparent border-2 border-white text-white font-extrabold text-lg rounded-2xl">關閉並查看完整路徑</button>
+                </div>
+            </div>
+
+            <!-- Wheel Winner Modal -->
+            <div id="wheelWinnerModal" class="fixed inset-0 bg-slate-950/70 hidden flex items-center justify-center p-6 z-50">
+                <div class="bg-white p-8 rounded-3xl text-center max-w-sm w-full border-4 border-slate-900 shadow-2xl space-y-4">
+                    <h3 class="text-xl font-extrabold text-slate-800">🎉 幸運兒是 🎉</h3>
+                    <div id="wheelWinnerText" class="text-4xl font-black text-red-600 py-2">---</div>
+                    <div id="wheelWitnessResult" class="text-sm font-bold text-slate-500 italic"></div>
+                    <button onclick="closeWheelModal()" class="w-full py-3 bg-slate-900 text-white font-extrabold rounded-2xl">確認</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: CR 金句 100 ================= -->
+        <section id="view-quotes" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-amber-100/70 p-5 rounded-2xl border-2 border-amber-200">
+                <div class="p-3 bg-amber-600 text-white rounded-xl">
+                    <i data-lucide="quote" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">C R 金句 100</h2>
+                    <p class="text-base text-slate-600 font-medium">請選擇一個意向，系統將自動為你生成專業評語金句</p>
+                </div>
+            </div>
+
+            <!-- Mode Selection Buttons -->
+            <div class="flex flex-wrap justify-center gap-5 py-3">
+                <button id="btn-stay" onclick="selectCrMode('stay')" class="mode-btn w-32 h-32 md:w-40 md:h-40 rounded-full border-3 border-amber-500 bg-white text-slate-900 font-extrabold flex flex-col items-center justify-center text-center p-3 text-sm md:text-base cursor-pointer shadow-md hover:shadow-xl">
+                    <i data-lucide="anchor" class="w-8 h-8 mb-1.5 text-amber-600"></i>
+                    <span>留守現職<br><span class="text-xs md:text-sm font-bold text-slate-500">穩定型</span></span>
+                </button>
+
+                <button id="btn-move" onclick="selectCrMode('move')" class="mode-btn w-32 h-32 md:w-40 md:h-40 rounded-full border-3 border-amber-500 bg-white text-slate-900 font-extrabold flex flex-col items-center justify-center text-center p-3 text-sm md:text-base cursor-pointer shadow-md hover:shadow-xl">
+                    <i data-lucide="compass" class="w-8 h-8 mb-1.5 text-amber-600"></i>
+                    <span>尋求挑戰<br><span class="text-xs md:text-sm font-bold text-slate-500">求進型</span></span>
+                </button>
+
+                <button id="btn-health" onclick="selectCrMode('health')" class="mode-btn w-32 h-32 md:w-40 md:h-40 rounded-full border-3 border-amber-500 bg-white text-slate-900 font-extrabold flex flex-col items-center justify-center text-center p-3 text-xs md:text-base cursor-pointer shadow-md hover:shadow-xl">
+                    <i data-lucide="users" class="w-8 h-8 mb-1.5 text-amber-600"></i>
+                    <span>團隊協作<br><span class="text-xs md:text-sm font-bold text-slate-500">健康型</span></span>
+                </button>
+            </div>
+
+            <!-- Display Sentence Box -->
+            <div id="cr-display-area" class="hidden bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-md text-center space-y-6 animate-fadeIn">
+                <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-200">
+                    <i data-lucide="quote" class="w-8 h-8 text-amber-500 mx-auto mb-3 opacity-80"></i>
+                    <p id="sentence-text" class="text-lg md:text-2xl font-extrabold text-slate-900 leading-relaxed min-h-[80px] flex items-center justify-center">
+                        <!-- Sentence inserted here -->
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="refreshSentence()" class="px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-base md:text-lg rounded-2xl shadow-md shadow-blue-200 transition-all flex items-center gap-2">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        <span>重新抽取</span>
+                    </button>
+                    <button onclick="copyCrSentence()" class="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-base md:text-lg rounded-2xl shadow-md shadow-emerald-200 transition-all flex items-center gap-2">
+                        <i data-lucide="copy" class="w-5 h-5"></i>
+                        <span>一鍵複製</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Toast Message Component for Copy Success -->
+            <div id="toast-msg" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3.5 rounded-full text-sm md:text-base font-extrabold shadow-2xl opacity-0 transition-opacity pointer-events-none z-50 flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+                <span id="toast-text">已成功複製到剪貼簿！</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12">
+        <div class="max-w-4xl mx-auto px-4 text-center text-sm text-slate-500 space-y-1 font-medium">
+            <p>© CNE日常 • Designed for Healthcare Professionals</p>
+            <p>輕鬆部署於 GitHub Pages • 每天持續新增項目</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Daily Slang Quotes Array
+        const dailyQuotes = [
+            "襟屌 爛做 矛詐型",
+            "縮骨 算爆 老撚土",
+            "又一day",
+            "舔伙記",
+            "舔毛",
+            "part上part落",
+            "食參",
+            "舔糖",
+            "出part",
+            "行水",
+            "轟",
+            "擺橫",
+            "擺門",
+            "全",
+            "拔水",
+            "開鐘",
+            "剩肉",
+            "開60",
+            "水塘",
+            "放血",
+            "太陽",
+            "月亮",
+            "開OP",
+            "92 77",
+            "five five 58",
+            "返8抖24",
+            "757",
+            "兩早兩晏兩通宵",
+            "返二放一",
+            "半日安",
+            "西麗湖",
+            "孖腸",
+            "地下秩序",
+            "又一日",
+            "搞撚掂",
+            "燒焊",
+            "落去搏",
+            "關人鳩打千秋",
+            "食伙記",
+            "老屎窟",
+            "人板",
+            "瞓醒有",
+            "有餅",
+            "矛餅",
+            "跳2",
+            "剔爆",
+            "追case"
+        ];
+
+        // Randomize Daily Slang Quote on Load
+        function initDailyQuote() {
+            const quoteTextElem = document.getElementById('daily-quote-text');
+            if (quoteTextElem) {
+                const randomIndex = Math.floor(Math.random() * dailyQuotes.length);
+                quoteTextElem.innerText = dailyQuotes[randomIndex];
+            }
+        }
+
+        // Navigation Controller
+        function switchView(viewId) {
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                if (viewId === 'home') {
+                    initDailyQuote();
+                } else if (viewId === 'draw') {
+                    initWheel();
+                }
+            }
+
+            const backBtn = document.getElementById('back-home-btn');
+            if (viewId === 'home') {
+                backBtn.classList.add('hidden');
+            } else {
+                backBtn.classList.remove('hidden');
+            }
+        }
+
+        // Populate Time Select Dropdowns for Drip Calculator
+        function initTimeDropdowns() {
+            const startHour = document.getElementById('start-hour');
+            const endHour = document.getElementById('end-hour');
+            const startMin = document.getElementById('start-min');
+            const endMin = document.getElementById('end-min');
+
+            if (!startHour || !endHour) return;
+
+            startHour.innerHTML = '';
+            endHour.innerHTML = '';
+            startMin.innerHTML = '';
+            endMin.innerHTML = '';
+
+            for (let i = 0; i < 24; i++) {
+                const val = i.toString().padStart(2, '0');
+                startHour.add(new Option(`${val} 時`, val));
+                endHour.add(new Option(`${val} 時`, val));
+            }
+
+            for (let i = 0; i < 60; i += 5) {
+                const val = i.toString().padStart(2, '0');
+                startMin.add(new Option(`${val} 分`, val));
+                endMin.add(new Option(`${val} 分`, val));
+            }
+
+            startHour.value = "08";
+            startMin.value = "00";
+            endHour.value = "12";
+            endMin.value = "00";
+        }
+
+        // Reset Drip Calculator
+        function resetEquipmentCalc() {
+            initTimeDropdowns();
+            document.getElementById('staff-count-select').value = "3";
+            document.getElementById('drip-calc-result').classList.add('hidden');
+            document.getElementById('staff-breakdown-container').innerHTML = '';
+        }
+
+        function formatMinutesToTime(mins) {
+            const normalizedMins = mins % (24 * 60);
+            const h = Math.floor(normalizedMins / 60).toString().padStart(2, '0');
+            const m = Math.floor(normalizedMins % 60).toString().padStart(2, '0');
+            return `${h}:${m}`;
+        }
+
+        // 行水神器 - Equipment Allocation Time Calculator
+        function calculateEquipmentTime() {
+            const sh = parseInt(document.getElementById('start-hour').value, 10);
+            const sm = parseInt(document.getElementById('start-min').value, 10);
+            const eh = parseInt(document.getElementById('end-hour').value, 10);
+            const em = parseInt(document.getElementById('end-min').value, 10);
+            const staffCount = parseInt(document.getElementById('staff-count-select').value, 10);
+
+            let startTotalMins = sh * 60 + sm;
+            let endTotalMins = eh * 60 + em;
+
+            if (endTotalMins <= startTotalMins) {
+                endTotalMins += 24 * 60;
+            }
+
+            const totalDurationMins = endTotalMins - startTotalMins;
+            const perPersonMins = Math.floor(totalDurationMins / staffCount);
+
+            const allocatedHours = Math.floor(perPersonMins / 60);
+            const allocatedMins = perPersonMins % 60;
+
+            let perPersonText = allocatedHours > 0 ? `${allocatedHours} 小時 ${allocatedMins} 分鐘` : `${allocatedMins} 分鐘`;
+
+            const container = document.getElementById('staff-breakdown-container');
+            container.innerHTML = '';
+
+            let currentStart = startTotalMins;
+
+            for (let i = 0; i < staffCount; i++) {
+                const letter = String.fromCharCode(65 + i);
+                let currentEnd = (i === staffCount - 1) ? endTotalMins : (currentStart + perPersonMins);
+
+                const startTimeStr = formatMinutesToTime(currentStart);
+                const endTimeStr = formatMinutesToTime(currentEnd);
+
+                const cardHtml = `
+                    <div class="bg-white p-4 rounded-2xl border-2 border-blue-100 flex items-center justify-between shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-full bg-blue-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">${letter}</span>
+                            <span class="font-extrabold text-slate-900 text-base">人員 ${letter}</span>
+                        </div>
+                        <div class="text-sm md:text-base font-extrabold text-blue-900 bg-blue-50 px-3.5 py-2 rounded-xl border border-blue-200">
+                            ${startTimeStr} - ${endTimeStr}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHtml);
+
+                currentStart = currentEnd;
+            }
+
+            document.getElementById('res-total-mins').innerText = totalDurationMins;
+            document.getElementById('res-per-time').innerText = perPersonText;
+            document.getElementById('drip-calc-result').classList.remove('hidden');
+        }
+
+        // ================= 煙棚計算 Logic (Compounding Formula with HK$3.306 Tax Rate) =================
+        function resetCigCalc() {
+            document.getElementById('cig-sticks').value = '';
+            document.querySelector('input[name="is-driver"][value="no"]').checked = true;
+            document.querySelector('input[name="cig-declaration"][value="undeclared"]').checked = true;
+            document.getElementById('cig-calc-result').classList.add('hidden');
+        }
+
+        function calculateCigDuty() {
+            const sticksInput = document.getElementById('cig-sticks').value;
+            const totalSticks = parseInt(sticksInput, 10);
+
+            if (isNaN(totalSticks) || totalSticks <= 0) {
+                showToast('請輸入有效的檢獲香煙總支數量');
+                return;
+            }
+
+            const driverRadio = document.querySelector('input[name="is-driver"]:checked');
+            const isDriver = driverRadio ? (driverRadio.value === 'yes') : false;
+
+            const declRadio = document.querySelector('input[name="cig-declaration"]:checked');
+            const isDeclared = declRadio ? (declRadio.value === 'declared') : false;
+
+            const taxRatePer1000 = 3306; // HKD per 1,000 sticks ($3.306 per stick)
+            const fixedFineRate = 5000;   // HKD fixed penalty under Compounding
+            
+            const allowance = isDriver ? 0 : 19;
+            const excessSticks = Math.max(0, totalSticks - allowance);
+
+            // Step 1: Duty
+            const taxAmountRaw = (excessSticks / 1000) * taxRatePer1000;
+            const taxAmount = Math.round(taxAmountRaw * 10) / 10;
+
+            // Step 2 & 3: Compounding Fine
+            let fine5x = 0;
+            let compoundingFineTotal = 0;
+
+            if (!isDeclared && excessSticks > 0) {
+                fine5x = Math.round((taxAmountRaw * 5) * 10) / 10;
+                compoundingFineTotal = fixedFineRate + fine5x;
+            } else if (isDeclared) {
+                compoundingFineTotal = 0;
+            }
+
+            document.getElementById('step1-sticks').innerText = excessSticks;
+            document.getElementById('step1-tax').innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step2-tax').innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step2-fine5x').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step3-fine5x').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step3-totalfine').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+
+            const stepsBox = document.getElementById('compounding-steps-box');
+            if (!isDeclared && excessSticks > 0) {
+                stepsBox.classList.remove('hidden');
+            } else {
+                stepsBox.classList.add('hidden');
+            }
+
+            document.getElementById('res-total-sticks').innerText = totalSticks;
+            document.getElementById('res-excess-sticks').innerText = excessSticks;
+            document.getElementById('res-tax-amount').innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('res-fine-5x-amount').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('res-compounding-total-display').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+
+            document.getElementById('res-driver-tag').innerText = isDriver ? '🚗 跨境駕駛員' : '🧳 一般旅客';
+            document.getElementById('res-allowance-tag').innerText = isDriver ? '(駕駛員無免稅額)' : '(扣減 19支免稅)';
+
+            const badge = document.getElementById('res-cig-status-badge');
+            if (isDeclared) {
+                badge.innerText = '🔴 紅色通道（主動申報）';
+                badge.className = 'px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+            } else {
+                badge.innerText = '🟢 綠色通道（未有申報/截獲）';
+                badge.className = 'px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-red-500/20 text-red-300 border border-red-500/30';
+            }
+
+            const riskBox = document.getElementById('cig-risk-warning');
+            
+            if (excessSticks === 0) {
+                riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-emerald-50 border-emerald-200 text-emerald-950';
+                riskBox.innerHTML = `
+                    <p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i> 符合法定免稅條件</p>
+                    <p class="font-medium">攜帶香煙總數符合法定免稅條件，可直接經綠色通道入境，免受任何科稅或處罰。</p>
+                `;
+            } else if (isDeclared) {
+                riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-blue-50 border-blue-200 text-blue-950';
+                riskBox.innerHTML = `
+                    <p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i> 合規申報，無刑事處罰</p>
+                    <p class="font-medium">旅客／駕駛員已於紅色通道向海關人員作出主動申報。繳清應繳煙稅（HK$ ${taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}）後即可合法攜帶相關物品入境。</p>
+                `;
+            } else if (!isDeclared && totalSticks <= 1000) {
+                riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-amber-50 border-amber-200 text-amber-950';
+                riskBox.innerHTML = `
+                    <p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i> 未有申報處罰程序（Compounding 複合罰款）</p>
+                    <p class="font-medium">因未有向海關人員作出申報，海關可根據法例進行 Compounding 處罰程序，發出定額罰款通知書。繳付 Compounding 總罰款 <strong>HK$ ${compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</strong>（包含 $5,000 定額罰款及 5 倍稅額罰款）後即可免於刑事起訴。</p>
+                `;
+            } else {
+                riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-red-50 border-red-200 text-red-950';
+                riskBox.innerHTML = `
+                    <p class="font-extrabold text-base md:text-lg text-red-700 flex items-center gap-2"><i data-lucide="siren" class="w-5 h-5 text-red-600"></i> ⚠️ 嚴重違法警告（移交刑事檢控）</p>
+                    <p class="font-bold">檢獲香煙數量極大（超過 1,000 支）或存在藏匿蓄意逃稅意圖：</p>
+                    <p class="leading-relaxed font-medium">海關有權拒絕適用 Compounding 現場罰款程序，將直接提起刑事檢控，控告「管有未完稅香煙」及「未有向海關人員作出申報」兩項罪名，移交法院審理。一經定罪，最高可被判罰款 <strong>HK$1,000,000</strong> 及 <strong>監禁 2 年</strong>，並留有刑事案底！</p>
+                `;
+            }
+
+            lucide.createIcons();
+            document.getElementById('cig-calc-result').classList.remove('hidden');
+        }
+
+        // ================= 抽籤模式 TRIPLE-MODE LOGIC =================
+
+        function switchDrawMode(mode) {
+            document.querySelectorAll('.draw-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-draw-${mode}`).classList.add('active');
+
+            document.getElementById('draw-mode-multi').classList.add('hidden');
+            document.getElementById('draw-mode-ghost').classList.add('hidden');
+            document.getElementById('draw-mode-wheel').classList.add('hidden');
+
+            document.getElementById(`draw-mode-${mode}`).classList.remove('hidden');
+
+            if (mode === 'ghost') {
+                setTimeout(() => { initGhostGame(true); }, 50);
+            } else if (mode === 'wheel') {
+                setTimeout(() => { updateWheel(); }, 50);
+            }
+        }
+
+        // --- MODE 1: 多人抽籤 (luckydraw.html) ---
+        function loadCnyPreset() {
+            document.getElementById('multi-witness').value = 'Charge Nurse (CR)';
+            document.getElementById('multi-quota').value = '3';
+            document.getElementById('multi-rounds').value = '1';
+            document.getElementById('multi-names').value = "A\nB\nC\nD\nE\nF\nG\nH";
+            
+            // Set default date to future 2027 Lunar New Year Day 1 (2027-02-06 丁未年正月初一)
+            document.getElementById('multi-date').value = '2027-02-06';
+            
+            showToast("已載入新年抽假預設（2027年初一 2027-02-06）！");
+        }
+
+        function startMultiDraw() {
+            const date = document.getElementById('multi-date').value;
+            const witness = document.getElementById('multi-witness').value.trim();
+            const quota = parseInt(document.getElementById('multi-quota').value, 10);
+            const rounds = parseInt(document.getElementById('multi-rounds').value, 10);
+            const namesText = document.getElementById('multi-names').value;
+            
+            let nameList = namesText.split('\n').map(name => name.trim()).filter(name => name !== '');
+
+            if (nameList.length === 0) {
+                showToast("請輸入抽籤名單！");
+                return;
+            }
+            if (isNaN(quota) || quota < 1) {
+                showToast("請輸入正確的可放假人數！");
+                return;
+            }
+            if (isNaN(rounds) || rounds < 1) {
+                showToast("請輸入抽籤次數！");
+                return;
+            }
+
+            const resultArea = document.getElementById('multi-result-area');
+            resultArea.innerHTML = '';
+
+            for (let i = 1; i <= rounds; i++) {
+                let currentList = [...nameList];
+                shuffleArray(currentList);
+
+                let htmlContent = `
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-300 space-y-3 shadow-sm">
+                        <div class="text-base font-extrabold text-purple-900 border-b border-slate-200 pb-2 flex justify-between items-center">
+                            <span>第 ${i} 次抽籤結果</span>
+                            <span class="text-xs font-bold text-slate-500">共 ${nameList.length} 人參與</span>
+                        </div>
+                        <div class="text-xs text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200 font-semibold space-y-1">
+                            <p>放假日期：${date || '未設定'}</p>
+                            <p>見證人：${witness || '無'}</p>
+                            <p>可放假名額：${quota} 人</p>
+                        </div>
+                `;
+
+                currentList.forEach((person, index) => {
+                    const rank = index + 1;
+                    const isWinner = rank <= quota;
+                    const bgClass = isWinner ? 'bg-emerald-50 border-l-4 border-emerald-500 text-emerald-950 font-extrabold' : 'bg-white border border-slate-200 text-slate-500 font-bold';
+                    const statusText = isWinner ? '🎉 中籤 (可放假)' : '候補';
+
+                    htmlContent += `
+                        <div class="flex justify-between items-center p-3 rounded-xl text-sm ${bgClass}">
+                            <span><span class="font-black text-slate-700 mr-2">#${rank}</span> ${person}</span>
+                            <span class="text-xs">${statusText}</span>
+                        </div>
+                    `;
+                });
+
+                htmlContent += `</div>`;
+                resultArea.innerHTML += htmlContent;
+            }
+
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function resetMultiForm() {
+            document.getElementById('multi-witness').value = '';
+            document.getElementById('multi-quota').value = '5';
+            document.getElementById('multi-rounds').value = '1';
+            document.getElementById('multi-names').value = "A\nB\nC\nD\nE\nF\nG\nH";
+            document.getElementById('multi-result-area').innerHTML = '';
+            document.getElementById('multi-date').valueAsDate = new Date();
+        }
+
+        // --- MODE 2: 畫鬼腳 (ghost.html - Perfect Color Mixing & Layout) ---
+        let ghostParticipants = [];
+        let ghostBridges = [];
+        let ghostResults = [];
+        let ghostWitnessName = "";
+        let ghostColumnWidth = 0;
+        const ghostTopMargin = 50;
+        const ghostBottomMargin = 70;
+        const ghostHeight = 500;
+        let ghostIsRunning = false;
+        const ghostColors = ["#E74C3C", "#2ECC71", "#3498DB", "#9B59B6", "#F1C40F", "#1ABC9C", "#E67E22", "#FF0066"];
+
+        function resetGhostGame() {
+            document.getElementById('ghost-names').value = "A\nB\nC\nD\nE";
+            document.getElementById('ghost-winner-count').value = "2";
+            document.getElementById('ghost-witness-name').value = "";
+            document.getElementById('ghost-witness-count').value = "0";
+            document.getElementById('ghost-integrity-badge').innerHTML = "🛡️ 等待生成數據...";
+            
+            const statusBar = document.getElementById('ghost-status-bar');
+            statusBar.textContent = "請點擊「生成抽籤圖」";
+            statusBar.style.color = "#b45309";
+            
+            document.getElementById('ghost-start-btn').disabled = true;
+
+            ghostIsRunning = false;
+            ghostParticipants = [];
+            ghostBridges = [];
+            ghostResults = [];
+
+            const ghostCanvas = document.getElementById('ghostCanvas');
+            if (ghostCanvas) {
+                const ctx = ghostCanvas.getContext('2d');
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(0, 0, ghostCanvas.width, ghostCanvas.height);
+            }
+        }
+
+        function initGhostGame(isResize = false) {
+            if (ghostIsRunning) return;
+
+            const ghostCanvas = document.getElementById('ghostCanvas');
+            if (!ghostCanvas) return;
+            const ctx = ghostCanvas.getContext('2d');
+            const wrapper = document.querySelector('.ghost-canvas-wrapper');
+
+            const rawText = document.getElementById('ghost-names').value;
+            ghostParticipants = rawText.split('\n').map(s => s.trim()).filter(s => s !== "");
+            const winnerCountInput = parseInt(document.getElementById('ghost-winner-count').value, 10) || 1;
+            ghostWitnessName = document.getElementById('ghost-witness-name').value.trim() || "神秘人";
+
+            if (ghostParticipants.length < 2) {
+                if (!isResize) showToast("最少要有 2 個人參與畫鬼腳！");
+                return;
+            }
+
+            const containerWidth = wrapper ? wrapper.clientWidth - 20 : 600;
+            let idealWidth = containerWidth / ghostParticipants.length;
+            const minColumnWidth = 60;
+            ghostColumnWidth = (idealWidth < minColumnWidth) ? minColumnWidth : idealWidth;
+
+            ghostCanvas.width = Math.max(containerWidth, ghostParticipants.length * ghostColumnWidth);
+            ghostCanvas.height = ghostHeight + ghostTopMargin + ghostBottomMargin;
+
+            if (!isResize) {
+                let isValid = false;
+                let attempts = 0;
+                
+                document.getElementById('ghost-status-bar').textContent = "正在生成並檢測邏輯...";
+                
+                while (!isValid && attempts < 50) {
+                    generateGhostBridgesSafely();
+                    generateGhostResults(winnerCountInput);
+                    isValid = checkGhostIntegrity();
+                    attempts++;
+                }
+
+                if (!isValid) {
+                    showToast("生成失敗：無法建立無衝突路徑，請再試。");
+                    return;
+                }
+
+                document.getElementById('ghost-integrity-badge').innerHTML = "✅ 系統檢測通過：路徑無衝突";
+                const statusBar = document.getElementById('ghost-status-bar');
+                statusBar.textContent = `圖表生成完畢！見證人：${ghostWitnessName}`;
+                statusBar.style.color = "#1e293b";
+                document.getElementById('ghost-start-btn').disabled = false;
+            }
+
+            drawGhostStaticMap(ghostCanvas, ctx);
+        }
+
+        function generateGhostBridgesSafely() {
+            ghostBridges = [];
+            const baseCount = Math.floor(Math.random() * 21) + 30;
+            const witnessCount = parseInt(document.getElementById('ghost-witness-count').value, 10) || 0;
+            const totalBridges = baseCount + witnessCount;
+            let safeLoop = 0;
+            while (ghostBridges.length < totalBridges && safeLoop < 1000) {
+                safeLoop++;
+                let col = Math.floor(Math.random() * (ghostParticipants.length - 1));
+                let y = Math.floor(Math.random() * (ghostHeight - 30)) + 15;
+                let conflict = ghostBridges.some(b => {
+                    let yDist = Math.abs(b.y - y);
+                    if (b.col === col && yDist < 20) return true;
+                    if (b.col === col - 1 && yDist < 20) return true;
+                    if (b.col === col + 1 && yDist < 20) return true;
+                    return false;
+                });
+                if (!conflict) ghostBridges.push({ col, y });
+            }
+            ghostBridges.sort((a, b) => a.y - b.y);
+        }
+
+        function generateGhostResults(count) {
+            ghostResults = new Array(ghostParticipants.length).fill("❌");
+            let assigned = 0;
+            let safeCount = Math.min(count, ghostParticipants.length);
+            while (assigned < safeCount) {
+                let idx = Math.floor(Math.random() * ghostParticipants.length);
+                if (ghostResults[idx] !== "🏆") {
+                    ghostResults[idx] = "🏆";
+                    assigned++;
+                }
+            }
+        }
+
+        function checkGhostIntegrity() {
+            let destinations = new Set();
+            for (let i = 0; i < ghostParticipants.length; i++) {
+                let logicCol = i;
+                let currentY = 0;
+                while(currentY < ghostHeight) {
+                    let nextBridge = null;
+                    let dir = 0;
+                    for (let b of ghostBridges) {
+                        if (b.y > currentY) {
+                            if (b.col === logicCol) { nextBridge = b; dir = 1; break; }
+                            if (b.col === logicCol - 1) { nextBridge = b; dir = -1; break; }
+                        }
+                    }
+                    if (nextBridge) { logicCol += dir; currentY = nextBridge.y; } 
+                    else { currentY = ghostHeight + 999; }
+                }
+                if (destinations.has(logicCol)) return false;
+                destinations.add(logicCol);
+            }
+            return true;
+        }
+
+        function drawGhostStaticMap(ghostCanvas, ctx) {
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, ghostCanvas.width, ghostCanvas.height);
+
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1.0;
+
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#cbd5e1";
+
+            let xOffset = 0;
+            if (ghostCanvas.width > ghostParticipants.length * ghostColumnWidth) {
+                xOffset = (ghostCanvas.width - ghostParticipants.length * ghostColumnWidth) / 2;
+            }
+
+            for (let i = 0; i < ghostParticipants.length; i++) {
+                let x = xOffset + i * ghostColumnWidth + ghostColumnWidth / 2;
+                
+                ctx.fillStyle = "#0f172a";
+                ctx.font = "bold 16px sans-serif";
+                ctx.fillText(ghostParticipants[i], x, 20);
+                
+                ctx.fillStyle = ghostColors[i % ghostColors.length];
+                ctx.beginPath();
+                ctx.arc(x, 35, 5, 0, Math.PI*2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(x, ghostTopMargin);
+                ctx.lineTo(x, ghostCanvas.height - ghostBottomMargin);
+                ctx.stroke();
+
+                drawGhostMysteryBox(ctx, ghostCanvas, x, "❓", null);
+            }
+
+            ghostBridges.forEach(b => {
+                let x1 = xOffset + b.col * ghostColumnWidth + ghostColumnWidth / 2;
+                let x2 = xOffset + (b.col + 1) * ghostColumnWidth + ghostColumnWidth / 2;
+                let y = ghostTopMargin + b.y;
+                ctx.beginPath();
+                ctx.moveTo(x1, y);
+                ctx.lineTo(x2, y);
+                ctx.stroke();
+            });
+        }
+
+        function drawGhostMysteryBox(ctx, ghostCanvas, x, text, color) {
+            ctx.save();
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.globalAlpha = 1.0;
+
+            let boxY = ghostCanvas.height - 35;
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(x - 24, boxY - 24, 48, 48);
+
+            if (text === "❓") {
+                ctx.font = "bold 24px sans-serif";
+                ctx.fillStyle = "#94a3b8";
+                ctx.fillText("❓", x, boxY);
+            } else {
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = color;
+                ctx.beginPath();
+                ctx.roundRect(x - 20, boxY - 20, 40, 40, 8);
+                ctx.stroke();
+
+                ctx.font = "bold 24px sans-serif";
+                ctx.fillStyle = color;
+                ctx.fillText(text, x, boxY);
+            }
+            ctx.restore();
+        }
+
+        async function startGhostGame() {
+            if (ghostIsRunning) return;
+            ghostIsRunning = true;
+            document.getElementById('ghost-start-btn').disabled = true;
+
+            const ghostCanvas = document.getElementById('ghostCanvas');
+            const ctx = ghostCanvas.getContext('2d');
+            const totalWinnersNeeded = parseInt(document.getElementById('ghost-winner-count').value, 10) || 1;
+            let foundWinners = [];
+
+            const overlay = document.getElementById('ghostOverlay');
+            const countdownDisplay = document.getElementById('ghostCountdownDisplay');
+            const winnerContent = document.getElementById('ghostWinnerContent');
+
+            overlay.style.display = 'flex';
+            countdownDisplay.style.display = 'block';
+            winnerContent.style.display = 'none';
+
+            for (let k = 3; k > 0; k--) {
+                countdownDisplay.textContent = k;
+                await new Promise(r => setTimeout(r, 800));
+            }
+            countdownDisplay.textContent = "GO!";
+            await new Promise(r => setTimeout(r, 500));
+            overlay.style.display = 'none';
+
+            let xOffset = 0;
+            if (ghostCanvas.width > ghostParticipants.length * ghostColumnWidth) {
+                xOffset = (ghostCanvas.width - ghostParticipants.length * ghostColumnWidth) / 2;
+            }
+
+            for (let i = 0; i < ghostParticipants.length; i++) {
+                let color = ghostColors[i % ghostColors.length];
+                const statusBar = document.getElementById('ghost-status-bar');
+                statusBar.textContent = `🎲 ${ghostParticipants[i]} 出發中...`;
+                statusBar.style.color = color;
+
+                let endColIndex = await animateGhostPath(ghostCanvas, ctx, i, color, xOffset);
+                
+                let finalRes = ghostResults[endColIndex];
+                let endX = xOffset + endColIndex * ghostColumnWidth + ghostColumnWidth / 2;
+                
+                drawGhostMysteryBox(ctx, ghostCanvas, endX, finalRes, color);
+
+                if (finalRes === "🏆") {
+                    foundWinners.push(ghostParticipants[i]);
+                }
+                
+                if (foundWinners.length >= totalWinnersNeeded) break;
+                await new Promise(r => setTimeout(r, 200));
+            }
+            
+            showAllGhostWinners(foundWinners);
+        }
+
+        function animateGhostPath(ghostCanvas, ctx, startIndex, color, xOffset) {
+            return new Promise(resolve => {
+                let logicCol = startIndex;
+                let startX = xOffset + logicCol * ghostColumnWidth + ghostColumnWidth / 2;
+                let currentY = ghostTopMargin;
+                let path = [{x: startX, y: currentY}];
+                
+                while(currentY < ghostHeight + ghostTopMargin) {
+                    let nextBridge = null;
+                    let dir = 0;
+                    let logicY = currentY - ghostTopMargin;
+
+                    for (let b of ghostBridges) {
+                        if (b.y > logicY) {
+                            if (b.col === logicCol) { nextBridge = b; dir = 1; break; }
+                            if (b.col === logicCol - 1) { nextBridge = b; dir = -1; break; }
+                        }
+                    }
+
+                    if (nextBridge) {
+                        let bridgeVisualY = ghostTopMargin + nextBridge.y;
+                        path.push({x: xOffset + logicCol * ghostColumnWidth + ghostColumnWidth / 2, y: bridgeVisualY});
+                        logicCol += dir;
+                        path.push({x: xOffset + logicCol * ghostColumnWidth + ghostColumnWidth / 2, y: bridgeVisualY});
+                        currentY = bridgeVisualY; 
+                    } else {
+                        path.push({x: xOffset + logicCol * ghostColumnWidth + ghostColumnWidth / 2, y: ghostCanvas.height - ghostBottomMargin});
+                        currentY = ghostCanvas.height + 999;
+                    }
+                }
+
+                let idx = 0;
+                let currPos = {...path[0]};
+                const speed = 4;
+                
+                ctx.lineWidth = 7;
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+                ctx.strokeStyle = color;
+                ctx.globalCompositeOperation = 'multiply';
+                ctx.globalAlpha = 0.75;
+
+                function step() {
+                    if (idx >= path.length - 1) {
+                        resolve(logicCol); 
+                        return;
+                    }
+                    let target = path[idx+1];
+                    let dx = target.x - currPos.x;
+                    let dy = target.y - currPos.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+
+                    if (dist <= speed) {
+                        ctx.beginPath(); ctx.moveTo(currPos.x, currPos.y); ctx.lineTo(target.x, target.y); ctx.stroke();
+                        currPos = {...target};
+                        idx++;
+                    } else {
+                        let ratio = speed / dist;
+                        let nx = currPos.x + dx * ratio;
+                        let ny = currPos.y + dy * ratio;
+                        ctx.beginPath(); ctx.moveTo(currPos.x, currPos.y); ctx.lineTo(nx, ny); ctx.stroke();
+                        currPos.x = nx; currPos.y = ny;
+                    }
+                    requestAnimationFrame(step);
+                }
+                step();
+            });
+        }
+
+        function showAllGhostWinners(winnersList) {
+            let winnersString = winnersList.length === 0 ? "無人中獎" : winnersList.join(" , ");
+
+            setTimeout(() => {
+                const overlay = document.getElementById('ghostOverlay');
+                overlay.style.display = 'flex';
+                document.getElementById('ghostCountdownDisplay').style.display = 'none';
+                document.getElementById('ghostWinnerContent').style.display = 'block';
+                document.getElementById('ghostWinnerText').textContent = winnersString;
+                document.getElementById('ghostWitnessCredit').textContent = `公正見證人: ${ghostWitnessName}`;
+                
+                const statusBar = document.getElementById('ghost-status-bar');
+                statusBar.textContent = `🎊 恭喜幸運兒: ${winnersString}！`;
+                statusBar.style.color = "#dc2626";
+                ghostIsRunning = false;
+                document.getElementById('ghost-start-btn').disabled = false;
+            }, 800);
+        }
+
+        function closeGhostOverlay() {
+            document.getElementById('ghostOverlay').style.display = 'none';
+        }
+
+        // --- MODE 3: 二選一輪盤 (2vs1.html) ---
+        let wheelRawNames = [];
+        let wheelDisplayNames = [];
+        let wheelDisplayColors = [];
+        let wheelCurrentAngle = 0;
+        let wheelArc = 0;
+        let wheelSpeed = 0;
+        let wheelMaxSpeed = 0.8;
+        let wheelIsHolding = false;
+        let wheelIsStopping = false;
+        let wheelFriction = 0.99;
+        const rainbowColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA502', '#A29BFE', '#FD79A8', '#55E6C1', '#FDCB6E'];
+
+        function initWheel() {
+            const spinBtn = document.getElementById('wheelSpinBtn');
+            const namesInput = document.getElementById('wheel-names');
+
+            if (!spinBtn || !namesInput) return;
+
+            namesInput.removeEventListener('input', updateWheel);
+            namesInput.addEventListener('input', updateWheel);
+
+            spinBtn.replaceWith(spinBtn.cloneNode(true));
+            const newSpinBtn = document.getElementById('wheelSpinBtn');
+
+            newSpinBtn.addEventListener('mousedown', startWheelHolding);
+            newSpinBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startWheelHolding(); });
+
+            window.removeEventListener('mouseup', stopWheelHolding);
+            window.removeEventListener('touchend', stopWheelHolding);
+            window.addEventListener('mouseup', stopWheelHolding);
+            window.addEventListener('touchend', stopWheelHolding);
+
+            updateWheel();
+            requestAnimationFrame(wheelAnimationLoop);
+        }
+
+        function resetWheelGame() {
+            document.getElementById('wheel-names').value = "A\nB";
+            document.getElementById('wheel-witness').value = "";
+            document.getElementById('wheel-duration').value = "5";
+            
+            wheelSpeed = 0;
+            wheelCurrentAngle = 0;
+            wheelIsHolding = false;
+            wheelIsStopping = false;
+            const spinBtn = document.getElementById('wheelSpinBtn');
+            spinBtn.disabled = false;
+            spinBtn.innerText = "按住不放 開始旋轉！";
+
+            updateWheel();
+        }
+
+        function updateWheel() {
+            const rawInput = document.getElementById('wheel-names').value;
+            wheelRawNames = rawInput.split('\n').filter(name => name.trim() !== '');
+            if (wheelRawNames.length === 0) wheelRawNames = ['名單', '空白'];
+            
+            wheelDisplayNames = [];
+            wheelDisplayColors = [];
+
+            const pointer = document.getElementById('wheelPointer');
+
+            if (wheelRawNames.length === 2) {
+                if (pointer) pointer.classList.add('gold');
+                const totalSegments = 18;
+                for (let i = 0; i < totalSegments; i++) {
+                    wheelDisplayNames.push(wheelRawNames[i % 2]);
+                    wheelDisplayColors.push(i % 2 === 0 ? '#2d3436' : '#ffffff');
+                }
+            } else {
+                if (pointer) pointer.classList.remove('gold');
+                wheelDisplayNames = [...wheelRawNames];
+                wheelDisplayNames.forEach((name, i) => {
+                    wheelDisplayColors.push(rainbowColors[i % rainbowColors.length]);
+                });
+            }
+            
+            wheelArc = Math.PI * 2 / wheelDisplayNames.length;
+            drawWheel();
+        }
+
+        function drawWheel() {
+            const canvas = document.getElementById('wheelCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = canvas.width / 2 - 20;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius + 10, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            
+            const pointer = document.getElementById('wheelPointer');
+            ctx.strokeStyle = pointer && pointer.classList.contains('gold') ? '#000000' : '#333333';
+            ctx.lineWidth = 15;
+            ctx.stroke();
+
+            wheelDisplayNames.forEach((name, i) => {
+                const angle = wheelCurrentAngle + i * wheelArc;
+                const bgColor = wheelDisplayColors[i];
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + wheelArc);
+                ctx.fillStyle = bgColor;
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + wheelArc / 2);
+                ctx.textAlign = "right";
+                
+                if (bgColor === '#ffffff') {
+                    ctx.fillStyle = "#000000";
+                    ctx.shadowBlur = 0;
+                } else {
+                    ctx.fillStyle = "#ffffff";
+                    ctx.shadowColor = "rgba(0,0,0,0.5)";
+                    ctx.shadowBlur = 4;
+                }
+                
+                const fontSize = wheelDisplayNames.length > 10 ? 28 : 36;
+                ctx.font = `bold ${fontSize}px sans-serif`;
+                
+                ctx.fillText(name, radius - 40, 10);
+                ctx.restore();
+            });
+        }
+
+        function startWheelHolding() {
+            if (wheelIsStopping && wheelSpeed > 0.01) return;
+            wheelIsHolding = true;
+            wheelIsStopping = false;
+            const spinBtn = document.getElementById('wheelSpinBtn');
+            spinBtn.innerText = "轉動中... 放手即停";
+        }
+
+        function stopWheelHolding() {
+            if (!wheelIsHolding) return;
+            wheelIsHolding = false;
+            wheelIsStopping = true;
+            const spinBtn = document.getElementById('wheelSpinBtn');
+            spinBtn.innerText = "減速中...";
+            spinBtn.disabled = true;
+
+            let duration = parseFloat(document.getElementById('wheel-duration').value) || 5;
+            if(duration < 1) duration = 1;
+            wheelFriction = Math.pow(0.001, 1 / (duration * 60));
+        }
+
+        function wheelAnimationLoop() {
+            if (wheelIsHolding) {
+                wheelSpeed = wheelSpeed + (wheelMaxSpeed - wheelSpeed) * 0.05;
+                wheelSpeed += (Math.random() - 0.5) * 0.005;
+            } else if (wheelIsStopping) {
+                wheelSpeed *= wheelFriction;
+                if (wheelSpeed < 0.0005) {
+                    wheelSpeed = 0;
+                    wheelIsStopping = false;
+                    const spinBtn = document.getElementById('wheelSpinBtn');
+                    spinBtn.disabled = false;
+                    spinBtn.innerText = "按住不放 開始旋轉！";
+                    showWheelWinner();
+                }
+            }
+            wheelCurrentAngle += wheelSpeed;
+            drawWheel();
+            requestAnimationFrame(wheelAnimationLoop);
+        }
+
+        function showWheelWinner() {
+            const normalizedAngle = wheelCurrentAngle % (Math.PI * 2);
+            let degrees = (normalizedAngle * 180 / Math.PI) + 90;
+            let arcd = wheelArc * 180 / Math.PI;
+            let index = Math.floor((360 - (degrees % 360)) / arcd);
+            
+            index = (wheelDisplayNames.length + index) % wheelDisplayNames.length;
+
+            const winner = wheelDisplayNames[index];
+            const witness = document.getElementById('wheel-witness').value || "（無）";
+            
+            document.getElementById('wheelWinnerText').innerText = winner;
+            document.getElementById('wheelWitnessResult').innerText = "見證人: " + witness;
+            document.getElementById('wheelWinnerModal').classList.remove('hidden');
+        }
+
+        function closeWheelModal() {
+            document.getElementById('wheelWinnerModal').classList.add('hidden');
+        }
+
+        // ================= C R 金句 100 Data & Logic =================
+        const crQuotesData = {
+            stay: [
+                "本年度工作進展順利，與同事協作默契；建議引入 AI 圖像識別系統輔助 X 光判讀，全面提升清關效能。",
+                "本人對現行工作非常滿意，組內氛圍和諧；建議推行無紙化辦公，將行政紀錄數位化，釋放前線執法人力。",
+                "目前崗位發揮穩定，團隊合作無間；建議引入 AI 智能聊天機械人處理查詢，分擔前線人員行政諮詢壓力。",
+                "本人對現行工作安排滿意；建議建立最佳實踐共享平台，推廣優秀工作流程，提升部門專業與標準化。",
+                "對現職表現平穩感滿意；建議增設身心健康資訊站，定期分享紓壓技巧與健康資訊，關顧同僚福祉。",
+                "本人對現行工作非常滿意；建議推動「電子化口岸管理系統」，實時監控流量，自動觸發人手增援機制。",
+                "團隊溝通有效，效率理想；建議推行電子化執法通知書，提升對公眾服務效率，同時簡化內部存檔程序。",
+                "目前崗位發揮穩定；建議舉辦職業倦怠工作坊，關注情緒健康並提供輔導資源，營造快樂工作文化。",
+                "團隊氛圍和諧，合作無間；建議建立組內感謝機制，表揚優秀團隊協作，進一步激發正面工作能量。",
+                "本人對現行工作非常滿意；願與全體同事齊心協力，守護香港繁榮，以不懈努力回饋社會各界期望。"
+            ],
+            move: [
+                "本人積極尋求突破，盼回饋部門；建議深化對國安法細則的理解，嚴防禁運品流入，堅守守門人角色。",
+                "願服從部門適當調派；建議優化風險偵測系統，減少對低風險旅客的干擾，在執法與貿易便利間取得平衡。",
+                "本人學習意欲極強，願意接受挑戰；建議設立科技創新激勵機制，鼓勵同事提出自動化方案，優化執法水平。",
+                "願服從調派，於不同崗位磨練；建議舉辦模擬法庭演練，提升人員出庭作證應變力，展現專業執法形象。",
+                "渴望接觸不同範疇提升專業；建議舉辦跨組別法律分享會，交流不同範疇的執法心得，強化整體法律水平。",
+                "配合部門發展，樂意嘗試新崗位；建議引入穿戴式科技，提升在口岸流動執法的應變能力與溝通效率。",
+                "本人積極尋求突破提升專業；將法治精神內化為準則，在每宗個案體現程序公義，無愧於海關制服。",
+                "願服從部門調派回饋社會；積極參與廉政講座，時刻警惕權力行使邊界，確保執法行為公平公正。",
+                "配合部門規劃嘗試新挑戰；期許未來一年帶領團隊在打擊私煙或毒品範疇取得突破，為社會貢獻力量。",
+                "本人學習意欲極強；保持終身學習熱誠，迎接大時代下的執法挑戰，將個人成長與海關願景緊密融合。"
+            ],
+            health: [
+                "團隊溝通有效，效率理想；建議推行同僚友導計劃，由資深同事分享調適壓力心得，建立互助文化。",
+                "本年度工作進展順利，與同事協作默契；維持良好體格與運動習慣，以最佳狀態應對高強度執法任務。",
+                "現時工作挑戰適中，同事互相扶持；積極回應市民對民生物資走私的關注，採取專項行動，維護供應穩定。",
+                "過去一年發揮穩定，感受團隊支援；建議增加壓力管理課程，協助人員在高壓環境下維持心靈健康。",
+                "配合部門規劃，樂意嘗試調動；建議增加崗位輪換機會，獲取多元執法經驗，拓寬專業視野與靈活性。",
+                "持續追求卓越，願不斷成長；關注人員休息質量，建議優化休息室設施，確保同僚在執勤間能充分休憩。",
+                "秉持初心執行任務；實踐健康生活方式，平衡工作與家庭，確保長期鬥志，為部門發展貢獻持久力量。",
+                "感謝上司指導；建議傳統舉辦跨組別聯誼，增進信任，減少行政溝通成本，提升整體工作愉悅度。",
+                "團隊氛圍和諧，執行力強；建議優化查驗室通風與環境，提升執法效率之餘亦顧及前線與被查驗者感受。",
+                "感謝現時崗位提供的鍛鍊；期望參與科技創新實驗室，測試新興科技在搜查中的應用，提升執法現代化。"
+            ]
+        };
+
+        let currentCrMode = '';
+
+        function selectCrMode(mode) {
+            currentCrMode = mode;
+            
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('btn-' + mode);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            document.getElementById('cr-display-area').classList.remove('hidden');
+            refreshSentence();
+        }
+
+        function refreshSentence() {
+            if (!currentCrMode || !crQuotesData[currentCrMode]) return;
+            const sentences = crQuotesData[currentCrMode];
+            const randomIndex = Math.floor(Math.random() * sentences.length);
+            
+            const displayElem = document.getElementById('sentence-text');
+            displayElem.innerText = sentences[randomIndex];
+        }
+
+        function copyCrSentence() {
+            const text = document.getElementById('sentence-text').innerText;
+            if (!text) return;
+
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('金句已成功複製到剪貼簿！');
+            } catch (err) {
+                showToast('複製失敗，請手動選取文字');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            toastText.innerText = msg;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        // On Page Load Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            initTimeDropdowns();
+            initDailyQuote();
+            document.getElementById('multi-date').valueAsDate = new Date();
+        });
+    </script>
+</body>
+</html>
