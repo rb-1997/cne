@@ -27,7 +27,6 @@
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Enlarged font style applied to child pages for clear legibility */
         .child-view-panel {
             font-size: 18px;
         }
@@ -66,7 +65,6 @@
             border-color: #581c87;
             box-shadow: 0 4px 12px rgba(107, 33, 168, 0.3);
         }
-        /* Wheel Pointer Styling */
         .wheel-pointer {
             width: 0;
             height: 0;
@@ -111,7 +109,7 @@
     <!-- Main Content Container -->
     <main class="flex-grow max-w-4xl w-full mx-auto p-4 md:p-6">
 
-        <!-- ================= PAGE 1: HOME DASHBOARD (Quad-Card Platform) ================= -->
+        <!-- ================= PAGE 1: HOME DASHBOARD ================= -->
         <section id="view-home" class="view-panel active space-y-6">
             <!-- Banner with Dynamic Daily Slang Quote -->
             <div class="bg-gradient-to-r from-teal-700 to-emerald-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden space-y-3">
@@ -119,7 +117,7 @@
                     <span class="inline-block bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-50">每日更新 • 護理智慧</span>
                     <h2 class="text-2xl md:text-3xl font-extrabold">歡迎來到 CNE日常 🛠️</h2>
                     
-                    <!-- Daily Quote Box (Randomized on Page Load / Login) -->
+                    <!-- Daily Quote Box -->
                     <div class="pt-1">
                         <div class="bg-amber-400/20 backdrop-blur-md border border-amber-300/40 rounded-xl px-4 py-2.5 text-amber-200 font-extrabold text-sm md:text-base inline-flex items-center gap-2 shadow-inner">
                             <i data-lucide="sparkles" class="w-4 h-4 text-amber-300 animate-pulse"></i>
@@ -133,7 +131,7 @@
                 <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
             </div>
 
-            <!-- Quad-Card Platform Grid (4 方格平台) -->
+            <!-- Core Tools Grid (Quad Card) -->
             <div>
                 <h3 class="text-base font-extrabold text-slate-800 mb-3 flex items-center gap-2">
                     <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
@@ -166,7 +164,7 @@
                             </div>
                             <div>
                                 <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">煙棚計算</h4>
-                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">未申報香煙 Compounding 複合罰款公式（每支$3.306）、駕駛員條例與稅額計算器。</p>
+                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">未申報香煙/雪茄 Compounding 複合罰款、駕駛員條例與關稅評估工具。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-emerald-700 font-extrabold">
@@ -212,11 +210,24 @@
                 </div>
             </div>
 
-            <!-- Future Expansion Card Placeholder -->
-            <div class="border-2 border-dashed border-slate-300 rounded-2xl p-5 text-center text-slate-500 bg-slate-100/50">
-                <i data-lucide="plus-circle" class="w-8 h-8 mx-auto mb-1.5 text-slate-400"></i>
-                <p class="font-bold text-sm text-slate-700">每日持續新增項目中...</p>
-                <p class="text-xs text-slate-500 mt-0.5">預留版面：未來可隨時於 GitHub 輕鬆加入更多護理小工具！</p>
+            <!-- CNE AI BOT Hero Entry Card (擺喺四格底下) -->
+            <div onclick="switchView('ai')" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl p-5 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all cursor-pointer group flex items-center justify-between border-2 border-indigo-300/40">
+                <div class="flex items-center space-x-4">
+                    <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner">
+                        <i data-lucide="bot" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="text-lg md:text-xl font-black tracking-wide">CNE AI BOT 對話機械人</h4>
+                            <span class="text-xs bg-amber-400 text-slate-900 font-extrabold px-2.5 py-0.5 rounded-full shadow-sm">AI 專家</span>
+                        </div>
+                        <p class="text-xs md:text-sm text-indigo-100 mt-1 font-medium leading-snug">內建資深 CNE 人員專業智庫 • 隨時解答法例條文、通關常識與各類實務問題。</p>
+                    </div>
+                </div>
+                <div class="hidden sm:flex items-center gap-1 text-sm font-extrabold bg-white/10 px-3.5 py-2 rounded-xl border border-white/20 group-hover:bg-white/20 transition-colors">
+                    <span>開始對話</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </div>
             </div>
         </section>
 
@@ -232,9 +243,7 @@
                 </div>
             </div>
 
-            <!-- Direct Calculator Panel -->
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
-                
                 <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4">
                     <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
                         <i data-lucide="calculator" class="w-6 h-6 text-blue-600"></i>
@@ -247,7 +256,6 @@
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-5">
-                    <!-- Start Time -->
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                             <i data-lucide="clock" class="w-5 h-5 text-blue-600"></i>
@@ -256,20 +264,15 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
-                                <select id="start-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                                    <!-- Populated by JS -->
-                                </select>
+                                <select id="start-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
-                                <select id="start-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                                    <!-- Populated by JS -->
-                                </select>
+                                <select id="start-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- End Time -->
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                             <i data-lucide="clock-4" class="w-5 h-5 text-blue-600"></i>
@@ -278,20 +281,15 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
-                                <select id="end-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                                    <!-- Populated by JS -->
-                                </select>
+                                <select id="end-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
-                                <select id="end-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                                    <!-- Populated by JS -->
-                                </select>
+                                <select id="end-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Staff Count (Dropdown 2 - 6) -->
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                             <i data-lucide="users" class="w-5 h-5 text-blue-600"></i>
@@ -309,7 +307,6 @@
                     </div>
                 </div>
 
-                <!-- Action Button -->
                 <div class="pt-2">
                     <button onclick="calculateEquipmentTime()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-blue-200 text-lg flex items-center justify-center gap-2">
                         <i data-lucide="calculator" class="w-6 h-6"></i>
@@ -317,25 +314,19 @@
                     </button>
                 </div>
 
-                <!-- Result Area -->
                 <div id="drip-calc-result" class="hidden p-5 md:p-6 bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-3xl space-y-5">
                     <div class="flex flex-wrap items-center justify-between border-b-2 border-blue-200/80 pb-4 gap-3 text-base text-slate-700">
                         <div>總共時間：<span id="res-total-mins" class="font-extrabold text-slate-900 text-xl">0</span> 分鐘</div>
                         <div>每人平均：<span id="res-per-time" class="font-extrabold text-blue-800 text-xl">0 分鐘</span></div>
                     </div>
-
-                    <!-- Personnel A, B, C... Time Slot Cards -->
                     <div class="space-y-3">
                         <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
                             <i data-lucide="list-checks" class="w-5 h-5 text-blue-600"></i>
                             人員時間分配結果：
                         </p>
-                        <div id="staff-breakdown-container" class="grid gap-3 sm:grid-cols-2">
-                            <!-- Populated dynamically by JS -->
-                        </div>
+                        <div id="staff-breakdown-container" class="grid gap-3 sm:grid-cols-2"></div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -347,17 +338,15 @@
                 </div>
                 <div>
                     <h2 class="text-2xl font-extrabold text-slate-900">煙棚計算</h2>
-                    <p class="text-base text-slate-600 font-medium">檢獲香煙 Compounding（複合罰款）及應繳關稅評估工具</p>
+                    <p class="text-base text-slate-600 font-medium">檢獲香煙及雪茄 Compounding（複合罰款）與應繳關稅評估工具</p>
                 </div>
             </div>
 
-            <!-- Cigarette Duty & Compounding Fine Calculator Container -->
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
-                
                 <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4">
                     <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
                         <i data-lucide="file-spreadsheet" class="w-6 h-6 text-emerald-600"></i>
-                        檢獲香煙 Compounding 罰款及關稅評估表
+                        檢獲香煙及雪茄 Compounding 罰款與關稅評估表
                     </h3>
                     <button onclick="resetCigCalc()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
@@ -365,20 +354,26 @@
                     </button>
                 </div>
 
-                <!-- Input Controls Grid -->
                 <div class="grid md:grid-cols-3 gap-5">
-                    
-                    <!-- 1. Total Quantity Input (Sticks Only) -->
-                    <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
-                        <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
-                            <i data-lucide="box" class="w-5 h-5 text-emerald-600"></i>
-                            總檢獲香煙支數量 (支)
-                        </label>
-                        <input type="number" id="cig-sticks" min="0" placeholder="例如: 200" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-xl bg-white font-extrabold text-slate-900">
-                        <p class="text-xs text-slate-500 font-semibold leading-relaxed">* 請直接輸入香煙總支數 (Sticks)</p>
+                    <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                        <div class="space-y-1.5">
+                            <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                                <i data-lucide="box" class="w-5 h-5 text-emerald-600"></i>
+                                總檢獲香煙支數量 (支)
+                            </label>
+                            <input type="number" id="cig-sticks" min="0" placeholder="例如: 200" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
+                        </div>
+
+                        <div class="space-y-1.5 border-t border-slate-200 pt-3">
+                            <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                                <i data-lucide="flame" class="w-5 h-5 text-amber-600"></i>
+                                總檢獲雪茄重量 (克 / g)
+                            </label>
+                            <input type="number" id="cigar-grams" min="0" placeholder="例如: 30" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
+                            <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">* 免稅額：19支香煙 或 1支雪茄(≤25克)，如旅客同時攜帶兩者，系統會優先自動減去雪茄免稅優惠25克。司機及駕駛者一律沒有豁免。</p>
+                        </div>
                     </div>
 
-                    <!-- 2. Driver Status Choice -->
                     <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                         <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
                             <i data-lucide="car" class="w-5 h-5 text-emerald-600"></i>
@@ -391,12 +386,11 @@
                             </label>
                             <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-emerald-400 transition-colors">
                                 <input type="radio" name="is-driver" value="no" checked class="w-5 h-5 text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-base font-extrabold text-slate-900">🧳 否 (一般旅客) <span class="text-xs text-emerald-600 font-bold">(享19支免稅)</span></span>
+                                <span class="text-base font-extrabold text-slate-900">🧳 否 (一般旅客) <span class="text-xs text-emerald-600 font-bold">(優先扣減雪茄免稅)</span></span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- 3. Declaration Channel Choice (Default: Undeclared) -->
                     <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                         <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
                             <i data-lucide="shield-alert" class="w-5 h-5 text-emerald-600"></i>
@@ -405,45 +399,40 @@
                         <div class="space-y-2 pt-1">
                             <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-red-400 transition-colors">
                                 <input type="radio" name="cig-declaration" value="undeclared" checked class="w-5 h-5 text-red-600 focus:ring-red-500">
-                                <span class="text-base font-extrabold text-red-800">🟢 未有向海關申報 / 截獲</span>
+                                <span class="text-base font-extrabold text-red-800">🟢 未有向 CNE 申報 / 截獲</span>
                             </label>
                             <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-emerald-400 transition-colors">
                                 <input type="radio" name="cig-declaration" value="declared" class="w-5 h-5 text-emerald-600 focus:ring-emerald-500">
-                                <span class="text-base font-extrabold text-emerald-800">🔴 主動向海關人員申報</span>
+                                <span class="text-base font-extrabold text-emerald-800">🔴 主動向 CNE 人員申報</span>
                             </label>
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Reference Rates Badge -->
                 <div class="bg-emerald-100/80 p-4 rounded-2xl border-2 border-emerald-200 flex flex-wrap items-center justify-between text-base text-emerald-950 gap-3">
                     <div class="flex items-center gap-2 font-extrabold">
                         <i data-lucide="scale" class="w-5 h-5 text-emerald-700"></i>
-                        <span>法定標準稅率（香港海關最新標準）：</span>
+                        <span>法定標準稅率（香港 CNE 最新標準）：</span>
                     </div>
                     <div class="flex flex-wrap items-center gap-4 text-sm md:text-base font-bold">
-                        <span>當前煙稅稅率：<strong>每支 HK$3.306</strong> (每千支 HK$3,306)</span>
-                        <span>定額罰款金額：<strong>HK$5,000</strong></span>
+                        <span>香煙稅率：<strong>每支 HK$3.306</strong></span>
+                        <span>雪茄稅率：<strong>每克 HK$4.258</strong> (每公斤 HK$4,258)</span>
+                        <span>定額罰款：<strong>HK$5,000</strong></span>
                     </div>
                 </div>
 
-                <!-- Calculate Action Button -->
                 <button onclick="calculateCigDuty()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-emerald-200 text-lg flex items-center justify-center gap-2">
                     <i data-lucide="calculator" class="w-6 h-6"></i>
                     <span>即刻計算 Compounding 評估結果</span>
                 </button>
 
-                <!-- Detailed Result Display Box -->
                 <div id="cig-calc-result" class="hidden space-y-5 animate-fadeIn">
-                    
                     <div class="p-6 md:p-8 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white rounded-3xl shadow-xl space-y-6">
                         <div class="flex justify-between items-center border-b border-slate-700 pb-4">
                             <span class="text-base font-extrabold text-emerald-400 tracking-wider uppercase">Compounding 罰款及關稅明細</span>
                             <span id="res-cig-status-badge" class="px-4 py-1.5 rounded-full text-sm font-bold bg-red-500/20 text-red-300 border border-red-500/40">未有申報</span>
                         </div>
 
-                        <!-- Step-by-Step Calculation Breakdown Card (Deep Green Theme) -->
                         <div id="compounding-steps-box" class="bg-emerald-950/80 p-5 rounded-2xl border border-emerald-700/60 text-sm space-y-3">
                             <p class="font-extrabold text-emerald-300 flex items-center gap-2 text-base md:text-lg">
                                 <i data-lucide="list-ordered" class="w-5 h-5 text-emerald-400"></i>
@@ -451,8 +440,10 @@
                             </p>
                             <div class="space-y-2.5 text-slate-100 font-mono text-sm leading-relaxed">
                                 <p class="p-3 bg-slate-900/90 rounded-xl border border-emerald-800/80">
-                                    <strong class="text-emerald-300">· 第一步 (計算應繳稅款)：</strong><br>
-                                    應繳稅款 ＝ (<span id="step1-sticks">0</span>支 ÷ 1,000支) × HK$3,306 ＝ <strong class="text-emerald-400 text-base font-extrabold">HK$ <span id="step1-tax">0</span></strong> <span class="text-emerald-200/80 text-xs">(即每支 HK$3.306)</span>
+                                    <strong class="text-emerald-300">· 第一步 (計算應繳總稅款)：</strong><br>
+                                    香煙稅款 ＝ (<span id="step1-cig-sticks">0</span>支 ÷ 1,000) × HK$3,306 ＝ HK$ <span id="step1-cig-tax">0</span><br>
+                                    雪茄稅款 ＝ (<span id="step1-cigar-grams">0</span>克 ÷ 1,000) × HK$4,258 ＝ HK$ <span id="step1-cigar-tax">0</span><br>
+                                    應繳總稅款 ＝ <strong class="text-emerald-400 text-base font-extrabold">HK$ <span id="step1-tax">0</span></strong>
                                 </p>
                                 <p class="p-3 bg-slate-900/90 rounded-xl border border-emerald-800/80">
                                     <strong class="text-emerald-300">· 第二步 (計算五倍稅額罰款部分)：</strong><br>
@@ -465,33 +456,29 @@
                             </div>
                         </div>
 
-                        <!-- Amount Breakdown Grid (Deep Green Highlighted Tax & 5x Fine) -->
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                             <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
                                 <p class="text-xs text-slate-400 font-bold">總檢獲數量</p>
-                                <p class="text-xl md:text-2xl font-extrabold text-white mt-1"><span id="res-total-sticks">0</span> 支</p>
+                                <p class="text-base font-bold text-white mt-1"><span id="res-total-sticks">0</span> 支煙 / <span id="res-total-cigar-grams">0</span>g 雪茄</p>
                                 <p id="res-driver-tag" class="text-xs text-slate-400 mt-1">一般旅客</p>
                             </div>
                             <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
-                                <p class="text-xs text-slate-400 font-bold">應課稅過額支數</p>
-                                <p class="text-xl md:text-2xl font-extrabold text-amber-400 mt-1"><span id="res-excess-sticks">0</span> 支</p>
-                                <p id="res-allowance-tag" class="text-xs text-slate-400 mt-1">(扣減 19支免稅)</p>
+                                <p class="text-xs text-slate-400 font-bold">應課稅過額支數/克數</p>
+                                <p class="text-base font-bold text-amber-400 mt-1"><span id="res-excess-sticks">0</span> 支煙 / <span id="res-excess-cigar-grams">0</span>g 雪茄</p>
+                                <p id="res-allowance-tag" class="text-xs text-slate-400 mt-1">(優先減去雪茄免稅)</p>
                             </div>
-                            <!-- Deep Green Styled Total Tax -->
                             <div class="bg-emerald-950/90 p-4 rounded-2xl border border-emerald-600/80 shadow-inner">
                                 <p class="text-xs text-emerald-300 font-bold">第一步：總共稅款</p>
                                 <p class="text-xl md:text-2xl font-black text-emerald-400 mt-1">HK$ <span id="res-tax-amount">0</span></p>
-                                <p class="text-xs text-emerald-200/80 mt-1">(@$3.306/支)</p>
+                                <p class="text-xs text-emerald-200/80 mt-1">(香煙+雪茄稅款)</p>
                             </div>
-                            <!-- Deep Green Styled 5x Tax Fine -->
                             <div class="bg-emerald-950/90 p-4 rounded-2xl border border-emerald-600/80 shadow-inner">
                                 <p class="text-xs text-emerald-300 font-bold">第二步：五倍稅額總數</p>
                                 <p class="text-xl md:text-2xl font-black text-emerald-400 mt-1">HK$ <span id="res-fine-5x-amount">0</span></p>
-                                <p class="text-xs text-emerald-200/80 mt-1">(稅款 × 5)</p>
+                                <p class="text-xs text-emerald-200/80 mt-1">(總稅款 × 5)</p>
                             </div>
                         </div>
 
-                        <!-- Single-Line RED Compounding Total Fine Display -->
                         <div class="bg-red-950/90 p-5 rounded-2xl border-2 border-red-500/80 text-center shadow-lg">
                             <p class="text-lg md:text-2xl font-black text-red-400 flex items-center justify-center gap-2 flex-wrap">
                                 <i data-lucide="alert-circle" class="w-7 h-7 text-red-500"></i>
@@ -501,28 +488,22 @@
                         </div>
                     </div>
 
-                    <!-- Customs & Legal Advisory Box -->
-                    <div id="cig-risk-warning" class="p-5 rounded-3xl text-sm md:text-base space-y-2 border-2">
-                        <!-- Dynamic legal advisory content -->
-                    </div>
+                    <div id="cig-risk-warning" class="p-5 rounded-3xl text-sm md:text-base space-y-2 border-2"></div>
 
-                    <!-- Mandatory Official "Helmet" Disclaimer -->
                     <div class="bg-amber-100/80 p-5 rounded-2xl border-2 border-amber-300 text-amber-950 text-sm md:text-base space-y-1.5">
                         <div class="flex items-center gap-2 font-extrabold text-amber-950">
                             <i data-lucide="shield-alert" class="w-6 h-6 text-amber-800"></i>
                             <span class="text-base md:text-lg">🪖 免責條款聲明 (Official Disclaimer / Draft Notice)：</span>
                         </div>
                         <p class="leading-relaxed font-medium">
-                            本網頁所計算之結果僅供參考及初步評估草案（Draft），不具備任何法律約束力。實質應繳稅款金額、Compounding 處罰細則及定額罰款通知書金額，<strong>一律以香港海關稅房（Duty Office）發出之正式稅單／報單及現場海關人員最終裁定為準</strong>。
+                            本網頁所計算之結果僅供參考及初步評估草案（Draft），不具備任何法律約束力。實質應繳稅款金額、Compounding 處罰細則及定額罰款通知書金額，<strong>一律以香港 CNE 稅房（Duty Office）發出之正式稅單／報單及現場 CNE 人員最終裁定為準</strong>。
                         </p>
                     </div>
-
                 </div>
-
             </div>
         </section>
 
-        <!-- ================= PAGE 4: 抽籤模式 (Triple-Mode Selection) ================= -->
+        <!-- ================= PAGE 4: 抽籤模式 ================= -->
         <section id="view-draw" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center space-x-4 bg-purple-100/70 p-5 rounded-2xl border-2 border-purple-200">
                 <div class="p-3 bg-purple-600 text-white rounded-xl">
@@ -534,7 +515,6 @@
                 </div>
             </div>
 
-            <!-- Mode Selector Tabs -->
             <div class="grid grid-cols-3 gap-2 bg-slate-200 p-1.5 rounded-2xl border border-slate-300 text-center font-extrabold text-sm md:text-base">
                 <button id="tab-draw-multi" onclick="switchDrawMode('multi')" class="draw-tab-btn px-2 py-3 rounded-xl active border border-transparent">
                     📋 多人抽籤<br><span class="text-xs font-normal opacity-80">(新年/長假排位)</span>
@@ -547,7 +527,7 @@
                 </button>
             </div>
 
-            <!-- MODE 1: 多人抽籤 (luckydraw.html - Ideal for CNY / Holiday Leave Draw) -->
+            <!-- MODE 1: 多人抽籤 -->
             <div id="draw-mode-multi" class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
                 <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3 flex-wrap gap-2">
                     <div>
@@ -600,7 +580,7 @@
                 <div id="multi-result-area" class="space-y-4 pt-2"></div>
             </div>
 
-            <!-- MODE 2: 畫鬼腳 (ghost.html) -->
+            <!-- MODE 2: 畫鬼腳 -->
             <div id="draw-mode-ghost" class="hidden bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
                 <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
                     <h3 class="text-xl font-extrabold text-amber-900 flex items-center gap-2">
@@ -616,7 +596,6 @@
                     </div>
                 </div>
 
-                <!-- Ghost Setup Inputs -->
                 <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <div>
                         <label class="block font-extrabold text-slate-800 mb-1">📝 參與者名單 (每行一個):</label>
@@ -645,18 +624,16 @@
 
                 <div id="ghost-status-bar" class="text-center font-extrabold text-amber-700 min-h-[1.5em] text-lg">請點擊「生成抽籤圖」</div>
 
-                <!-- Ghost Canvas (腳鏡) Container -->
                 <div class="ghost-canvas-wrapper w-full overflow-x-auto bg-slate-100 border-2 border-slate-300 rounded-2xl p-3 flex justify-center shadow-inner">
                     <canvas id="ghostCanvas"></canvas>
                 </div>
 
-                <!-- Action Button 2: Start Drawing placed directly UNDER the Ghost Canvas (腳鏡下便) -->
                 <div>
                     <button id="ghost-start-btn" onclick="startGhostGame()" disabled class="w-full py-4 bg-red-600 hover:bg-red-700 disabled:bg-slate-300 disabled:text-slate-500 text-white font-black text-xl rounded-2xl shadow-lg transition-all active:scale-95">🚀 2. 開始大抽籤</button>
                 </div>
             </div>
 
-            <!-- MODE 3: 二選一輪盤 (2vs1.html) -->
+            <!-- MODE 3: 二選一輪盤 -->
             <div id="draw-mode-wheel" class="hidden bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
                 <div class="flex items-center justify-between border-b-2 border-slate-100 pb-3">
                     <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
@@ -669,7 +646,6 @@
                     </button>
                 </div>
 
-                <!-- 1. Input Controls & Setup Options (Top Area) -->
                 <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <div>
                         <label class="block font-extrabold text-slate-800 mb-1">幸運兒名單 (每行一個，輸入兩人將啟動黑白對決模式):</label>
@@ -690,39 +666,37 @@
                     <button onclick="resetWheelGame()" class="w-full py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm rounded-xl">↺ 重置設定</button>
                 </div>
 
-                <!-- 2. Rotating Wheel Canvas and Spin Button Directly Below -->
                 <div class="flex flex-col items-center justify-center space-y-5 pt-2">
-                    <!-- Wheel Canvas Container -->
                     <div class="flex flex-col items-center justify-center relative py-2">
                         <div id="wheelPointer" class="wheel-pointer absolute top-0 z-20"></div>
                         <div class="w-72 h-72 md:w-80 md:h-80 relative flex items-center justify-center">
                             <canvas id="wheelCanvas" width="800" height="800" class="w-full h-full rounded-full shadow-2xl border-4 border-white"></canvas>
                         </div>
                     </div>
-
-                    <!-- Spin Button directly underneath the wheel -->
                     <button id="wheelSpinBtn" class="w-full max-w-md py-4 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-black text-xl rounded-2xl shadow-lg transition-all active:scale-95">按住不放 開始旋轉！</button>
                 </div>
             </div>
 
-            <!-- Ghost Overlay Winner Modal -->
-            <div id="ghostOverlay" class="fixed inset-0 bg-slate-950/90 hidden flex-col items-center justify-center p-6 z-50 text-center">
-                <div id="ghostCountdownDisplay" class="text-7xl md:text-9xl font-black text-amber-400 animate-pulse-fast">3</div>
-                <div id="ghostWinnerContent" class="hidden max-w-md w-full space-y-4">
-                    <h3 class="text-2xl font-extrabold text-white">🎉 恭喜以下幸運兒！ 🎉</h3>
-                    <div id="ghostWinnerText" class="text-4xl md:text-5xl font-black text-amber-400 py-3 word-break">???</div>
-                    <div id="ghostWitnessCredit" class="text-base text-slate-300 italic"></div>
-                    <button onclick="closeGhostOverlay()" class="px-8 py-3 bg-transparent border-2 border-white text-white font-extrabold text-lg rounded-2xl">關閉並查看完整路徑</button>
+            <!-- Ghost Overlay Winner Modal (Safe Class-based Control) -->
+            <div id="ghostOverlay" class="fixed inset-0 bg-slate-950/90 hidden flex items-center justify-center p-6 z-50 text-center">
+                <div class="max-w-md w-full space-y-4">
+                    <div id="ghostCountdownDisplay" class="text-7xl md:text-9xl font-black text-amber-400 animate-pulse-fast">3</div>
+                    <div id="ghostWinnerContent" class="hidden space-y-4">
+                        <h3 class="text-2xl font-extrabold text-white">🎉 恭喜以下幸運兒！ 🎉</h3>
+                        <div id="ghostWinnerText" class="text-4xl md:text-5xl font-black text-amber-400 py-3 word-break">???</div>
+                        <div id="ghostWitnessCredit" class="text-base text-slate-300 italic"></div>
+                        <button onclick="closeGhostOverlay()" class="px-8 py-3 bg-transparent border-2 border-white text-white font-extrabold text-lg rounded-2xl hover:bg-white/10 transition-colors">關閉並查看完整路徑</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Wheel Winner Modal -->
+            <!-- Wheel Winner Modal (Safe Class-based Control) -->
             <div id="wheelWinnerModal" class="fixed inset-0 bg-slate-950/70 hidden flex items-center justify-center p-6 z-50">
                 <div class="bg-white p-8 rounded-3xl text-center max-w-sm w-full border-4 border-slate-900 shadow-2xl space-y-4">
                     <h3 class="text-xl font-extrabold text-slate-800">🎉 幸運兒是 🎉</h3>
                     <div id="wheelWinnerText" class="text-4xl font-black text-red-600 py-2">---</div>
                     <div id="wheelWitnessResult" class="text-sm font-bold text-slate-500 italic"></div>
-                    <button onclick="closeWheelModal()" class="w-full py-3 bg-slate-900 text-white font-extrabold rounded-2xl">確認</button>
+                    <button onclick="closeWheelModal()" class="w-full py-3 bg-slate-900 text-white font-extrabold rounded-2xl hover:bg-slate-800 transition-colors">確認</button>
                 </div>
             </div>
         </section>
@@ -739,7 +713,6 @@
                 </div>
             </div>
 
-            <!-- Mode Selection Buttons -->
             <div class="flex flex-wrap justify-center gap-5 py-3">
                 <button id="btn-stay" onclick="selectCrMode('stay')" class="mode-btn w-32 h-32 md:w-40 md:h-40 rounded-full border-3 border-amber-500 bg-white text-slate-900 font-extrabold flex flex-col items-center justify-center text-center p-3 text-sm md:text-base cursor-pointer shadow-md hover:shadow-xl">
                     <i data-lucide="anchor" class="w-8 h-8 mb-1.5 text-amber-600"></i>
@@ -757,13 +730,10 @@
                 </button>
             </div>
 
-            <!-- Display Sentence Box -->
             <div id="cr-display-area" class="hidden bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-md text-center space-y-6 animate-fadeIn">
                 <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-200">
                     <i data-lucide="quote" class="w-8 h-8 text-amber-500 mx-auto mb-3 opacity-80"></i>
-                    <p id="sentence-text" class="text-lg md:text-2xl font-extrabold text-slate-900 leading-relaxed min-h-[80px] flex items-center justify-center">
-                        <!-- Sentence inserted here -->
-                    </p>
+                    <p id="sentence-text" class="text-lg md:text-2xl font-extrabold text-slate-900 leading-relaxed min-h-[80px] flex items-center justify-center"></p>
                 </div>
 
                 <div class="flex flex-wrap justify-center gap-4">
@@ -778,10 +748,31 @@
                 </div>
             </div>
 
-            <!-- Toast Message Component for Copy Success -->
             <div id="toast-msg" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3.5 rounded-full text-sm md:text-base font-extrabold shadow-2xl opacity-0 transition-opacity pointer-events-none z-50 flex items-center gap-2">
                 <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
                 <span id="toast-text">已成功複製到剪貼簿！</span>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 6: CNE AI BOT 對話機械人 (Dify Chatbot 官方嵌入) ================= -->
+        <section id="view-ai" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-gradient-to-r from-blue-100 to-indigo-100 p-5 rounded-2xl border-2 border-indigo-200">
+                <div class="p-3 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-xl shadow-md">
+                    <i data-lucide="bot" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">CNE AI BOT 對話機械人</h2>
+                    <p class="text-base text-slate-600 font-medium">資深 CNE 專家在線解答 • 支援法例查詢與清關計算</p>
+                </div>
+            </div>
+
+            <!-- Dify Chatbot Embedded iFrame Container -->
+            <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[680px]">
+                <iframe
+                    src="https://udify.app/chatbot/8T3166qLrJeeoLUH"
+                    style="width: 100%; height: 680px; border: 0;"
+                    allow="microphone;clipboard-write">
+                </iframe>
             </div>
         </section>
 
@@ -797,61 +788,18 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        try { lucide.createIcons(); } catch(e) {}
 
-        // Daily Slang Quotes Array
         const dailyQuotes = [
-            "襟屌 爛做 矛詐型",
-            "縮骨 算爆 老撚土",
-            "又一day",
-            "舔伙記",
-            "舔毛",
-            "part上part落",
-            "食參",
-            "舔糖",
-            "出part",
-            "行水",
-            "轟",
-            "擺橫",
-            "擺門",
-            "全",
-            "拔水",
-            "開鐘",
-            "剩肉",
-            "開60",
-            "水塘",
-            "放血",
-            "太陽",
-            "月亮",
-            "開OP",
-            "92 77",
-            "five five 58",
-            "返8抖24",
-            "757",
-            "兩早兩晏兩通宵",
-            "返二放一",
-            "半日安",
-            "西麗湖",
-            "孖腸",
-            "地下秩序",
-            "又一日",
-            "搞撚掂",
-            "燒焊",
-            "落去搏",
-            "關人鳩打千秋",
-            "食伙記",
-            "老屎窟",
-            "人板",
-            "瞓醒有",
-            "有餅",
-            "矛餅",
-            "跳2",
-            "剔爆",
-            "追case"
+            "襟屌 爛做 矛詐型", "縮骨 算爆 老撚土", "又一day", "舔伙記", "舔毛",
+            "part上part落", "食參", "舔糖", "出part", "行水", "轟", "擺橫", "擺門",
+            "全", "拔水", "開鐘", "剩肉", "開60", "水塘", "放血", "太陽", "月亮",
+            "開OP", "92 77", "five five 58", "返8抖24", "757", "兩早兩晏兩通宵",
+            "返二放一", "半日安", "西麗湖", "孖腸", "地下秩序", "又一日", "搞撚掂",
+            "燒焊", "落去搏", "關人鳩打千秋", "食伙記", "老屎窟", "人板", "瞓醒有",
+            "有餅", "矛餅", "跳2", "剔爆", "追case"
         ];
 
-        // Randomize Daily Slang Quote on Load
         function initDailyQuote() {
             const quoteTextElem = document.getElementById('daily-quote-text');
             if (quoteTextElem) {
@@ -860,7 +808,6 @@
             }
         }
 
-        // Navigation Controller
         function switchView(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
                 panel.classList.remove('active');
@@ -886,7 +833,6 @@
             }
         }
 
-        // Populate Time Select Dropdowns for Drip Calculator
         function initTimeDropdowns() {
             const startHour = document.getElementById('start-hour');
             const endHour = document.getElementById('end-hour');
@@ -918,7 +864,6 @@
             endMin.value = "00";
         }
 
-        // Reset Drip Calculator
         function resetEquipmentCalc() {
             initTimeDropdowns();
             document.getElementById('staff-count-select').value = "3";
@@ -933,7 +878,6 @@
             return `${h}:${m}`;
         }
 
-        // 行水神器 - Equipment Allocation Time Calculator
         function calculateEquipmentTime() {
             const sh = parseInt(document.getElementById('start-hour').value, 10);
             const sm = parseInt(document.getElementById('start-min').value, 10);
@@ -989,20 +933,24 @@
             document.getElementById('drip-calc-result').classList.remove('hidden');
         }
 
-        // ================= 煙棚計算 Logic (Compounding Formula with HK$3.306 Tax Rate) =================
+        // ================= 煙棚計算 Logic =================
         function resetCigCalc() {
             document.getElementById('cig-sticks').value = '';
+            document.getElementById('cigar-grams').value = '';
             document.querySelector('input[name="is-driver"][value="no"]').checked = true;
             document.querySelector('input[name="cig-declaration"][value="undeclared"]').checked = true;
             document.getElementById('cig-calc-result').classList.add('hidden');
         }
 
         function calculateCigDuty() {
-            const sticksInput = document.getElementById('cig-sticks').value;
-            const totalSticks = parseInt(sticksInput, 10);
+            const sticksStr = document.getElementById('cig-sticks').value;
+            const gramsStr = document.getElementById('cigar-grams').value;
 
-            if (isNaN(totalSticks) || totalSticks <= 0) {
-                showToast('請輸入有效的檢獲香煙總支數量');
+            const totalSticks = parseInt(sticksStr, 10) || 0;
+            const totalCigarGrams = parseFloat(gramsStr) || 0;
+
+            if (totalSticks <= 0 && totalCigarGrams <= 0) {
+                showToast('請輸入有效的檢獲香煙支數或雪茄重量（克）');
                 return;
             }
 
@@ -1012,49 +960,81 @@
             const declRadio = document.querySelector('input[name="cig-declaration"]:checked');
             const isDeclared = declRadio ? (declRadio.value === 'declared') : false;
 
-            const taxRatePer1000 = 3306; // HKD per 1,000 sticks ($3.306 per stick)
-            const fixedFineRate = 5000;   // HKD fixed penalty under Compounding
-            
-            const allowance = isDriver ? 0 : 19;
-            const excessSticks = Math.max(0, totalSticks - allowance);
+            const cigTaxRatePer1000 = 3306;
+            const cigarTaxRatePer1000g = 4258;
+            const fixedFineRate = 5000;
 
-            // Step 1: Duty
-            const taxAmountRaw = (excessSticks / 1000) * taxRatePer1000;
-            const taxAmount = Math.round(taxAmountRaw * 10) / 10;
+            let excessSticks = 0;
+            let excessCigarGrams = 0;
+            let allowanceText = "";
 
-            // Step 2 & 3: Compounding Fine
+            if (isDriver) {
+                excessSticks = totalSticks;
+                excessCigarGrams = totalCigarGrams;
+                allowanceText = "(駕駛員無免稅優惠)";
+            } else {
+                if (totalSticks > 0 && totalCigarGrams <= 0) {
+                    excessSticks = Math.max(0, totalSticks - 19);
+                    excessCigarGrams = 0;
+                    allowanceText = "(扣減 19支香煙免稅)";
+                } else if (totalSticks <= 0 && totalCigarGrams > 0) {
+                    excessSticks = 0;
+                    excessCigarGrams = Math.max(0, totalCigarGrams - 25);
+                    allowanceText = "(扣減 25克雪茄免稅)";
+                } else {
+                    excessSticks = totalSticks;
+                    excessCigarGrams = Math.max(0, totalCigarGrams - 25);
+                    allowanceText = "(優先扣減 25克雪茄免稅)";
+                }
+            }
+
+            const cigTaxRaw = (excessSticks / 1000) * cigTaxRatePer1000;
+            const cigarTaxRaw = (excessCigarGrams / 1000) * cigarTaxRatePer1000g;
+
+            const cigTax = Math.round(cigTaxRaw * 10) / 10;
+            const cigarTax = Math.round(cigarTaxRaw * 10) / 10;
+            const totalTax = Math.round((cigTaxRaw + cigarTaxRaw) * 10) / 10;
+
             let fine5x = 0;
             let compoundingFineTotal = 0;
 
-            if (!isDeclared && excessSticks > 0) {
-                fine5x = Math.round((taxAmountRaw * 5) * 10) / 10;
+            if (!isDeclared && (excessSticks > 0 || excessCigarGrams > 0)) {
+                fine5x = Math.round(((cigTaxRaw + cigarTaxRaw) * 5) * 10) / 10;
                 compoundingFineTotal = fixedFineRate + fine5x;
             } else if (isDeclared) {
                 compoundingFineTotal = 0;
             }
 
-            document.getElementById('step1-sticks').innerText = excessSticks;
-            document.getElementById('step1-tax').innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
-            document.getElementById('step2-tax').innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step1-cig-sticks').innerText = excessSticks;
+            document.getElementById('step1-cig-tax').innerText = cigTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step1-cigar-grams').innerText = excessCigarGrams;
+            document.getElementById('step1-cigar-tax').innerText = cigarTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step1-tax').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+
+            document.getElementById('step2-tax').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('step2-fine5x').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+
             document.getElementById('step3-fine5x').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('step3-totalfine').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
 
             const stepsBox = document.getElementById('compounding-steps-box');
-            if (!isDeclared && excessSticks > 0) {
+            if (!isDeclared && (excessSticks > 0 || excessCigarGrams > 0)) {
                 stepsBox.classList.remove('hidden');
             } else {
                 stepsBox.classList.add('hidden');
             }
 
             document.getElementById('res-total-sticks').innerText = totalSticks;
+            document.getElementById('res-total-cigar-grams').innerText = totalCigarGrams;
             document.getElementById('res-excess-sticks').innerText = excessSticks;
-            document.getElementById('res-tax-amount').innerText = taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('res-excess-cigar-grams').innerText = excessCigarGrams;
+
+            document.getElementById('res-tax-amount').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('res-fine-5x-amount').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('res-compounding-total-display').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
 
             document.getElementById('res-driver-tag').innerText = isDriver ? '🚗 跨境駕駛員' : '🧳 一般旅客';
-            document.getElementById('res-allowance-tag').innerText = isDriver ? '(駕駛員無免稅額)' : '(扣減 19支免稅)';
+            document.getElementById('res-allowance-tag').innerText = allowanceText;
 
             const badge = document.getElementById('res-cig-status-badge');
             if (isDeclared) {
@@ -1066,40 +1046,25 @@
             }
 
             const riskBox = document.getElementById('cig-risk-warning');
-            
-            if (excessSticks === 0) {
+            if (excessSticks === 0 && excessCigarGrams === 0) {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-emerald-50 border-emerald-200 text-emerald-950';
-                riskBox.innerHTML = `
-                    <p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i> 符合法定免稅條件</p>
-                    <p class="font-medium">攜帶香煙總數符合法定免稅條件，可直接經綠色通道入境，免受任何科稅或處罰。</p>
-                `;
+                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-emerald-600"></i> 符合法定免稅條件</p><p class="font-medium">攜帶香煙／雪茄數量符合法定免稅條件，可直接經綠色通道入境，免受任何科稅或處罰。</p>`;
             } else if (isDeclared) {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-blue-50 border-blue-200 text-blue-950';
-                riskBox.innerHTML = `
-                    <p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i> 合規申報，無刑事處罰</p>
-                    <p class="font-medium">旅客／駕駛員已於紅色通道向海關人員作出主動申報。繳清應繳煙稅（HK$ ${taxAmount.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}）後即可合法攜帶相關物品入境。</p>
-                `;
-            } else if (!isDeclared && totalSticks <= 1000) {
+                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i> 合規申報，無刑事處罰</p><p class="font-medium">旅客／駕駛員已於紅色通道向 CNE 人員作出主動申報。繳清應繳總煙稅（HK$ ${totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}）後即可合法攜帶相關物品入境。</p>`;
+            } else if (!isDeclared && (totalSticks <= 1000 && totalCigarGrams <= 1000)) {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-amber-50 border-amber-200 text-amber-950';
-                riskBox.innerHTML = `
-                    <p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i> 未有申報處罰程序（Compounding 複合罰款）</p>
-                    <p class="font-medium">因未有向海關人員作出申報，海關可根據法例進行 Compounding 處罰程序，發出定額罰款通知書。繳付 Compounding 總罰款 <strong>HK$ ${compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</strong>（包含 $5,000 定額罰款及 5 倍稅額罰款）後即可免於刑事起訴。</p>
-                `;
+                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i> 未有申報處罰程序（Compounding 複合罰款）</p><p class="font-medium">因未有向 CNE 人員作出申報，CNE 可根據法例進行 Compounding 處罰程序，發出定額罰款通知書。繳付 Compounding 總罰款 <strong>HK$ ${compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</strong> 後即可免於刑事起訴。</p>`;
             } else {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-red-50 border-red-200 text-red-950';
-                riskBox.innerHTML = `
-                    <p class="font-extrabold text-base md:text-lg text-red-700 flex items-center gap-2"><i data-lucide="siren" class="w-5 h-5 text-red-600"></i> ⚠️ 嚴重違法警告（移交刑事檢控）</p>
-                    <p class="font-bold">檢獲香煙數量極大（超過 1,000 支）或存在藏匿蓄意逃稅意圖：</p>
-                    <p class="leading-relaxed font-medium">海關有權拒絕適用 Compounding 現場罰款程序，將直接提起刑事檢控，控告「管有未完稅香煙」及「未有向海關人員作出申報」兩項罪名，移交法院審理。一經定罪，最高可被判罰款 <strong>HK$1,000,000</strong> 及 <strong>監禁 2 年</strong>，並留有刑事案底！</p>
-                `;
+                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg text-red-700 flex items-center gap-2"><i data-lucide="siren" class="w-5 h-5 text-red-600"></i> ⚠️ 嚴重違法警告（移交刑事檢控）</p><p class="font-bold">檢獲煙草數量極大或存在藏匿蓄意逃稅意圖：</p><p class="leading-relaxed font-medium">CNE 有權拒絕適用 Compounding 現場罰款程序，將直接提起刑事檢控，控告「管有未完稅煙草」及「未有向 CNE 人員作出申報」兩項罪名，移交法院審理。一經定罪，最高可被判罰款 <strong>HK$1,000,000</strong> 及 <strong>監禁 2 年</strong>，並留有刑事案底！</p>`;
             }
 
-            lucide.createIcons();
+            try { lucide.createIcons(); } catch(e) {}
             document.getElementById('cig-calc-result').classList.remove('hidden');
         }
 
         // ================= 抽籤模式 TRIPLE-MODE LOGIC =================
-
         function switchDrawMode(mode) {
             document.querySelectorAll('.draw-tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`tab-draw-${mode}`).classList.add('active');
@@ -1117,16 +1082,12 @@
             }
         }
 
-        // --- MODE 1: 多人抽籤 (luckydraw.html) ---
         function loadCnyPreset() {
             document.getElementById('multi-witness').value = 'Charge Nurse (CR)';
             document.getElementById('multi-quota').value = '3';
             document.getElementById('multi-rounds').value = '1';
             document.getElementById('multi-names').value = "A\nB\nC\nD\nE\nF\nG\nH";
-            
-            // Set default date to future 2027 Lunar New Year Day 1 (2027-02-06 丁未年正月初一)
             document.getElementById('multi-date').value = '2027-02-06';
-            
             showToast("已載入新年抽假預設（2027年初一 2027-02-06）！");
         }
 
@@ -1139,16 +1100,8 @@
             
             let nameList = namesText.split('\n').map(name => name.trim()).filter(name => name !== '');
 
-            if (nameList.length === 0) {
-                showToast("請輸入抽籤名單！");
-                return;
-            }
-            if (isNaN(quota) || quota < 1) {
-                showToast("請輸入正確的可放假人數！");
-                return;
-            }
-            if (isNaN(rounds) || rounds < 1) {
-                showToast("請輸入抽籤次數！");
+            if (nameList.length === 0 || isNaN(quota) || quota < 1 || isNaN(rounds) || rounds < 1) {
+                showToast("請檢查名單、名額與次數輸入！");
                 return;
             }
 
@@ -1176,12 +1129,10 @@
                     const rank = index + 1;
                     const isWinner = rank <= quota;
                     const bgClass = isWinner ? 'bg-emerald-50 border-l-4 border-emerald-500 text-emerald-950 font-extrabold' : 'bg-white border border-slate-200 text-slate-500 font-bold';
-                    const statusText = isWinner ? '🎉 中籤 (可放假)' : '候補';
-
                     htmlContent += `
                         <div class="flex justify-between items-center p-3 rounded-xl text-sm ${bgClass}">
                             <span><span class="font-black text-slate-700 mr-2">#${rank}</span> ${person}</span>
-                            <span class="text-xs">${statusText}</span>
+                            <span class="text-xs">${isWinner ? '🎉 中籤 (可放假)' : '候補'}</span>
                         </div>
                     `;
                 });
@@ -1189,7 +1140,6 @@
                 htmlContent += `</div>`;
                 resultArea.innerHTML += htmlContent;
             }
-
             resultArea.scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -1209,7 +1159,7 @@
             document.getElementById('multi-date').valueAsDate = new Date();
         }
 
-        // --- MODE 2: 畫鬼腳 (ghost.html - Perfect Color Mixing & Layout) ---
+        // --- MODE 2: 畫鬼腳 ---
         let ghostParticipants = [];
         let ghostBridges = [];
         let ghostResults = [];
@@ -1227,18 +1177,9 @@
             document.getElementById('ghost-witness-name').value = "";
             document.getElementById('ghost-witness-count').value = "0";
             document.getElementById('ghost-integrity-badge').innerHTML = "🛡️ 等待生成數據...";
-            
-            const statusBar = document.getElementById('ghost-status-bar');
-            statusBar.textContent = "請點擊「生成抽籤圖」";
-            statusBar.style.color = "#b45309";
-            
+            document.getElementById('ghost-status-bar').textContent = "請點擊「生成抽籤圖」";
             document.getElementById('ghost-start-btn').disabled = true;
-
             ghostIsRunning = false;
-            ghostParticipants = [];
-            ghostBridges = [];
-            ghostResults = [];
-
             const ghostCanvas = document.getElementById('ghostCanvas');
             if (ghostCanvas) {
                 const ctx = ghostCanvas.getContext('2d');
@@ -1249,7 +1190,6 @@
 
         function initGhostGame(isResize = false) {
             if (ghostIsRunning) return;
-
             const ghostCanvas = document.getElementById('ghostCanvas');
             if (!ghostCanvas) return;
             const ctx = ghostCanvas.getContext('2d');
@@ -1267,8 +1207,7 @@
 
             const containerWidth = wrapper ? wrapper.clientWidth - 20 : 600;
             let idealWidth = containerWidth / ghostParticipants.length;
-            const minColumnWidth = 60;
-            ghostColumnWidth = (idealWidth < minColumnWidth) ? minColumnWidth : idealWidth;
+            ghostColumnWidth = (idealWidth < 60) ? 60 : idealWidth;
 
             ghostCanvas.width = Math.max(containerWidth, ghostParticipants.length * ghostColumnWidth);
             ghostCanvas.height = ghostHeight + ghostTopMargin + ghostBottomMargin;
@@ -1276,28 +1215,17 @@
             if (!isResize) {
                 let isValid = false;
                 let attempts = 0;
-                
-                document.getElementById('ghost-status-bar').textContent = "正在生成並檢測邏輯...";
-                
                 while (!isValid && attempts < 50) {
                     generateGhostBridgesSafely();
                     generateGhostResults(winnerCountInput);
                     isValid = checkGhostIntegrity();
                     attempts++;
                 }
-
-                if (!isValid) {
-                    showToast("生成失敗：無法建立無衝突路徑，請再試。");
-                    return;
-                }
-
                 document.getElementById('ghost-integrity-badge').innerHTML = "✅ 系統檢測通過：路徑無衝突";
                 const statusBar = document.getElementById('ghost-status-bar');
                 statusBar.textContent = `圖表生成完畢！見證人：${ghostWitnessName}`;
-                statusBar.style.color = "#1e293b";
                 document.getElementById('ghost-start-btn').disabled = false;
             }
-
             drawGhostStaticMap(ghostCanvas, ctx);
         }
 
@@ -1313,10 +1241,7 @@
                 let y = Math.floor(Math.random() * (ghostHeight - 30)) + 15;
                 let conflict = ghostBridges.some(b => {
                     let yDist = Math.abs(b.y - y);
-                    if (b.col === col && yDist < 20) return true;
-                    if (b.col === col - 1 && yDist < 20) return true;
-                    if (b.col === col + 1 && yDist < 20) return true;
-                    return false;
+                    return (b.col === col || b.col === col - 1 || b.col === col + 1) && yDist < 20;
                 });
                 if (!conflict) ghostBridges.push({ col, y });
             }
@@ -1362,10 +1287,8 @@
         function drawGhostStaticMap(ghostCanvas, ctx) {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, ghostCanvas.width, ghostCanvas.height);
-
             ctx.globalCompositeOperation = 'source-over';
             ctx.globalAlpha = 1.0;
-
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.lineWidth = 2;
@@ -1378,21 +1301,17 @@
 
             for (let i = 0; i < ghostParticipants.length; i++) {
                 let x = xOffset + i * ghostColumnWidth + ghostColumnWidth / 2;
-                
                 ctx.fillStyle = "#0f172a";
                 ctx.font = "bold 16px sans-serif";
                 ctx.fillText(ghostParticipants[i], x, 20);
-                
                 ctx.fillStyle = ghostColors[i % ghostColors.length];
                 ctx.beginPath();
                 ctx.arc(x, 35, 5, 0, Math.PI*2);
                 ctx.fill();
-
                 ctx.beginPath();
                 ctx.moveTo(x, ghostTopMargin);
                 ctx.lineTo(x, ghostCanvas.height - ghostBottomMargin);
                 ctx.stroke();
-
                 drawGhostMysteryBox(ctx, ghostCanvas, x, "❓", null);
             }
 
@@ -1411,7 +1330,6 @@
             ctx.save();
             ctx.globalCompositeOperation = 'source-over';
             ctx.globalAlpha = 1.0;
-
             let boxY = ghostCanvas.height - 35;
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(x - 24, boxY - 24, 48, 48);
@@ -1426,7 +1344,6 @@
                 ctx.beginPath();
                 ctx.roundRect(x - 20, boxY - 20, 40, 40, 8);
                 ctx.stroke();
-
                 ctx.font = "bold 24px sans-serif";
                 ctx.fillStyle = color;
                 ctx.fillText(text, x, boxY);
@@ -1448,9 +1365,9 @@
             const countdownDisplay = document.getElementById('ghostCountdownDisplay');
             const winnerContent = document.getElementById('ghostWinnerContent');
 
-            overlay.style.display = 'flex';
-            countdownDisplay.style.display = 'block';
-            winnerContent.style.display = 'none';
+            overlay.classList.remove('hidden');
+            countdownDisplay.classList.remove('hidden');
+            winnerContent.classList.add('hidden');
 
             for (let k = 3; k > 0; k--) {
                 countdownDisplay.textContent = k;
@@ -1458,7 +1375,7 @@
             }
             countdownDisplay.textContent = "GO!";
             await new Promise(r => setTimeout(r, 500));
-            overlay.style.display = 'none';
+            overlay.classList.add('hidden');
 
             let xOffset = 0;
             if (ghostCanvas.width > ghostParticipants.length * ghostColumnWidth) {
@@ -1472,20 +1389,14 @@
                 statusBar.style.color = color;
 
                 let endColIndex = await animateGhostPath(ghostCanvas, ctx, i, color, xOffset);
-                
                 let finalRes = ghostResults[endColIndex];
                 let endX = xOffset + endColIndex * ghostColumnWidth + ghostColumnWidth / 2;
                 
                 drawGhostMysteryBox(ctx, ghostCanvas, endX, finalRes, color);
-
-                if (finalRes === "🏆") {
-                    foundWinners.push(ghostParticipants[i]);
-                }
-                
+                if (finalRes === "🏆") foundWinners.push(ghostParticipants[i]);
                 if (foundWinners.length >= totalWinnersNeeded) break;
                 await new Promise(r => setTimeout(r, 200));
             }
-            
             showAllGhostWinners(foundWinners);
         }
 
@@ -1500,14 +1411,12 @@
                     let nextBridge = null;
                     let dir = 0;
                     let logicY = currentY - ghostTopMargin;
-
                     for (let b of ghostBridges) {
                         if (b.y > logicY) {
                             if (b.col === logicCol) { nextBridge = b; dir = 1; break; }
                             if (b.col === logicCol - 1) { nextBridge = b; dir = -1; break; }
                         }
                     }
-
                     if (nextBridge) {
                         let bridgeVisualY = ghostTopMargin + nextBridge.y;
                         path.push({x: xOffset + logicCol * ghostColumnWidth + ghostColumnWidth / 2, y: bridgeVisualY});
@@ -1523,7 +1432,6 @@
                 let idx = 0;
                 let currPos = {...path[0]};
                 const speed = 4;
-                
                 ctx.lineWidth = 7;
                 ctx.lineCap = "round";
                 ctx.lineJoin = "round";
@@ -1560,12 +1468,11 @@
 
         function showAllGhostWinners(winnersList) {
             let winnersString = winnersList.length === 0 ? "無人中獎" : winnersList.join(" , ");
-
             setTimeout(() => {
                 const overlay = document.getElementById('ghostOverlay');
-                overlay.style.display = 'flex';
-                document.getElementById('ghostCountdownDisplay').style.display = 'none';
-                document.getElementById('ghostWinnerContent').style.display = 'block';
+                overlay.classList.remove('hidden');
+                document.getElementById('ghostCountdownDisplay').classList.add('hidden');
+                document.getElementById('ghostWinnerContent').classList.remove('hidden');
                 document.getElementById('ghostWinnerText').textContent = winnersString;
                 document.getElementById('ghostWitnessCredit').textContent = `公正見證人: ${ghostWitnessName}`;
                 
@@ -1578,10 +1485,10 @@
         }
 
         function closeGhostOverlay() {
-            document.getElementById('ghostOverlay').style.display = 'none';
+            document.getElementById('ghostOverlay').classList.add('hidden');
         }
 
-        // --- MODE 3: 二選一輪盤 (2vs1.html) ---
+        // --- MODE 3: 二選一輪盤 ---
         let wheelRawNames = [];
         let wheelDisplayNames = [];
         let wheelDisplayColors = [];
@@ -1597,7 +1504,6 @@
         function initWheel() {
             const spinBtn = document.getElementById('wheelSpinBtn');
             const namesInput = document.getElementById('wheel-names');
-
             if (!spinBtn || !namesInput) return;
 
             namesInput.removeEventListener('input', updateWheel);
@@ -1622,7 +1528,6 @@
             document.getElementById('wheel-names').value = "A\nB";
             document.getElementById('wheel-witness').value = "";
             document.getElementById('wheel-duration').value = "5";
-            
             wheelSpeed = 0;
             wheelCurrentAngle = 0;
             wheelIsHolding = false;
@@ -1630,7 +1535,6 @@
             const spinBtn = document.getElementById('wheelSpinBtn');
             spinBtn.disabled = false;
             spinBtn.innerText = "按住不放 開始旋轉！";
-
             updateWheel();
         }
 
@@ -1641,13 +1545,11 @@
             
             wheelDisplayNames = [];
             wheelDisplayColors = [];
-
             const pointer = document.getElementById('wheelPointer');
 
             if (wheelRawNames.length === 2) {
                 if (pointer) pointer.classList.add('gold');
-                const totalSegments = 18;
-                for (let i = 0; i < totalSegments; i++) {
+                for (let i = 0; i < 18; i++) {
                     wheelDisplayNames.push(wheelRawNames[i % 2]);
                     wheelDisplayColors.push(i % 2 === 0 ? '#2d3436' : '#ffffff');
                 }
@@ -1658,7 +1560,6 @@
                     wheelDisplayColors.push(rainbowColors[i % rainbowColors.length]);
                 });
             }
-            
             wheelArc = Math.PI * 2 / wheelDisplayNames.length;
             drawWheel();
         }
@@ -1672,7 +1573,6 @@
             const radius = canvas.width / 2 - 20;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.beginPath();
             ctx.arc(centerX, centerY, radius + 10, 0, Math.PI * 2);
             ctx.fillStyle = '#ffffff';
@@ -1686,7 +1586,6 @@
             wheelDisplayNames.forEach((name, i) => {
                 const angle = wheelCurrentAngle + i * wheelArc;
                 const bgColor = wheelDisplayColors[i];
-                
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, angle, angle + wheelArc);
@@ -1698,19 +1597,8 @@
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + wheelArc / 2);
                 ctx.textAlign = "right";
-                
-                if (bgColor === '#ffffff') {
-                    ctx.fillStyle = "#000000";
-                    ctx.shadowBlur = 0;
-                } else {
-                    ctx.fillStyle = "#ffffff";
-                    ctx.shadowColor = "rgba(0,0,0,0.5)";
-                    ctx.shadowBlur = 4;
-                }
-                
-                const fontSize = wheelDisplayNames.length > 10 ? 28 : 36;
-                ctx.font = `bold ${fontSize}px sans-serif`;
-                
+                ctx.fillStyle = bgColor === '#ffffff' ? "#000000" : "#ffffff";
+                ctx.font = `bold ${wheelDisplayNames.length > 10 ? 28 : 36}px sans-serif`;
                 ctx.fillText(name, radius - 40, 10);
                 ctx.restore();
             });
@@ -1720,8 +1608,7 @@
             if (wheelIsStopping && wheelSpeed > 0.01) return;
             wheelIsHolding = true;
             wheelIsStopping = false;
-            const spinBtn = document.getElementById('wheelSpinBtn');
-            spinBtn.innerText = "轉動中... 放手即停";
+            document.getElementById('wheelSpinBtn').innerText = "轉動中... 放手即停";
         }
 
         function stopWheelHolding() {
@@ -1733,14 +1620,13 @@
             spinBtn.disabled = true;
 
             let duration = parseFloat(document.getElementById('wheel-duration').value) || 5;
-            if(duration < 1) duration = 1;
+            if (duration < 1) duration = 1;
             wheelFriction = Math.pow(0.001, 1 / (duration * 60));
         }
 
         function wheelAnimationLoop() {
             if (wheelIsHolding) {
-                wheelSpeed = wheelSpeed + (wheelMaxSpeed - wheelSpeed) * 0.05;
-                wheelSpeed += (Math.random() - 0.5) * 0.005;
+                wheelSpeed = wheelSpeed + (wheelMaxSpeed - wheelSpeed) * 0.05 + (Math.random() - 0.5) * 0.005;
             } else if (wheelIsStopping) {
                 wheelSpeed *= wheelFriction;
                 if (wheelSpeed < 0.0005) {
@@ -1762,12 +1648,10 @@
             let degrees = (normalizedAngle * 180 / Math.PI) + 90;
             let arcd = wheelArc * 180 / Math.PI;
             let index = Math.floor((360 - (degrees % 360)) / arcd);
-            
             index = (wheelDisplayNames.length + index) % wheelDisplayNames.length;
 
             const winner = wheelDisplayNames[index];
             const witness = document.getElementById('wheel-witness').value || "（無）";
-            
             document.getElementById('wheelWinnerText').innerText = winner;
             document.getElementById('wheelWitnessResult').innerText = "見證人: " + witness;
             document.getElementById('wheelWinnerModal').classList.remove('hidden');
@@ -1784,36 +1668,19 @@
                 "本人對現行工作非常滿意，組內氛圍和諧；建議推行無紙化辦公，將行政紀錄數位化，釋放前線執法人力。",
                 "目前崗位發揮穩定，團隊合作無間；建議引入 AI 智能聊天機械人處理查詢，分擔前線人員行政諮詢壓力。",
                 "本人對現行工作安排滿意；建議建立最佳實踐共享平台，推廣優秀工作流程，提升部門專業與標準化。",
-                "對現職表現平穩感滿意；建議增設身心健康資訊站，定期分享紓壓技巧與健康資訊，關顧同僚福祉。",
-                "本人對現行工作非常滿意；建議推動「電子化口岸管理系統」，實時監控流量，自動觸發人手增援機制。",
-                "團隊溝通有效，效率理想；建議推行電子化執法通知書，提升對公眾服務效率，同時簡化內部存檔程序。",
-                "目前崗位發揮穩定；建議舉辦職業倦怠工作坊，關注情緒健康並提供輔導資源，營造快樂工作文化。",
-                "團隊氛圍和諧，合作無間；建議建立組內感謝機制，表揚優秀團隊協作，進一步激發正面工作能量。",
-                "本人對現行工作非常滿意；願與全體同事齊心協力，守護香港繁榮，以不懈努力回饋社會各界期望。"
+                "對現職表現平穩感滿意；建議增設身心健康資訊站，定期分享紓壓技巧與健康資訊，關顧同僚福祉。"
             ],
             move: [
                 "本人積極尋求突破，盼回饋部門；建議深化對國安法細則的理解，嚴防禁運品流入，堅守守門人角色。",
                 "願服從部門適當調派；建議優化風險偵測系統，減少對低風險旅客的干擾，在執法與貿易便利間取得平衡。",
                 "本人學習意欲極強，願意接受挑戰；建議設立科技創新激勵機制，鼓勵同事提出自動化方案，優化執法水平。",
-                "願服從調派，於不同崗位磨練；建議舉辦模擬法庭演練，提升人員出庭作證應變力，展現專業執法形象。",
-                "渴望接觸不同範疇提升專業；建議舉辦跨組別法律分享會，交流不同範疇的執法心得，強化整體法律水平。",
-                "配合部門發展，樂意嘗試新崗位；建議引入穿戴式科技，提升在口岸流動執法的應變能力與溝通效率。",
-                "本人積極尋求突破提升專業；將法治精神內化為準則，在每宗個案體現程序公義，無愧於海關制服。",
-                "願服從部門調派回饋社會；積極參與廉政講座，時刻警惕權力行使邊界，確保執法行為公平公正。",
-                "配合部門規劃嘗試新挑戰；期許未來一年帶領團隊在打擊私煙或毒品範疇取得突破，為社會貢獻力量。",
-                "本人學習意欲極強；保持終身學習熱誠，迎接大時代下的執法挑戰，將個人成長與海關願景緊密融合。"
+                "願服從調派，於不同崗位磨練；建議舉辦模擬法庭演練，提升人員出庭作證應變力，展現專業執法形象。"
             ],
             health: [
                 "團隊溝通有效，效率理想；建議推行同僚友導計劃，由資深同事分享調適壓力心得，建立互助文化。",
                 "本年度工作進展順利，與同事協作默契；維持良好體格與運動習慣，以最佳狀態應對高強度執法任務。",
                 "現時工作挑戰適中，同事互相扶持；積極回應市民對民生物資走私的關注，採取專項行動，維護供應穩定。",
-                "過去一年發揮穩定，感受團隊支援；建議增加壓力管理課程，協助人員在高壓環境下維持心靈健康。",
-                "配合部門規劃，樂意嘗試調動；建議增加崗位輪換機會，獲取多元執法經驗，拓寬專業視野與靈活性。",
-                "持續追求卓越，願不斷成長；關注人員休息質量，建議優化休息室設施，確保同僚在執勤間能充分休憩。",
-                "秉持初心執行任務；實踐健康生活方式，平衡工作與家庭，確保長期鬥志，為部門發展貢獻持久力量。",
-                "感謝上司指導；建議傳統舉辦跨組別聯誼，增進信任，減少行政溝通成本，提升整體工作愉悅度。",
-                "團隊氛圍和諧，執行力強；建議優化查驗室通風與環境，提升執法效率之餘亦顧及前線與被查驗者感受。",
-                "感謝現時崗位提供的鍛鍊；期望參與科技創新實驗室，測試新興科技在搜查中的應用，提升執法現代化。"
+                "過去一年發揮穩定，感受團隊支援；建議增加壓力管理課程，協助人員在高壓環境下維持心靈健康。"
             ]
         };
 
@@ -1821,11 +1688,9 @@
 
         function selectCrMode(mode) {
             currentCrMode = mode;
-            
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById('btn-' + mode);
             if (activeBtn) activeBtn.classList.add('active');
-
             document.getElementById('cr-display-area').classList.remove('hidden');
             refreshSentence();
         }
@@ -1834,15 +1699,12 @@
             if (!currentCrMode || !crQuotesData[currentCrMode]) return;
             const sentences = crQuotesData[currentCrMode];
             const randomIndex = Math.floor(Math.random() * sentences.length);
-            
-            const displayElem = document.getElementById('sentence-text');
-            displayElem.innerText = sentences[randomIndex];
+            document.getElementById('sentence-text').innerText = sentences[randomIndex];
         }
 
         function copyCrSentence() {
             const text = document.getElementById('sentence-text').innerText;
             if (!text) return;
-
             const textArea = document.createElement("textarea");
             textArea.value = text;
             document.body.appendChild(textArea);
@@ -1851,7 +1713,7 @@
                 document.execCommand('copy');
                 showToast('金句已成功複製到剪貼簿！');
             } catch (err) {
-                showToast('複製失敗，請手動選取文字');
+                showToast('複製失敗');
             }
             document.body.removeChild(textArea);
         }
@@ -1868,7 +1730,6 @@
             }, 2500);
         }
 
-        // On Page Load Initialization
         window.addEventListener('DOMContentLoaded', () => {
             initTimeDropdowns();
             initDailyQuote();
