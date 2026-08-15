@@ -111,11 +111,11 @@
 
         <!-- ================= PAGE 1: HOME DASHBOARD ================= -->
         <section id="view-home" class="view-panel active space-y-6">
-            <!-- Banner with Dynamic Daily Slang Quote -->
-            <div class="bg-gradient-to-r from-teal-700 to-emerald-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden space-y-3">
+            <!-- Banner with Premium Deep Emerald Blue Gradient -->
+            <div class="bg-gradient-to-r from-teal-800 via-emerald-800 to-cyan-900 border border-teal-600/30 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden space-y-3">
                 <div class="relative z-10 space-y-2">
-                    <span class="inline-block bg-white/20 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-50">每日更新 • 護理智慧</span>
-                    <h2 class="text-2xl md:text-3xl font-extrabold">歡迎來到 CNE日常 🛠️</h2>
+                    <span class="inline-block bg-teal-400/20 border border-teal-300/30 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-200 shadow-inner">每日更新 • 護理智慧</span>
+                    <h2 class="text-2xl md:text-3xl font-black tracking-wide text-white drop-shadow-sm">歡迎來到 CNE日常 🛠️</h2>
                     
                     <!-- Daily Quote Box -->
                     <div class="pt-1">
@@ -131,102 +131,122 @@
                 <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
             </div>
 
-            <!-- Core Tools Grid (Quad Card) -->
+            <!-- Core Tools Grid (Symmetrical 6-Card Grid with Custom Gradients) -->
             <div>
                 <h3 class="text-base font-extrabold text-slate-800 mb-3 flex items-center gap-2">
                     <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
                     核心項目選單
                 </h3>
-                <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
-                    <!-- Card 1: 行水神器 -->
-                    <div onclick="switchView('drip')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                    <!-- Card 1: 行水神器 (白色銀色漸變) -->
+                    <div onclick="switchView('drip')" class="bg-gradient-to-br from-white via-slate-50 to-slate-200 rounded-2xl p-5 border border-slate-300 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-slate-900">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 rounded-xl bg-slate-800 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
                                 <i data-lucide="droplets" class="w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">行水神器</h4>
-                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">設定時間與 2-6 人數，直接試算人員 A、B、C... 之整理裝備時間區段。</p>
+                                <h4 class="text-lg font-black text-slate-900">行水神器</h4>
+                                <p class="text-xs text-slate-600 mt-1 line-clamp-2 font-medium">設定時間與 2-6 人數，直接試算人員 A、B、C... 之整理裝備時間區段。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-blue-700 font-extrabold">
+                        <div class="mt-4 pt-3 border-t border-slate-300/70 flex items-center justify-between text-xs text-slate-800 font-black">
                             <span>進入功能</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
-                    <!-- Card 2: 煙棚計算 -->
-                    <div onclick="switchView('respiratory')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                    <!-- Card 2: 煙棚計算 (淺藍與藍色漸變) -->
+                    <div onclick="switchView('respiratory')" class="bg-gradient-to-br from-sky-500 via-blue-600 to-blue-700 rounded-2xl p-5 border border-blue-400 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-sky-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
                                 <i data-lucide="flame" class="w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">煙棚計算</h4>
-                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">未申報香煙/雪茄 Compounding 複合罰款、駕駛員條例與關稅評估工具。</p>
+                                <h4 class="text-lg font-black text-white">煙棚計算</h4>
+                                <p class="text-xs text-sky-100 mt-1 line-clamp-2 font-medium">未申報香煙/雪茄 Compounding 複合罰款、駕駛員條例與關稅評估工具。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-emerald-700 font-extrabold">
+                        <div class="mt-4 pt-3 border-t border-blue-400/60 flex items-center justify-between text-xs text-sky-100 font-extrabold">
                             <span>進入計算</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
-                    <!-- Card 3: 抽籤模式 -->
-                    <div onclick="switchView('draw')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                    <!-- Card 3: 抽籤模式 (淺淺綠與淺綠漸變) -->
+                    <div onclick="switchView('draw')" class="bg-gradient-to-br from-emerald-100 via-green-100 to-emerald-200 rounded-2xl p-5 border border-emerald-300/80 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-emerald-950">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
                                 <i data-lucide="dices" class="w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">抽籤模式</h4>
-                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">推薦：新年/長假期同事抽假排位（多人綜合）、畫鬼腳視覺版、二選一輪盤。</p>
+                                <h4 class="text-lg font-black text-emerald-950">抽籤模式</h4>
+                                <p class="text-xs text-emerald-800 mt-1 line-clamp-2 font-bold opacity-90">推薦：新年/長假期同事抽假排位（多人綜合）、畫鬼腳視覺版、二選一輪盤。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-purple-700 font-extrabold">
+                        <div class="mt-4 pt-3 border-t border-emerald-300/80 flex items-center justify-between text-xs text-emerald-900 font-black">
                             <span>選擇模式</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
-                    <!-- Card 4: CR金句 -->
-                    <div onclick="switchView('quotes')" class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all cursor-pointer group flex flex-col justify-between">
+                    <!-- Card 4: CR金句 (淺黃與淺橙色漸變) -->
+                    <div onclick="switchView('quotes')" class="bg-gradient-to-br from-amber-200 via-amber-300 to-orange-400 rounded-2xl p-5 border border-amber-300 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-amber-950">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div class="w-12 h-12 rounded-xl bg-amber-900 text-amber-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
                                 <i data-lucide="quote" class="w-6 h-6"></i>
                             </div>
                             <div>
-                                <h4 class="text-lg font-bold text-slate-900 group-hover:text-teal-700 transition-colors">C R 金句 100</h4>
-                                <p class="text-xs text-slate-500 mt-1 line-clamp-2">精選穩定型、求進型、健康型三大意向報告評語金句。</p>
+                                <h4 class="text-lg font-black text-amber-950">C R 金句 100</h4>
+                                <p class="text-xs text-amber-900 mt-1 line-clamp-2 font-bold opacity-90">精選穩定型、求進型、健康型三大意向報告評語金句。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-amber-700 font-extrabold">
+                        <div class="mt-4 pt-3 border-t border-amber-400/80 flex items-center justify-between text-xs text-amber-950 font-black">
                             <span>選擇意向</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            <!-- CNE AI BOT Hero Entry Card (擺喺四格底下) -->
-            <div onclick="switchView('ai')" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-2xl p-5 text-white shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all cursor-pointer group flex items-center justify-between border-2 border-indigo-300/40">
-                <div class="flex items-center space-x-4">
-                    <div class="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner">
-                        <i data-lucide="bot" class="w-8 h-8 text-white"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h4 class="text-lg md:text-xl font-black tracking-wide">CNE AI BOT 對話機械人</h4>
-                            <span class="text-xs bg-amber-400 text-slate-900 font-extrabold px-2.5 py-0.5 rounded-full shadow-sm">AI 專家</span>
+                    <!-- Card 5: 輪班預約好幫手 (橙色漸變紅色) -->
+                    <div onclick="switchView('shift')" class="bg-gradient-to-br from-orange-500 via-orange-600 to-red-600 rounded-2xl p-5 border border-orange-400 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-orange-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <h4 class="text-lg font-black text-white">輪班預約好幫手</h4>
+                                    <span class="text-[10px] bg-white text-red-600 px-1.5 py-0.5 rounded-full font-black shadow-sm">跨Pattern對照</span>
+                                </div>
+                                <p class="text-xs text-orange-100 mt-1 line-clamp-2 font-medium">支援 5 大班別 Pattern 混合對照，自動分析強烈推薦約會日與空檔日！</p>
+                            </div>
                         </div>
-                        <p class="text-xs md:text-sm text-indigo-100 mt-1 font-medium leading-snug">內建資深 CNE 人員專業智庫 • 隨時解答法例條文、通關常識與各類實務問題。</p>
+                        <div class="mt-4 pt-3 border-t border-orange-400/60 flex items-center justify-between text-xs text-orange-100 font-extrabold">
+                            <span>進入對照</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="hidden sm:flex items-center gap-1 text-sm font-extrabold bg-white/10 px-3.5 py-2 rounded-xl border border-white/20 group-hover:bg-white/20 transition-colors">
-                    <span>開始對話</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+
+                    <!-- Card 6: CNE AI BOT 對話機械人 (保留深紫色同漸變紫色) -->
+                    <div onclick="switchView('ai')" class="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 rounded-2xl p-5 border border-purple-500/40 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-amber-300 flex items-center justify-center group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner">
+                                <i data-lucide="bot" class="w-7 h-7"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <h4 class="text-lg font-black tracking-wide text-white">CNE AI BOT</h4>
+                                    <span class="text-[10px] bg-amber-400 text-slate-900 font-extrabold px-2 py-0.5 rounded-full shadow-sm">AI 專家</span>
+                                </div>
+                                <p class="text-xs text-purple-100 mt-1 line-clamp-2 font-medium">內建資深 CNE 人員智庫，隨時解答法例條文與清關算式。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-purple-700/60 flex items-center justify-between text-xs text-amber-300 font-extrabold">
+                            <span>開始對話</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -754,7 +774,7 @@
             </div>
         </section>
 
-        <!-- ================= PAGE 6: CNE AI BOT 對話機械人 (Dify Chatbot 官方嵌入) ================= -->
+        <!-- ================= PAGE 6: CNE AI BOT 對話機械人 ================= -->
         <section id="view-ai" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center space-x-4 bg-gradient-to-r from-blue-100 to-indigo-100 p-5 rounded-2xl border-2 border-indigo-200">
                 <div class="p-3 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-xl shadow-md">
@@ -773,6 +793,71 @@
                     style="width: 100%; height: 680px; border: 0;"
                     allow="microphone;clipboard-write">
                 </iframe>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 7: 輪班預約好幫手 (多 Pattern 班表對照與約會推薦) ================= -->
+        <section id="view-shift" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-gradient-to-r from-orange-100 to-red-100 p-5 rounded-2xl border-2 border-orange-200">
+                <div class="p-3 bg-gradient-to-tr from-orange-500 to-red-600 text-white rounded-xl shadow-md">
+                    <i data-lucide="calendar-check" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-slate-900">輪班預約好幫手</h2>
+                    <p class="text-base text-slate-600 font-medium">支援多位同事選擇不同 Pattern 班別，交叉比對全月聚會/放假黃金日子</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
+                
+                <!-- Staff Anchor Settings Section -->
+                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                    <div class="flex items-center justify-between border-b border-slate-200 pb-3 flex-wrap gap-2">
+                        <h3 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
+                            <i data-lucide="user-plus" class="w-5 h-5 text-orange-600"></i>
+                            1. 設定同事所屬 Pattern 與基準班別
+                        </h3>
+                        <button onclick="addStaffRow()" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span>新增同事</span>
+                        </button>
+                    </div>
+
+                    <!-- Staff Config Dynamic Container -->
+                    <div id="staff-config-list" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Display Control Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b-2 border-slate-100 pb-4">
+                    <div class="flex items-center gap-2">
+                        <label class="font-extrabold text-slate-800">推算檢視月份：</label>
+                        <input type="month" id="shift-view-month" onchange="renderMultiShiftRoster()" class="p-2 border-2 border-slate-300 rounded-xl font-bold bg-slate-50">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="shift-filter-mode" onchange="renderMultiShiftRoster()" class="p-2 border-2 border-orange-300 rounded-xl font-bold bg-orange-50 text-orange-950 text-sm">
+                            <option value="all">顯示全部日子</option>
+                            <option value="perfect">🥳 只顯示「強烈推薦（全員放假）」的日子</option>
+                            <option value="suitable">👍 只顯示「適合約會（早更/放假）」的日子</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Joint Free-Time Summary Card -->
+                <div id="joint-free-summary-card" class="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl space-y-2">
+                    <!-- Dynamic Summary Text -->
+                </div>
+
+                <!-- Multi-Staff Roster Table / List -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-bold text-slate-500">跨 Pattern 多人全月班表對照結果：</p>
+                    </div>
+                    <div id="shift-roster-container" class="space-y-3">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -822,6 +907,8 @@
                     initDailyQuote();
                 } else if (viewId === 'draw') {
                     initWheel();
+                } else if (viewId === 'shift') {
+                    initShiftView();
                 }
             }
 
@@ -1458,7 +1545,7 @@
                         let nx = currPos.x + dx * ratio;
                         let ny = currPos.y + dy * ratio;
                         ctx.beginPath(); ctx.moveTo(currPos.x, currPos.y); ctx.lineTo(nx, ny); ctx.stroke();
-                        currPos.x = nx; currPos.y = ny;
+                        currPos = {...target};
                     }
                     requestAnimationFrame(step);
                 }
@@ -1716,6 +1803,336 @@
                 showToast('複製失敗');
             }
             document.body.removeChild(textArea);
+        }
+
+        // ================= 8天多人多 Pattern 班表對照 (5大 Pattern 智慧邏輯) =================
+        const SHIFT_PATTERNS = {
+            pattern1: {
+                name: "Pattern1: 早1 早2 放假1 晏1 晏2 放假2",
+                shifts: [
+                    { name: "早 1", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "放假 1", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false },
+                    { name: "晏 1", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "放假 2", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false }
+                ]
+            },
+            pattern2: {
+                name: "Pattern2: 早1 晏1 Swing 早2 晏2 放假1 早3 晏3 放假2",
+                shifts: [
+                    { name: "早 1", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "晏 1", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "Swing", type: "swing", bg: "bg-indigo-100 border-indigo-300 text-indigo-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "放假 1", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false },
+                    { name: "早 3", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "晏 3", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "放假 2", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false }
+                ]
+            },
+            pattern3: {
+                name: "Pattern3: 早1 晏2 Swing 早2 晏2 放假",
+                shifts: [
+                    { name: "早 1", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "Swing", type: "swing", bg: "bg-indigo-100 border-indigo-300 text-indigo-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "放假", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false }
+                ]
+            },
+            pattern4: {
+                name: "Pattern4: 早1 早2 晏1 晏2 放假1 通宵1 通宵2 放假2",
+                shifts: [
+                    { name: "早 1", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "晏 1", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isOff: false, isMorning: false, isAfternoon: true },
+                    { name: "放假 1", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false },
+                    { name: "通宵 1", type: "night", bg: "bg-purple-100 border-purple-300 text-purple-950", isOff: false, isMorning: false, isAfternoon: false },
+                    { name: "通宵 2", type: "night", bg: "bg-purple-100 border-purple-300 text-purple-950", isOff: false, isMorning: false, isAfternoon: false },
+                    { name: "放假 2", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false }
+                ]
+            },
+            pattern5: {
+                name: "Pattern5: 五天工作週，星期六日放假",
+                shifts: [
+                    { name: "常規工作", type: "work", bg: "bg-slate-100 border-slate-300 text-slate-900", isOff: false, isMorning: true, isAfternoon: false },
+                    { name: "週末放假", type: "off", bg: "bg-emerald-100 border-emerald-300 text-emerald-950", isOff: true, isMorning: false, isAfternoon: false }
+                ]
+            }
+        };
+
+        // Staff Data Memory
+        let staffList = [
+            { id: 1, name: "人員 A", patternKey: "pattern1", anchorDate: "", anchorType: 0 },
+            { id: 2, name: "人員 B", patternKey: "pattern4", anchorDate: "", anchorType: 4 }
+        ];
+
+        function initShiftView() {
+            const today = new Date();
+            const todayIso = today.toISOString().split('T')[0];
+
+            staffList.forEach(s => {
+                if (!s.anchorDate) s.anchorDate = todayIso;
+            });
+
+            const viewMonthInput = document.getElementById('shift-view-month');
+            if (!viewMonthInput.value) {
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, '0');
+                viewMonthInput.value = `${yyyy}-${mm}`;
+            }
+
+            renderStaffConfigRows();
+            renderMultiShiftRoster();
+        }
+
+        function renderStaffConfigRows() {
+            const container = document.getElementById('staff-config-list');
+            container.innerHTML = '';
+
+            staffList.forEach((staff, index) => {
+                const patternObj = SHIFT_PATTERNS[staff.patternKey] || SHIFT_PATTERNS.pattern1;
+
+                // Build Visual Pattern Preview Pills
+                const patternPillsHtml = patternObj.shifts.map((s, pIdx) => {
+                    let pillBg = "bg-slate-100 text-slate-700 border-slate-300";
+                    if (s.isOff) pillBg = "bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold";
+                    else if (s.isMorning) pillBg = "bg-amber-100 text-amber-900 border-amber-300 font-bold";
+                    else if (s.isAfternoon) pillBg = "bg-blue-100 text-blue-900 border-blue-300 font-bold";
+                    else if (s.type === 'night') pillBg = "bg-purple-100 text-purple-900 border-purple-300 font-bold";
+
+                    return `<span class="px-2 py-0.5 rounded-lg border text-[11px] whitespace-nowrap ${pillBg}">${pIdx + 1}.${s.name}</span>`;
+                }).join('<span class="text-slate-300 text-xs font-bold">➔</span>');
+
+                const rowHtml = `
+                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3 shadow-sm">
+                        <div class="grid sm:grid-cols-12 gap-3 items-center">
+                            <div class="sm:col-span-3 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-extrabold text-xs flex items-center justify-center">${index + 1}</span>
+                                <input type="text" value="${staff.name}" onchange="updateStaffName(${staff.id}, this.value)" placeholder="同事姓名" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm font-extrabold text-slate-900 bg-slate-50 focus:bg-white">
+                            </div>
+                            <div class="sm:col-span-4">
+                                <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">選擇 Pattern:</span>
+                                <select onchange="updateStaffPattern(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-slate-50 text-slate-900">
+                                    <option value="pattern1" ${staff.patternKey === 'pattern1' ? 'selected' : ''}>Pattern1: 早1 早2 放假1 晏1 晏2 放假2</option>
+                                    <option value="pattern2" ${staff.patternKey === 'pattern2' ? 'selected' : ''}>Pattern2: 早1 晏1 Swing 早2 晏2 放假1 早3 晏3 放假2</option>
+                                    <option value="pattern3" ${staff.patternKey === 'pattern3' ? 'selected' : ''}>Pattern3: 早1 晏2 Swing 早2 晏2 放假</option>
+                                    <option value="pattern4" ${staff.patternKey === 'pattern4' ? 'selected' : ''}>Pattern4: 早1 早2 晏1 晏2 放假1 通宵1 通宵2 放假2</option>
+                                    <option value="pattern5" ${staff.patternKey === 'pattern5' ? 'selected' : ''}>Pattern5: 五天工作週，星期六日放假</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-3">
+                                <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">已知日期:</span>
+                                <input type="date" value="${staff.anchorDate}" onchange="updateStaffDate(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">當天班別:</span>
+                                ${staff.patternKey === 'pattern5' ? `
+                                    <span class="text-xs font-bold text-slate-500 block px-1 py-1.5">自動按週六日</span>
+                                ` : `
+                                    <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900">
+                                        ${patternObj.shifts.map((p, i) => `<option value="${i}" ${staff.anchorType === i ? 'selected' : ''}>${p.name}</option>`).join('')}
+                                    </select>
+                                `}
+                            </div>
+                            <div class="sm:col-span-1 flex justify-end">
+                                ${staffList.length > 1 ? `
+                                    <button onclick="removeStaffRow(${staff.id})" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="刪除此同事">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <!-- Pattern Visual Flow Preview Box -->
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 flex items-center gap-2 overflow-x-auto">
+                            <span class="text-[11px] font-black text-slate-500 flex-shrink-0 flex items-center gap-1">
+                                <i data-lucide="eye" class="w-3.5 h-3.5 text-orange-600"></i>
+                                Pattern 順序預覽：
+                            </span>
+                            <div class="flex items-center gap-1.5 overflow-x-auto py-0.5">
+                                ${patternPillsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', rowHtml);
+            });
+            try { lucide.createIcons(); } catch(e) {}
+        }
+
+        function addStaffRow() {
+            const nextId = Date.now();
+            const nextLetter = String.fromCharCode(65 + staffList.length);
+            const todayIso = new Date().toISOString().split('T')[0];
+            staffList.push({
+                id: nextId,
+                name: `人員 ${nextLetter}`,
+                patternKey: "pattern1",
+                anchorDate: todayIso,
+                anchorType: 0
+            });
+            renderStaffConfigRows();
+            renderMultiShiftRoster();
+        }
+
+        function removeStaffRow(id) {
+            if (staffList.length <= 1) return;
+            staffList = staffList.filter(s => s.id !== id);
+            renderStaffConfigRows();
+            renderMultiShiftRoster();
+        }
+
+        function updateStaffName(id, val) {
+            const staff = staffList.find(s => s.id === id);
+            if (staff) staff.name = val.trim() || '同事';
+            renderMultiShiftRoster();
+        }
+
+        function updateStaffPattern(id, key) {
+            const staff = staffList.find(s => s.id === id);
+            if (staff) {
+                staff.patternKey = key;
+                staff.anchorType = 0; // reset anchor type for new pattern
+            }
+            renderStaffConfigRows();
+            renderMultiShiftRoster();
+        }
+
+        function updateStaffDate(id, val) {
+            const staff = staffList.find(s => s.id === id);
+            if (staff && val) staff.anchorDate = val;
+            renderMultiShiftRoster();
+        }
+
+        function updateStaffType(id, val) {
+            const staff = staffList.find(s => s.id === id);
+            if (staff) staff.anchorType = parseInt(val, 10);
+            renderMultiShiftRoster();
+        }
+
+        function renderMultiShiftRoster() {
+            const viewMonthStr = document.getElementById('shift-view-month').value;
+            const filterMode = document.getElementById('shift-filter-mode').value;
+            if (!viewMonthStr || staffList.length === 0) return;
+
+            const [viewY, viewM] = viewMonthStr.split('-').map(Number);
+            const daysInMonth = new Date(viewY, viewM, 0).getDate();
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+
+            const container = document.getElementById('shift-roster-container');
+            container.innerHTML = '';
+
+            let perfectDaysCount = 0;
+            let suitableDaysCount = 0;
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const currentDate = new Date(viewY, viewM - 1, day);
+                const dateIsoStr = `${viewY}-${String(viewM).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayOfWeek = currentDate.getDay(); // 0 is Sun, 6 is Sat
+                const weekdayStr = weekdays[dayOfWeek];
+
+                let staffShiftResults = [];
+                let isAllOff = true;
+                let hasAfternoon = false;
+                let isAllMorningOrOff = true;
+
+                staffList.forEach(staff => {
+                    let shiftObj = null;
+
+                    if (staff.patternKey === 'pattern5') {
+                        // 5-day work week: Sat(6) & Sun(0) are OFF
+                        if (dayOfWeek === 0 || dayOfWeek === 6) {
+                            shiftObj = SHIFT_PATTERNS.pattern5.shifts[1]; // 週末放假
+                        } else {
+                            shiftObj = SHIFT_PATTERNS.pattern5.shifts[0]; // 常規工作
+                        }
+                    } else {
+                        const patternObj = SHIFT_PATTERNS[staff.patternKey] || SHIFT_PATTERNS.pattern1;
+                        const patternLength = patternObj.shifts.length;
+
+                        const [aY, aM, aD] = staff.anchorDate.split('-').map(Number);
+                        const anchorDate = new Date(aY, aM - 1, aD);
+                        const diffDays = Math.floor((currentDate.getTime() - anchorDate.getTime()) / (1000 * 3600 * 24));
+
+                        let shiftIndex = (staff.anchorType + (diffDays % patternLength)) % patternLength;
+                        if (shiftIndex < 0) shiftIndex += patternLength;
+
+                        shiftObj = patternObj.shifts[shiftIndex];
+                    }
+
+                    if (!shiftObj.isOff) isAllOff = false;
+                    if (shiftObj.isAfternoon) hasAfternoon = true;
+                    if (!shiftObj.isOff && !shiftObj.isMorning) isAllMorningOrOff = false;
+
+                    staffShiftResults.push({
+                        staffName: staff.name,
+                        shift: shiftObj
+                    });
+                });
+
+                // Recommendation Logic:
+                // 1. Perfect: All staff OFF
+                // 2. Suitable: All staff Morning or OFF (NO afternoon shifts!)
+                const isPerfect = isAllOff;
+                const isSuitable = !hasAfternoon && isAllMorningOrOff && !isPerfect;
+
+                if (isPerfect) perfectDaysCount++;
+                if (isSuitable) suitableDaysCount++;
+
+                // Filter check
+                if (filterMode === 'perfect' && !isPerfect) continue;
+                if (filterMode === 'suitable' && !isSuitable && !isPerfect) continue;
+
+                let highlightBadge = '';
+                if (isPerfect) {
+                    highlightBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-black bg-emerald-500 text-white shadow-sm flex items-center gap-1"><i data-lucide="party-popper" class="w-3.5 h-3.5"></i> 🎉 強烈推薦約會（全員放假）</span>`;
+                } else if (isSuitable) {
+                    highlightBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-black bg-amber-500 text-white shadow-sm flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i> 👍 適合約會（早更/放假，無人返晏）</span>`;
+                }
+
+                let staffCardsHtml = staffShiftResults.map(res => {
+                    return `
+                        <div class="p-3 rounded-xl border flex items-center justify-between ${res.shift.bg} shadow-sm">
+                            <div>
+                                <span class="text-xs font-extrabold block text-slate-700">${res.staffName}</span>
+                                <span class="text-base font-black">${res.shift.name}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const dayBlockHtml = `
+                    <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl space-y-3 shadow-sm ${isPerfect ? 'border-emerald-400 bg-emerald-50/40' : (isSuitable ? 'border-amber-300 bg-amber-50/30' : '')}">
+                        <div class="flex items-center justify-between border-b border-slate-200 pb-2 flex-wrap gap-2">
+                            <span class="text-base font-black text-slate-900">${dateIsoStr} (週${weekdayStr})</span>
+                            ${highlightBadge}
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            ${staffCardsHtml}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', dayBlockHtml);
+            }
+
+            // Update Summary Card
+            const summaryBox = document.getElementById('joint-free-summary-card');
+            summaryBox.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2 text-sm font-extrabold text-emerald-950">
+                    <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-5 h-5 text-emerald-600"></i> ${viewY}年${viewM}月 跨 Pattern 約會推薦分析：</span>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-emerald-100 text-emerald-900 px-3 py-1 rounded-xl border border-emerald-300">🎉 強烈推薦 (全員放假)：<strong class="text-emerald-700 text-lg ml-1">${perfectDaysCount}</strong> 天</span>
+                        <span class="bg-amber-100 text-amber-900 px-3 py-1 rounded-xl border border-amber-300">👍 適合約會 (早更/放假)：<strong class="text-amber-800 text-lg ml-1">${suitableDaysCount}</strong> 天</span>
+                    </div>
+                </div>
+            `;
+
+            try { lucide.createIcons(); } catch(e) {}
         }
 
         function showToast(msg) {
