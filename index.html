@@ -249,7 +249,28 @@
                     </div>
 
                 </div>
-            </div>
+            
+                    <!-- Card 7: 宿舍分數計算器 (NEW) -->
+                    <div onclick="switchView('quarters')" class="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 rounded-2xl p-5 border border-slate-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                        <div class="space-y-3">
+                            <div class="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md text-slate-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                <i data-lucide="building-2" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <h4 class="text-lg font-black text-white">宿舍分數計算</h4>
+                                    <span class="text-[10px] bg-slate-500 text-white px-1.5 py-0.5 rounded-full font-black shadow-sm">附錄 VII</span>
+                                </div>
+                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium">CNE 部門宿舍計分試算表，依據最新指引實時計算 Quartering Points。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-600/60 flex items-center justify-between text-xs text-slate-300 font-extrabold">
+                            <span>開始試算</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                </div>
         </section>
 
         <!-- ================= PAGE 2: 行水神器 ================= -->
@@ -805,6 +826,12 @@
                     <h2 class="text-2xl font-extrabold text-slate-900">輪班預約好幫手</h2>
                     <p class="text-base text-slate-600 font-medium">支援多位同事選擇不同 Pattern 班別，精準交叉比對食晚飯/聚會黃金日子</p>
                 </div>
+                <div class="ml-auto">
+                    <button onclick="resetShiftView()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
             </div>
 
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
@@ -860,6 +887,327 @@
             </div>
         </section>
 
+            <!-- ================= PAGE 8: 宿舍分數計算器 ================= -->
+        <section id="view-quarters" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-slate-200/80 p-5 rounded-2xl border-2 border-slate-300">
+                <div class="p-3 bg-slate-800 text-white rounded-xl"><i data-lucide="building-2" class="w-8 h-8"></i></div>
+                <div><h2 class="text-2xl font-extrabold text-slate-900">宿舍分數計算器</h2><p class="text-base text-slate-600 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p></div>
+            </div>
+            <div class="flex flex-wrap border-b border-slate-300 mb-2 bg-slate-200/80 rounded-t-xl p-1 shadow-sm">
+                <button onclick="switchQuartersTab('calculator')" id="qtab-calculator" class="quarters-tab-btn active px-5 py-2.5 font-bold text-xs md:text-sm rounded-lg transition-all duration-200 flex items-center space-x-2 text-slate-900 bg-white shadow-sm border border-slate-300"><i data-lucide="calculator" class="w-4 h-4 text-slate-700"></i><span>宿舍分數計算器</span></button>
+                
+            </div>
+            <div id="qpanel-calculator" class="quarters-tab-panel space-y-6">
+                <div class="bg-white rounded-xl shadow-md border border-slate-300 overflow-hidden">
+                    <div class="bg-slate-800 text-slate-100 px-5 py-3 flex justify-between items-center border-b border-slate-700"><span class="font-bold text-xs md:text-sm tracking-wide">CNE Departmental Quartering Points Calculator</span><span class="text-[11px] bg-slate-700 text-slate-200 px-2 py-0.5 rounded border border-slate-600">Version Oct-24</span></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead><tr class="bg-slate-300 text-slate-900 font-bold border-b border-slate-400"><th class="p-3 border-r border-slate-300 w-5/12 min-w-[220px]">項目資料</th><th class="p-3 border-r border-slate-300 w-3/12 min-w-[180px]">填寫/選擇資料</th><th class="p-3 border-r border-slate-300 w-2/12 min-w-[120px] text-center">單項得分</th><th class="p-3 w-2/12 min-w-[140px]">計分基準與備註</th></tr></thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-800">
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Substantive Monthly Salary</div><div class="text-slate-600">實職月薪 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><div class="relative w-full"><span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500 font-bold">$</span><input type="number" id="q-salary" step="any" min="0" value="0" placeholder="例如: 46000" oninput="calculateQuartersPoints()" class="w-full pl-7 pr-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></div></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-salary-score" class="font-extrabold text-sm text-slate-800">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>1 point each $538</div><div>每 $538 算 1 分</div></td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Date of Application Deadline</div><div class="text-slate-600">申請截止日期 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><input type="date" id="q-deadline" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 text-slate-400 align-middle">-</td><td class="p-3 text-slate-500 text-xs align-middle">計算服務年資基準截止日</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Date of Appointment to Current Grade</div><div class="text-slate-600">現職級系入職日期 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><input type="date" id="q-appointment" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-service-score" class="font-extrabold text-sm text-slate-800">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>6 points each year</div><div>每年資 6 分</div></td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Days Not Counted as Years of Service</div><div class="text-slate-600">不計算在 CNE 服務年期的日數</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-daysNotCounted" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-service-days-info" class="text-xs font-bold text-slate-700">淨年資: 0天</span></td><td class="p-3 text-slate-500 align-middle">從總服務天數中扣除</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Marital Status</div><div class="text-slate-600">婚姻狀況 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-maritalStatus" onchange="handleQuartersMaritalChange()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="Married">Married 已婚</option><option value="Single">Single 單身</option><option value="Widowed">Widowed 喪偶</option><option value="Separated">Separated 分居</option><option value="Divorced">Divorced 離婚</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 text-slate-400 align-middle">-</td><td class="p-3 text-slate-500 text-xs align-middle">影響配偶分及單親首名子女計分</td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Spouse Residing with Officer in HK</div><div class="text-slate-600">配偶與申請人在本港同住/預計1個月內抵港</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-spouseResiding" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="Yes">Yes 是</option><option value="No">No 否</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-spouse-score" class="font-extrabold text-sm text-slate-800">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>20 points each</div><div>每名 20 分</div></td></tr>
+                                <tr class="hover:bg-slate-200/50 border-l-4 border-l-slate-600"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Dependent Child in Hong Kong</div><div class="text-slate-700 font-medium">居於本港或於一個月內抵達的受供養子女數目</div></td><td class="p-3 border-r border-slate-200 bg-slate-200/60 align-middle"><select id="q-childHK" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border-2 border-slate-500 rounded focus:outline-none focus:ring-2 focus:ring-slate-600 text-slate-900 font-black h-9"><option value="0" selected>0 名</option><option value="1">1 名</option><option value="2">2 名</option><option value="3">3 名</option><option value="4">4 名</option><option value="5">5 名</option><option value="6">6 名</option><option value="7">7 名</option><option value="8">8 名</option><option value="9">9 名</option><option value="10">10 名</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-100 align-middle"><span id="q-row-childhk-score" class="font-black text-base text-slate-900">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>10 points each</div><div>一般每名 10 分</div><div class="text-[10px] text-slate-500 font-medium mt-0.5">(喪偶/離婚首名20分)</div></td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Child undergoing full-time Education outside HK</div><div class="text-slate-600 font-medium">正在本港以外接受全時間教育的子女數目 (21歲或以下)</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-childOutside" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="0" selected>0 名</option><option value="1">1 名</option><option value="2">2 名</option><option value="3">3 名</option><option value="4">4 名</option><option value="5">5 名</option><option value="6">6 名</option><option value="7">7 名</option><option value="8">8 名</option><option value="9">9 名</option><option value="10">10 名</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-childoutside-score" class="font-extrabold text-sm text-slate-700">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>5 points each</div><div>每名 5 分</div></td></tr>
+                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Child expected to be Born within 4 months</div><div class="text-slate-600">預計在四個月內出生的子女數目</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-childExpected" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="0" selected>0 名</option><option value="1">1 名</option><option value="2">2 名</option><option value="3">3 名</option><option value="4">4 名</option><option value="5">5 名</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-childexpected-score" class="font-extrabold text-sm text-slate-700">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>10 points each</div><div>每名 10 分</div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-slate-300 p-5 border-t-2 border-slate-400 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="text-center md:text-left"><div class="text-xs font-bold text-slate-600 uppercase tracking-widest">Your Quartering Points</div><div class="text-xl md:text-2xl font-black text-slate-900">你的宿舍總分數</div></div>
+                        <div id="q-errorState" class="bg-slate-700 text-slate-100 border border-slate-600 px-6 py-3 rounded-lg text-center shadow-sm min-w-[280px]"><div class="text-xl font-black tracking-wider text-amber-300">資料未完整 (Incomplete)</div><div class="text-xs font-normal mt-0.5 opacity-90">請填寫實職月薪、申請截止日期及入職日期。</div></div>
+                        <div id="q-successState" class="hidden bg-slate-800 text-white px-8 py-3.5 rounded-xl text-center shadow-md border-2 border-slate-500 min-w-[280px]"><div class="text-xs text-slate-300 uppercase tracking-widest font-semibold">總宿舍得分 (Total Points)</div><div class="text-3xl font-black text-amber-300 my-0.5 tracking-tight" id="q-totalPoints">0.000</div><div class="text-[11px] text-slate-300 font-normal">已依據規定計算至小數點後 3 位</div></div>
+                    </div>
+                </div>
+                <div id="q-breakdownSection" class="bg-white rounded-xl p-5 border border-slate-300 shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2 border-b border-slate-200 pb-2"><i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-700"></i><span>分數拆解總覽 (Score Summary)</span></h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">月薪得分</span><span class="text-base font-bold text-slate-800" id="q-bk-salary">0.000</span></div>
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">服務年資得分</span><span class="text-base font-bold text-slate-800" id="q-bk-service">0.000</span></div>
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">配偶得分</span><span class="text-base font-bold text-slate-800" id="q-bk-spouse">0.000</span></div>
+                        <div class="bg-slate-200 p-2.5 rounded border border-slate-300 text-center"><span class="text-slate-800 font-bold block">居港子女得分</span><span class="text-base font-black text-slate-900" id="q-bk-childhk">0.000</span></div>
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">境外就讀子女</span><span class="text-base font-bold text-slate-800" id="q-bk-childoutside">0.000</span></div>
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">預產子女得分</span><span class="text-base font-bold text-slate-800" id="q-bk-childexpected">0.000</span></div>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="loadQuartersSampleData()" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-colors shadow-sm flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4"></i><span>填入示範數據試算</span></button>
+                    <button onclick="resetQuartersCalc()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-sm transition-colors border border-slate-300 flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i><span>重置所有資料</span></button>
+                </div>
+                <div class="bg-slate-200/80 p-4 rounded-xl border border-slate-300 text-xs text-slate-600 leading-relaxed space-y-1.5">
+                    <p class="font-bold text-slate-700">Disclaimer / 免責聲明：</p>
+                    <p>上述計算結果只是粗略估計並僅供參考。實際宿舍分數以 CNE 部門宿舍指南所規定並經宿舍小組計算及宿舍編配委員會審核者為準。此計算器的設計者及管理人員對上述計算結果的準確性概不負任何責任。宿舍編配亦同時受包括但不限於職級等眾多因素影響，人員應閱讀部門宿舍指南所載與宿舍分數相關的規定。</p>
+                </div>
+            </div>
+            
+        </section>
+
+            <!-- ================= PAGE 9: 退休金計算器 ================= -->
+        <section id="view-pension" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center space-x-4 bg-amber-100/80 p-5 rounded-2xl border-2 border-amber-300">
+                <div class="p-3 bg-amber-900 text-white rounded-xl">
+                    <i data-lucide="coins" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-extrabold text-amber-950">退休金計算器</h2>
+                    <p class="text-base text-amber-800 font-medium">新退休金計劃下公務員退休金計算（NPS）</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-amber-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b-2 border-amber-100 pb-4 flex-wrap gap-2">
+                    <h3 class="font-extrabold text-amber-950 text-xl flex items-center gap-2">
+                        <i data-lucide="calculator" class="w-6 h-6 text-amber-700"></i>
+                        退休金試算表
+                    </h3>
+                    <button onclick="resetPensionCalc()" class="text-sm font-bold text-amber-800 hover:text-red-600 flex items-center gap-1.5 bg-amber-50 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-amber-200 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="space-y-4 bg-amber-50/60 p-5 rounded-2xl border-2 border-amber-200">
+                        <h4 class="font-bold text-amber-900 text-sm border-b border-amber-200 pb-2">基本資料</h4>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="bookmark" class="w-4 h-4 text-amber-700"></i>
+                                退休金計劃 <span class="text-xs text-amber-600">(註1)</span>
+                            </label>
+                            <select id="p-scheme" onchange="onPensionSchemeChange()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                                <option value="new">新退休金計劃 (1987年7月1日後受聘)</option>
+                                <option value="old">舊退休金計劃 (1987年7月1日前受聘)</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="user-check" class="w-4 h-4 text-amber-700"></i>
+                                人員類別
+                            </label>
+                            <select id="p-class" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                                <option value="A">甲類人員 (Class A)</option>
+                                <option value="B">乙類人員 (Class B)</option>
+                            </select>
+                            <p class="text-[11px] text-amber-700 font-medium">甲類：實聘擔任設定職位。乙類：擔任非設定職位或未獲實聘。</p>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="shield" class="w-4 h-4 text-amber-700"></i>
+                                是否紀律部隊人員
+                            </label>
+                            <select id="p-disciplinary" onchange="onDisciplinaryChange()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                                <option value="no">否 (文職人員)</option>
+                                <option value="yes">是 (紀律部隊人員)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 bg-amber-50/60 p-5 rounded-2xl border-2 border-amber-200">
+                        <h4 class="font-bold text-amber-900 text-sm border-b border-amber-200 pb-2">薪酬與日期</h4>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="banknote" class="w-4 h-4 text-amber-700"></i>
+                                最高可供計算退休金的薪酬（每月）<span class="text-xs text-amber-600">(註2)</span>
+                            </label>
+                            <div class="relative w-full">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-amber-700 font-bold">$</span>
+                                <input type="number" id="p-salary" min="0" step="1" placeholder="例如: 27000" oninput="calculatePension()" class="w-full pl-8 pr-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="calendar" class="w-4 h-4 text-amber-700"></i>
+                                最初受聘於政府的日期 <span class="text-xs text-amber-600">(註3)</span>
+                            </label>
+                            <input type="date" id="p-appoint" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="calendar-check" class="w-4 h-4 text-amber-700"></i>
+                                退休日期 <span class="text-xs text-amber-600">(註4)</span>
+                            </label>
+                            <input type="date" id="p-retire" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 bg-amber-50/60 p-5 rounded-2xl border-2 border-amber-200">
+                        <h4 class="font-bold text-amber-900 text-sm border-b border-amber-200 pb-2">紀律部隊額外資料（如適用）</h4>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="cake" class="w-4 h-4 text-amber-700"></i>
+                                出生日期 <span class="text-xs text-amber-600">(只供新計劃紀律部隊人員填寫)</span>
+                            </label>
+                            <input type="date" id="p-dob" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="clock" class="w-4 h-4 text-amber-700"></i>
+                                訂明的退休年齡 <span class="text-xs text-amber-600">(註5)</span>
+                            </label>
+                            <select id="p-retire-age" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                                <option value="55">55歲 (紀律部隊員佐級)</option>
+                                <option value="57">57歲 (紀律部隊主任級)</option>
+                                <option value="60">60歲 (文職人員)</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="percent" class="w-4 h-4 text-amber-700"></i>
+                                退休酬金的折算百分比 <span class="text-xs text-amber-600">(註6)</span>
+                            </label>
+                            <select id="p-commute" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                                <option value="0">0% (不折算，全數按月發放)</option>
+                                <option value="50" selected>50% (新計劃最高)</option>
+                                <option value="55">55%</option>
+                                <option value="60">60%</option>
+                                <option value="65">65%</option>
+                                <option value="70">70%</option>
+                                <option value="75">75%</option>
+                                <option value="80">80%</option>
+                                <option value="85">85%</option>
+                                <option value="90">90%</option>
+                                <option value="95">95% (新計劃上限)</option>
+                            </select>
+                            <p class="text-[11px] text-amber-700 font-medium" id="p-commute-hint">新計劃最高可折算 50%，舊計劃最高 25%</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 bg-amber-50/60 p-5 rounded-2xl border-2 border-amber-200">
+                        <h4 class="font-bold text-amber-900 text-sm border-b border-amber-200 pb-2">特殊情況（可選）</h4>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-700"></i>
+                                退休原因
+                            </label>
+                            <select id="p-reason" onchange="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                                <option value="normal">正常退休（達退休年齡）</option>
+                                <option value="operational">紀律部隊運作上需要退休 (55-60歲)</option>
+                                <option value="incapacity">因喪失工作能力而遭勒令退休</option>
+                                <option value="redundancy">因屬超額人員而退休</option>
+                                <option value="resign">辭職（延付退休金）</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="minus-circle" class="w-4 h-4 text-amber-700"></i>
+                                不計算退休金服務期（月數）
+                            </label>
+                            <input type="number" id="p-exclude" min="0" value="0" oninput="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                            <p class="text-[11px] text-amber-700 font-medium">例如：無薪缺勤、合約服務期等不計算期間</p>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-extrabold text-amber-950 flex items-center gap-1.5">
+                                <i data-lucide="trending-up" class="w-4 h-4 text-amber-700"></i>
+                                1987年4月1日前服務期（月數）
+                            </label>
+                            <input type="number" id="p-pre1987" min="0" value="0" oninput="calculatePension()" class="w-full px-4 py-2.5 border-2 border-amber-300 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white font-bold text-amber-950">
+                            <p class="text-[11px] text-amber-700 font-medium">乙類人員適用：1987年4月1日前服務期因子為 1/800</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="calculatePension()" class="w-full bg-amber-800 hover:bg-amber-900 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-amber-200 text-lg flex items-center justify-center gap-2">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                    <span>計算退休金</span>
+                </button>
+
+                <div id="p-result" class="hidden space-y-5">
+                    <div class="p-6 md:p-8 bg-gradient-to-br from-amber-950 via-amber-900 to-yellow-950 text-white rounded-3xl shadow-xl space-y-6">
+                        <div class="flex justify-between items-center border-b border-amber-700 pb-4">
+                            <span class="text-base font-extrabold text-amber-300 tracking-wider uppercase">退休金計算結果</span>
+                            <span id="p-status-badge" class="px-4 py-1.5 rounded-full text-sm font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">正常退休</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div class="bg-amber-950/90 p-4 rounded-2xl border border-amber-700">
+                                <p class="text-xs text-amber-400 font-bold">可供計算退休金服務期</p>
+                                <p class="text-xl md:text-2xl font-black text-white mt-1"><span id="p-res-months">0</span> 個月</p>
+                                <p class="text-xs text-amber-300 mt-1">(<span id="p-res-years">0</span> 年)</p>
+                            </div>
+                            <div class="bg-amber-950/90 p-4 rounded-2xl border border-amber-700">
+                                <p class="text-xs text-amber-400 font-bold">最高每年可供計算薪酬</p>
+                                <p class="text-xl md:text-2xl font-black text-white mt-1">HK$ <span id="p-res-annual">0</span></p>
+                                <p class="text-xs text-amber-300 mt-1">(月薪 × 12)</p>
+                            </div>
+                            <div class="bg-amber-950/90 p-4 rounded-2xl border border-amber-700">
+                                <p class="text-xs text-amber-400 font-bold">未經扣減每年退休金</p>
+                                <p class="text-xl md:text-2xl font-black text-amber-300 mt-1">HK$ <span id="p-res-gross">0</span></p>
+                                <p class="text-xs text-amber-300 mt-1">(上限為薪酬 2/3)</p>
+                            </div>
+                            <div class="bg-amber-950/90 p-4 rounded-2xl border border-amber-700">
+                                <p class="text-xs text-amber-400 font-bold">退休金因子</p>
+                                <p class="text-xl md:text-2xl font-black text-white mt-1"><span id="p-res-factor">1/675</span></p>
+                                <p class="text-xs text-amber-300 mt-1" id="p-res-factor-note">甲類人員</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-950/80 p-5 rounded-2xl border border-amber-600/60 text-sm space-y-3">
+                            <p class="font-extrabold text-amber-300 flex items-center gap-2 text-base md:text-lg">
+                                <i data-lucide="list-ordered" class="w-5 h-5 text-amber-400"></i>
+                                計算步驟：
+                            </p>
+                            <div class="space-y-2.5 text-amber-100 font-mono text-sm leading-relaxed">
+                                <p class="p-3 bg-amber-950/90 rounded-xl border border-amber-800/80">
+                                    <strong class="text-amber-300">· 第一步：</strong> 最高每年薪酬 = 月薪 HK$ <span id="step1-salary">0</span> × 12 = <strong class="text-white">HK$ <span id="step1-annual">0</span></strong>
+                                </p>
+                                <p class="p-3 bg-amber-950/90 rounded-xl border border-amber-800/80">
+                                    <strong class="text-amber-300">· 第二步：</strong> 服務期 = <span id="step2-months">0</span> 個月，退休金因子 = <span id="step2-factor">1/675</span>
+                                </p>
+                                <p class="p-3 bg-amber-950/90 rounded-xl border border-amber-800/80">
+                                    <strong class="text-amber-300">· 第三步：</strong> 未經扣減每年退休金 = HK$ <span id="step3-annual">0</span> × <span id="step3-months">0</span> × <span id="step3-factor">1/675</span> = <strong class="text-amber-300 text-base font-extrabold">HK$ <span id="step3-gross">0</span></strong>
+                                </p>
+                                <p class="p-3 bg-amber-950/90 rounded-xl border border-amber-800/80">
+                                    <strong class="text-amber-300">· 第四步（上限檢查）：</strong> 最高退休金上限 = 薪酬的 2/3 = HK$ <span id="step4-cap">0</span><br>
+                                    <span id="step4-check">未超過上限，採用計算值。</span>
+                                </p>
+                                <p class="p-3 bg-amber-950/90 rounded-xl border border-amber-800/80">
+                                    <strong class="text-amber-300">· 第五步（折算）：</strong> 折算 <span id="step5-pct">50</span>%，折算酬金 = HK$ <span id="step5-gross">0</span> × <span id="step5-pct2">50</span>% × 14 = <strong class="text-amber-300 text-base font-extrabold">HK$ <span id="step5-lump">0</span></strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-amber-800/90 p-5 rounded-2xl border-2 border-amber-500 text-center shadow-lg">
+                                <p class="text-xs text-amber-300 font-bold uppercase tracking-widest">一筆過退休酬金 <span class="text-amber-600">(註7)</span></p>
+                                <p class="text-3xl md:text-4xl font-black text-amber-300 my-1 tracking-tight">HK$ <span id="p-res-lump">0</span></p>
+                                <p class="text-xs text-amber-400">退休時一次性發放</p>
+                            </div>
+                            <div class="bg-amber-800/90 p-5 rounded-2xl border-2 border-amber-500 text-center shadow-lg">
+                                <p class="text-xs text-amber-300 font-bold uppercase tracking-widest">每月退休金 <span class="text-amber-600">(註8)</span></p>
+                                <p class="text-3xl md:text-4xl font-black text-amber-300 my-1 tracking-tight">HK$ <span id="p-res-monthly">0</span></p>
+                                <p class="text-xs text-amber-400">終身按月發放，每年按通脹調整</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-100/80 p-5 rounded-2xl border-2 border-amber-300 text-amber-950 text-sm md:text-base space-y-1.5">
+                        <div class="flex items-center gap-2 font-extrabold text-amber-950">
+                            <i data-lucide="shield-alert" class="w-6 h-6 text-amber-800"></i>
+                            <span class="text-base md:text-lg">🪖 免責聲明：</span>
+                        </div>
+                        <p class="leading-relaxed font-medium">
+                            本計算器結果僅供參考及初步評估。實際退休金金額以公務員事務局及庫務署最終核定為準。計算基於《退休金利益條例》（第99章）及《退休金條例》（第89章）所載規定。紀律部隊運作退休、喪失工作能力等特殊情況的計算可能涉及額外因素，請參閱官方文件或向相關部門查詢。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -910,6 +1258,9 @@
                     initWheel();
                 } else if (viewId === 'shift') {
                     initShiftView();
+                } else if (viewId === 'quarters') {
+                    initQuartersDaysDropdown();
+                    calculateQuartersPoints();
                 }
             }
 
@@ -2145,10 +2496,372 @@
         window.addEventListener('DOMContentLoaded', () => {
             initTimeDropdowns();
             initDailyQuote();
+            initQuartersDaysDropdown();
             updateLucideIcons();
             const multiDateElem = document.getElementById('multi-date');
             if (multiDateElem) multiDateElem.valueAsDate = new Date();
         });
-    </script>
+    
+        // ================= 宿舍分數計算器 (Quarters Calculator) =================
+        function initQuartersDaysDropdown() {
+            const select = document.getElementById('q-daysNotCounted');
+            if (!select || select.options.length > 0) return;
+            select.innerHTML = '';
+            for (let i = 0; i <= 365; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i + ' 日';
+                select.appendChild(opt);
+            }
+        }
+
+        function switchQuartersTab(tabName) {
+            document.querySelectorAll('.quarters-tab-panel').forEach(p => p.classList.add('hidden'));
+            document.querySelectorAll('.quarters-tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'text-slate-900', 'bg-white', 'shadow-sm', 'border', 'border-slate-300');
+                btn.classList.add('text-slate-600');
+            });
+            document.getElementById('qpanel-' + tabName).classList.remove('hidden');
+            const activeBtn = document.getElementById('qtab-' + tabName);
+            activeBtn.classList.add('active', 'text-slate-900', 'bg-white', 'shadow-sm', 'border', 'border-slate-300');
+            activeBtn.classList.remove('text-slate-600');
+            updateLucideIcons();
+        }
+
+        function handleQuartersMaritalChange() {
+            const status = document.getElementById('q-maritalStatus').value;
+            const spouseSelect = document.getElementById('q-spouseResiding');
+            if (status === 'Widowed' || status === 'Separated' || status === 'Divorced') {
+                spouseSelect.value = 'No';
+                spouseSelect.disabled = true;
+            } else {
+                spouseSelect.disabled = false;
+            }
+            calculateQuartersPoints();
+        }
+
+        function calculateQuartersPoints() {
+            const salary = parseFloat(document.getElementById('q-salary').value) || 0;
+            const deadlineVal = document.getElementById('q-deadline').value;
+            const appointmentVal = document.getElementById('q-appointment').value;
+            const daysNotCounted = parseInt(document.getElementById('q-daysNotCounted').value) || 0;
+            const maritalStatus = document.getElementById('q-maritalStatus').value;
+            const spouseResiding = document.getElementById('q-spouseResiding').value;
+            const childHK = parseInt(document.getElementById('q-childHK').value) || 0;
+            const childOutside = parseInt(document.getElementById('q-childOutside').value) || 0;
+            const childExpected = parseInt(document.getElementById('q-childExpected').value) || 0;
+
+            let salaryPoints = 0;
+            if (salary > 0) salaryPoints = salary / 538;
+            document.getElementById('q-row-salary-score').innerText = salaryPoints.toFixed(3) + ' 分';
+
+            let servicePoints = 0, netDays = 0;
+            if (deadlineVal && appointmentVal) {
+                const totalDays = Math.floor((new Date(deadlineVal) - new Date(appointmentVal)) / (1000 * 60 * 60 * 24));
+                netDays = Math.max(0, totalDays - daysNotCounted);
+                servicePoints = (netDays / 365) * 6;
+            }
+            document.getElementById('q-row-service-score').innerText = servicePoints.toFixed(3) + ' 分';
+            document.getElementById('q-row-service-days-info').innerText = '淨年資: ' + netDays + '天';
+
+            let spousePoints = 0;
+            if (spouseResiding === 'Yes' && (maritalStatus === 'Married' || maritalStatus === 'Single')) spousePoints = 20;
+            document.getElementById('q-row-spouse-score').innerText = spousePoints.toFixed(3) + ' 分';
+
+            let childHKPoints = 0;
+            if (maritalStatus === 'Widowed' || maritalStatus === 'Separated' || maritalStatus === 'Divorced') {
+                if (childHK > 0) childHKPoints = 20 + (childHK - 1) * 10;
+            } else {
+                childHKPoints = childHK * 10;
+            }
+            document.getElementById('q-row-childhk-score').innerText = childHKPoints.toFixed(3) + ' 分';
+
+            const childOutsidePoints = childOutside * 5;
+            document.getElementById('q-row-childoutside-score').innerText = childOutsidePoints.toFixed(3) + ' 分';
+
+            const childExpectedPoints = childExpected * 10;
+            document.getElementById('q-row-childexpected-score').innerText = childExpectedPoints.toFixed(3) + ' 分';
+
+            document.getElementById('q-bk-salary').innerText = salaryPoints.toFixed(3);
+            document.getElementById('q-bk-service').innerText = servicePoints.toFixed(3);
+            document.getElementById('q-bk-spouse').innerText = spousePoints.toFixed(3);
+            document.getElementById('q-bk-childhk').innerText = childHKPoints.toFixed(3);
+            document.getElementById('q-bk-childoutside').innerText = childOutsidePoints.toFixed(3);
+            document.getElementById('q-bk-childexpected').innerText = childExpectedPoints.toFixed(3);
+
+            const isFullyFilled = salary > 0 && deadlineVal && appointmentVal;
+            if (isFullyFilled) {
+                const total = salaryPoints + servicePoints + spousePoints + childHKPoints + childOutsidePoints + childExpectedPoints;
+                document.getElementById('q-totalPoints').innerText = total.toFixed(3);
+                document.getElementById('q-errorState').classList.add('hidden');
+                document.getElementById('q-successState').classList.remove('hidden');
+            } else {
+                document.getElementById('q-errorState').classList.remove('hidden');
+                document.getElementById('q-successState').classList.add('hidden');
+            }
+        }
+
+        function loadQuartersSampleData() {
+            document.getElementById('q-salary').value = 46000;
+            document.getElementById('q-deadline').value = '2024-10-31';
+            document.getElementById('q-appointment').value = '2018-05-15';
+            document.getElementById('q-daysNotCounted').value = '0';
+            document.getElementById('q-maritalStatus').value = 'Married';
+            document.getElementById('q-spouseResiding').value = 'Yes';
+            document.getElementById('q-childHK').value = '2';
+            document.getElementById('q-childOutside').value = '0';
+            document.getElementById('q-childExpected').value = '0';
+            handleQuartersMaritalChange();
+        }
+
+        function resetQuartersCalc() {
+            document.getElementById('q-salary').value = 0;
+            document.getElementById('q-deadline').value = '';
+            document.getElementById('q-appointment').value = '';
+            document.getElementById('q-daysNotCounted').value = '0';
+            document.getElementById('q-maritalStatus').value = 'Married';
+            document.getElementById('q-spouseResiding').value = 'Yes';
+            document.getElementById('q-spouseResiding').disabled = false;
+            document.getElementById('q-childHK').value = '0';
+            document.getElementById('q-childOutside').value = '0';
+            document.getElementById('q-childExpected').value = '0';
+            calculateQuartersPoints();
+        }
+
+
+        function resetShiftView() {
+            staffList = [
+                { id: 1, name: "人員 A", patternKey: "pattern1", anchorDate: "", anchorType: 0 },
+                { id: 2, name: "人員 B", patternKey: "pattern4", anchorDate: "", anchorType: 4 }
+            ];
+            const today = new Date();
+            const todayIso = today.toISOString().split('T')[0];
+            staffList.forEach(s => { if (!s.anchorDate) s.anchorDate = todayIso; });
+
+            const viewMonthInput = document.getElementById('shift-view-month');
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            viewMonthInput.value = `${yyyy}-${mm}`;
+
+            document.getElementById('shift-filter-mode').value = 'all';
+
+            renderStaffConfigRows();
+            renderMultiShiftRoster();
+            showToast('輪班資料已重置');
+        }
+
+
+        // ================= 退休金計算器 (Pension Calculator) =================
+        function onPensionSchemeChange() {
+            const scheme = document.getElementById('p-scheme').value;
+            const commuteSelect = document.getElementById('p-commute');
+            const hint = document.getElementById('p-commute-hint');
+
+            // Update commute options based on scheme
+            commuteSelect.innerHTML = '';
+            if (scheme === 'old') {
+                hint.innerText = '舊計劃最高可折算 25%';
+                const opts = [
+                    {v:'0', t:'0% (不折算)'},
+                    {v:'10', t:'10%'},
+                    {v:'15', t:'15%'},
+                    {v:'20', t:'20%'},
+                    {v:'25', t:'25% (舊計劃最高)'}
+                ];
+                opts.forEach(o => {
+                    const opt = document.createElement('option');
+                    opt.value = o.v; opt.textContent = o.t;
+                    if (o.v === '25') opt.selected = true;
+                    commuteSelect.appendChild(opt);
+                });
+            } else {
+                hint.innerText = '新計劃最高可折算 50%';
+                const opts = [
+                    {v:'0', t:'0% (不折算，全數按月發放)'},
+                    {v:'50', t:'50% (新計劃最高)'},
+                    {v:'55', t:'55%'},
+                    {v:'60', t:'60%'},
+                    {v:'65', t:'65%'},
+                    {v:'70', t:'70%'},
+                    {v:'75', t:'75%'},
+                    {v:'80', t:'80%'},
+                    {v:'85', t:'85%'},
+                    {v:'90', t:'90%'},
+                    {v:'95', t:'95% (新計劃上限)'}
+                ];
+                opts.forEach(o => {
+                    const opt = document.createElement('option');
+                    opt.value = o.v; opt.textContent = o.t;
+                    if (o.v === '50') opt.selected = true;
+                    commuteSelect.appendChild(opt);
+                });
+            }
+            calculatePension();
+        }
+
+        function onDisciplinaryChange() {
+            const isDisc = document.getElementById('p-disciplinary').value === 'yes';
+            const scheme = document.getElementById('p-scheme').value;
+            const retireAge = document.getElementById('p-retire-age');
+
+            if (scheme === 'new' && isDisc) {
+                retireAge.innerHTML = '<option value="55">55歲 (紀律部隊員佐級)</option><option value="57">57歲 (紀律部隊主任級)</option>';
+            } else if (scheme === 'new' && !isDisc) {
+                retireAge.innerHTML = '<option value="60">60歲 (文職人員)</option>';
+            } else {
+                retireAge.innerHTML = '<option value="55">55歲 (舊計劃)</option>';
+            }
+            calculatePension();
+        }
+
+        function calculatePension() {
+            const scheme = document.getElementById('p-scheme').value;
+            const staffClass = document.getElementById('p-class').value;
+            const isDisc = document.getElementById('p-disciplinary').value === 'yes';
+            const salary = parseFloat(document.getElementById('p-salary').value) || 0;
+            const appointDate = document.getElementById('p-appoint').value;
+            const retireDate = document.getElementById('p-retire').value;
+            const commutePct = parseFloat(document.getElementById('p-commute').value) || 0;
+            const reason = document.getElementById('p-reason').value;
+            const excludeMonths = parseInt(document.getElementById('p-exclude').value) || 0;
+            const pre1987Months = parseInt(document.getElementById('p-pre1987').value) || 0;
+            const dob = document.getElementById('p-dob').value;
+            const retireAge = parseInt(document.getElementById('p-retire-age').value) || 60;
+
+            if (!salary || !appointDate || !retireDate) {
+                document.getElementById('p-result').classList.add('hidden');
+                return;
+            }
+
+            const appoint = new Date(appointDate);
+            const retire = new Date(retireDate);
+            let totalMonths = Math.floor((retire - appoint) / (1000 * 60 * 60 * 24 * 30.44));
+            totalMonths = Math.max(0, totalMonths - excludeMonths);
+
+            // Operational retirement enhancement for disciplinary forces
+            let enhancedMonths = totalMonths;
+            let enhancementNote = '';
+            if (reason === 'operational' && isDisc && scheme === 'new') {
+                const ageAtRetire = dob ? Math.floor((retire - new Date(dob)) / (1000 * 60 * 60 * 24 * 365.25)) : 55;
+                let ratio = 1.0;
+                if (ageAtRetire >= 55 && ageAtRetire < 56) ratio = 1.25;
+                else if (ageAtRetire >= 56 && ageAtRetire < 57) ratio = 1.00;
+                else if (ageAtRetire >= 57 && ageAtRetire < 58) ratio = 0.75;
+                else if (ageAtRetire >= 58 && ageAtRetire < 59) ratio = 0.50;
+                else if (ageAtRetire >= 59 && ageAtRetire < 60) ratio = 0.25;
+
+                if (ratio !== 1.0) {
+                    const baseYears = totalMonths / 12;
+                    const addedMonths = baseYears * (ratio - 1) * 12;
+                    // Cap at max pension service or service to age 60
+                    const maxMonths = Math.min(450, (60 - (ageAtRetire - baseYears)) * 12);
+                    enhancedMonths = Math.min(totalMonths + addedMonths, maxMonths);
+                    enhancementNote = `運作退休增強係數 ${ratio}x`;
+                }
+            }
+
+            // Incapacity doubling (up to 22.5 years = 270 months)
+            if (reason === 'incapacity') {
+                const doubled = enhancedMonths * 2;
+                enhancedMonths = Math.min(doubled, 270);
+                enhancementNote = '喪失工作能力（服務期翻倍，上限22.5年）';
+            }
+
+            const annualSalary = salary * 12;
+
+            // Pension factor
+            let factor = 1/675;
+            let factorText = '1/675';
+            let factorNote = '甲類人員 / 乙類1987年4月1日後';
+
+            if (staffClass === 'B' && pre1987Months > 0) {
+                // Weighted average for Class B with pre-1987 service
+                const post1987Months = Math.max(0, enhancedMonths - pre1987Months);
+                const weightedFactor = (pre1987Months * (1/800) + post1987Months * (1/675)) / enhancedMonths;
+                factor = weightedFactor;
+                factorText = `加權平均 (${pre1987Months}月×1/800 + ${post1987Months}月×1/675)`;
+                factorNote = '乙類人員（混合服務期）';
+            } else if (staffClass === 'B' && pre1987Months === 0) {
+                factor = 1/675;
+                factorText = '1/675';
+                factorNote = '乙類人員（1987年4月1日後）';
+            } else {
+                factor = 1/675;
+                factorText = '1/675';
+                factorNote = staffClass === 'A' ? '甲類人員' : '乙類人員';
+            }
+
+            // Calculate gross annual pension
+            let grossAnnual = annualSalary * enhancedMonths * factor;
+
+            // Cap at 2/3 of annual salary
+            const cap = annualSalary * (2/3);
+            let capped = false;
+            if (grossAnnual > cap) {
+                grossAnnual = cap;
+                capped = true;
+            }
+
+            // Commutation
+            const commuteDecimal = commutePct / 100;
+            const lumpSum = grossAnnual * commuteDecimal * 14;
+            const reducedAnnual = grossAnnual * (1 - commuteDecimal);
+            const monthlyPension = reducedAnnual / 12;
+
+            // Update display
+            document.getElementById('p-res-months').innerText = Math.round(enhancedMonths);
+            document.getElementById('p-res-years').innerText = (enhancedMonths / 12).toFixed(2);
+            document.getElementById('p-res-annual').innerText = annualSalary.toLocaleString();
+            document.getElementById('p-res-gross').innerText = Math.round(grossAnnual).toLocaleString();
+            document.getElementById('p-res-factor').innerText = factorText;
+            document.getElementById('p-res-factor-note').innerText = factorNote + (enhancementNote ? ' · ' + enhancementNote : '');
+
+            document.getElementById('step1-salary').innerText = salary.toLocaleString();
+            document.getElementById('step1-annual').innerText = annualSalary.toLocaleString();
+            document.getElementById('step2-months').innerText = Math.round(enhancedMonths);
+            document.getElementById('step2-factor').innerText = factorText;
+            document.getElementById('step3-annual').innerText = annualSalary.toLocaleString();
+            document.getElementById('step3-months').innerText = Math.round(enhancedMonths);
+            document.getElementById('step3-factor').innerText = factorText;
+            document.getElementById('step3-gross').innerText = Math.round(grossAnnual).toLocaleString();
+            document.getElementById('step4-cap').innerText = Math.round(cap).toLocaleString();
+            document.getElementById('step4-check').innerText = capped ? '已超過上限，採用上限值。' : '未超過上限，採用計算值。';
+            document.getElementById('step5-pct').innerText = commutePct;
+            document.getElementById('step5-pct2').innerText = commutePct;
+            document.getElementById('step5-gross').innerText = Math.round(grossAnnual).toLocaleString();
+            document.getElementById('step5-lump').innerText = Math.round(lumpSum).toLocaleString();
+
+            document.getElementById('p-res-lump').innerText = Math.round(lumpSum).toLocaleString();
+            document.getElementById('p-res-monthly').innerText = Math.round(monthlyPension).toLocaleString();
+
+            // Status badge
+            const badge = document.getElementById('p-status-badge');
+            const reasonMap = {
+                'normal': '正常退休', 'operational': '運作上需要退休',
+                'incapacity': '喪失工作能力退休', 'redundancy': '超額人員退休', 'resign': '辭職（延付）'
+            };
+            badge.innerText = reasonMap[reason] || '正常退休';
+
+            document.getElementById('p-result').classList.remove('hidden');
+            updateLucideIcons();
+        }
+
+        function resetPensionCalc() {
+            document.getElementById('p-scheme').value = 'new';
+            document.getElementById('p-class').value = 'A';
+            document.getElementById('p-disciplinary').value = 'no';
+            document.getElementById('p-salary').value = '';
+            document.getElementById('p-appoint').value = '';
+            document.getElementById('p-retire').value = '';
+            document.getElementById('p-dob').value = '';
+            document.getElementById('p-reason').value = 'normal';
+            document.getElementById('p-exclude').value = '0';
+            document.getElementById('p-pre1987').value = '0';
+            onPensionSchemeChange();
+            onDisciplinaryChange();
+            document.getElementById('p-result').classList.add('hidden');
+        }
+
+</script>
 </body>
 </html>
