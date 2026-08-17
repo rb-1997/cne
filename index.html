@@ -36,6 +36,15 @@
         .child-view-panel input, .child-view-panel select, .child-view-panel button, .child-view-panel textarea {
             font-size: 1.05rem;
         }
+        #view-quarters input, #view-quarters select {
+            font-size: 0.875rem; /* 14px for mobile devices */
+            line-height: 1.25rem;
+        }
+        @media (min-width: 768px) {
+            #view-quarters input, #view-quarters select {
+                font-size: 0.9375rem; /* 15px for tablets/desktop */
+            }
+        }
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -87,8 +96,8 @@
 
     <!-- Header -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('home')">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="switchView('home')">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-between p-2 text-white shadow-md shadow-teal-100">
                     <i data-lucide="cross" class="w-6 h-6 mx-auto"></i>
                 </div>
@@ -99,7 +108,7 @@
             </div>
             
             <div class="flex items-center space-x-2">
-                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-slate-200 hover:bg-slate-300 text-slate-800 px-3.5 py-1.5 rounded-xl transition-all font-bold border border-slate-300">
+                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-slate-200 hover:bg-slate-300 text-slate-800 px-3.5 py-1.5 rounded-xl transition-all font-bold border border-slate-300 active:scale-95">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -108,12 +117,12 @@
     </header>
 
     <!-- Main Content Container -->
-    <main class="flex-grow max-w-4xl w-full mx-auto p-4 md:p-6">
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6">
 
-        <!-- ================= PAGE 1: HOME DASHBOARD ================= -->
+        <!-- ================= PAGE 1: HOME DASHBOARD (8-GRID BALANCED LAYOUT) ================= -->
         <section id="view-home" class="view-panel active space-y-6">
             <!-- Banner with Premium Deep Emerald Blue Gradient -->
-            <div class="bg-gradient-to-r from-teal-800 via-emerald-800 to-cyan-900 border border-teal-600/30 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden space-y-3">
+            <div class="bg-gradient-to-r from-teal-800 via-emerald-800 to-cyan-900 border border-teal-600/30 rounded-2xl p-5 md:p-6 text-white shadow-xl relative overflow-hidden space-y-3">
                 <div class="relative z-10 space-y-2">
                     <span class="inline-block bg-teal-400/20 border border-teal-300/30 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-200 shadow-inner">每日更新 • 護理智慧</span>
                     <h2 class="text-2xl md:text-3xl font-black tracking-wide text-white drop-shadow-sm">歡迎來到 CNE日常 🛠️</h2>
@@ -127,45 +136,56 @@
                         </div>
                     </div>
 
-                    <p class="text-teal-100 text-sm md:text-base max-w-lg leading-relaxed font-medium pt-1">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。</p>
+                    <p class="text-teal-100 text-xs md:text-sm max-w-xl leading-relaxed font-medium pt-1">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。</p>
                 </div>
                 <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
             </div>
 
-            <!-- Core Tools Grid (Symmetrical 6-Card Grid) -->
+            <!-- Balanced 8-Card Grid Layout -->
             <div>
-                <h3 class="text-base font-extrabold text-slate-800 mb-3 flex items-center gap-2">
-                    <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
-                    核心項目選單
-                </h3>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
+                        核心項目選單 (8項實用工具)
+                    </h3>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-200/60 px-2.5 py-1 rounded-full">適合手機/平板</span>
+                </div>
 
-                    <!-- Card 1: 行水神器 -->
-                    <div onclick="switchView('drip')" class="bg-gradient-to-br from-white via-slate-50 to-slate-200 rounded-2xl p-5 border border-slate-300 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-slate-900">
+                <!-- 8-Grid System: Mobile (2 columns = 4 rows), Tablet/Desktop (4 columns = 2 rows) -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 md:gap-4.5">
+
+                    <!-- Card 1: 行水神器 (白色與銀色混合漸變底色) -->
+                    <div onclick="switchView('drip')" class="h-full bg-gradient-to-br from-white via-slate-100 to-slate-300 rounded-2xl p-4 md:p-5 border border-slate-300 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-slate-900">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-slate-800 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                <i data-lucide="droplets" class="w-6 h-6"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-800 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="droplets" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-slate-200/80 text-slate-700 font-bold px-2 py-0.5 rounded-full border border-slate-300">時間分配</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-black text-slate-900">行水神器</h4>
-                                <p class="text-xs text-slate-600 mt-1 line-clamp-2 font-medium">設定時間與 2-6 人數，直接試算人員 A、B、C... 之整理裝備時間區段。</p>
+                                <h4 class="text-base md:text-lg font-black text-slate-900">行水神器</h4>
+                                <p class="text-xs text-slate-600 mt-1 line-clamp-2 font-medium leading-relaxed">設定時間與 2-6 人數，直接試算人員裝備整理時段。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-300/70 flex items-center justify-between text-xs text-slate-800 font-black">
+                        <div class="mt-4 pt-3 border-t border-slate-300/80 flex items-center justify-between text-xs text-slate-800 font-bold">
                             <span>進入功能</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 2: 煙棚計算 -->
-                    <div onclick="switchView('respiratory')" class="bg-gradient-to-br from-sky-500 via-blue-600 to-blue-700 rounded-2xl p-5 border border-blue-400 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                    <div onclick="switchView('respiratory')" class="h-full bg-gradient-to-br from-sky-600 via-blue-600 to-blue-700 rounded-2xl p-4 md:p-5 border border-blue-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-sky-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                <i data-lucide="flame" class="w-6 h-6"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-sky-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="flame" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">罰款關稅</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-black text-white">煙棚計算</h4>
-                                <p class="text-xs text-sky-100 mt-1 line-clamp-2 font-medium">未申報香煙/雪茄 Compounding 複合罰款、駕駛員條例與關稅評估工具。</p>
+                                <h4 class="text-base md:text-lg font-black text-white">煙棚計算</h4>
+                                <p class="text-xs text-sky-100 mt-1 line-clamp-2 font-medium leading-relaxed">未申報香煙/雪茄 Compounding 罰款及關稅評估工具。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-blue-400/60 flex items-center justify-between text-xs text-sky-100 font-extrabold">
@@ -175,51 +195,57 @@
                     </div>
 
                     <!-- Card 3: 抽籤模式 -->
-                    <div onclick="switchView('draw')" class="bg-gradient-to-br from-emerald-100 via-green-100 to-emerald-200 rounded-2xl p-5 border border-emerald-300/80 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-emerald-950">
+                    <div onclick="switchView('draw')" class="h-full bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 rounded-2xl p-4 md:p-5 border border-emerald-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
-                                <i data-lucide="dices" class="w-6 h-6"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="dices" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">假期排位</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-black text-emerald-950">抽籤模式</h4>
-                                <p class="text-xs text-emerald-800 mt-1 line-clamp-2 font-bold opacity-90">新年/長假期同事抽假排位、畫鬼腳視覺版、二選一輪盤。</p>
+                                <h4 class="text-base md:text-lg font-black text-white">抽籤模式</h4>
+                                <p class="text-xs text-emerald-100 mt-1 line-clamp-2 font-medium leading-relaxed">長假期同事抽假、畫鬼腳視覺版、二選一幸運輪盤。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-emerald-300/80 flex items-center justify-between text-xs text-emerald-900 font-black">
+                        <div class="mt-4 pt-3 border-t border-emerald-400/60 flex items-center justify-between text-xs text-emerald-100 font-black">
                             <span>選擇模式</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 4: CR金句 -->
-                    <div onclick="switchView('quotes')" class="bg-gradient-to-br from-amber-200 via-amber-300 to-orange-400 rounded-2xl p-5 border border-amber-300 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-amber-950">
+                    <div onclick="switchView('quotes')" class="h-full bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 rounded-2xl p-4 md:p-5 border border-amber-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-amber-900 text-amber-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                <i data-lucide="quote" class="w-6 h-6"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-amber-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="quote" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">評語 100</span>
                             </div>
                             <div>
-                                <h4 class="text-lg font-black text-amber-950">C R 金句 100</h4>
-                                <p class="text-xs text-amber-900 mt-1 line-clamp-2 font-bold opacity-90">精選穩定型、求進型、健康型三大意向報告評語金句。</p>
+                                <h4 class="text-base md:text-lg font-black text-white">CR 金句 100</h4>
+                                <p class="text-xs text-amber-100 mt-1 line-clamp-2 font-medium leading-relaxed">穩定型、求進型、健康型意向報告評語金句精選。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-amber-400/80 flex items-center justify-between text-xs text-amber-950 font-black">
+                        <div class="mt-4 pt-3 border-t border-amber-400/60 flex items-center justify-between text-xs text-amber-100 font-black">
                             <span>選擇意向</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 5: 輪班預約好幫手 -->
-                    <div onclick="switchView('shift')" class="bg-gradient-to-br from-orange-500 via-orange-600 to-red-600 rounded-2xl p-5 border border-orange-400 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                    <div onclick="switchView('shift')" class="h-full bg-gradient-to-br from-orange-600 via-rose-600 to-red-600 rounded-2xl p-4 md:p-5 border border-orange-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-orange-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-orange-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="calendar-check" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-white text-red-600 px-2 py-0.5 rounded-full font-black shadow-sm">約會好幫手</span>
                             </div>
                             <div>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <h4 class="text-lg font-black text-white">輪班預約好幫手</h4>
-                                    <span class="text-[10px] bg-white text-red-600 px-1.5 py-0.5 rounded-full font-black shadow-sm">跨Pattern對照</span>
-                                </div>
-                                <p class="text-xs text-orange-100 mt-1 line-clamp-2 font-medium">支援 5 大班別 Pattern 混合對照，自動分析黃金晚餐聚會與約會日！</p>
+                                <h4 class="text-base md:text-lg font-black text-white">輪班預約好幫手</h4>
+                                <p class="text-xs text-orange-100 mt-1 line-clamp-2 font-medium leading-relaxed">支援 5 大 Pattern 班別對照，自動分析黃金聚會日！</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-orange-400/60 flex items-center justify-between text-xs text-orange-100 font-extrabold">
@@ -229,17 +255,17 @@
                     </div>
 
                     <!-- Card 6: CNE AI BOT -->
-                    <div onclick="switchView('ai')" class="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 rounded-2xl p-5 border border-purple-500/40 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                    <div onclick="switchView('ai')" class="h-full bg-gradient-to-br from-purple-800 via-indigo-900 to-purple-900 rounded-2xl p-4 md:p-5 border border-purple-500/50 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-md text-amber-300 flex items-center justify-center group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner">
-                                <i data-lucide="bot" class="w-7 h-7"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-amber-300 flex items-center justify-center group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="bot" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-amber-400 text-slate-900 font-extrabold px-2 py-0.5 rounded-full shadow-sm">AI 專家</span>
                             </div>
                             <div>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <h4 class="text-lg font-black tracking-wide text-white">CNE AI BOT</h4>
-                                    <span class="text-[10px] bg-amber-400 text-slate-900 font-extrabold px-2 py-0.5 rounded-full shadow-sm">AI 專家</span>
-                                </div>
-                                <p class="text-xs text-purple-100 mt-1 line-clamp-2 font-medium">內建資深 CNE 人員智庫，隨時解答法例條文與清關算式。</p>
+                                <h4 class="text-base md:text-lg font-black tracking-wide text-white">CNE AI BOT</h4>
+                                <p class="text-xs text-purple-100 mt-1 line-clamp-2 font-medium leading-relaxed">內建資深 CNE 智庫，隨時解答法例條文與算式。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-purple-700/60 flex items-center justify-between text-xs text-amber-300 font-extrabold">
@@ -248,29 +274,48 @@
                         </div>
                     </div>
 
-                </div>
-            
-                    <!-- Card 7: 宿舍分數計算器 (NEW) -->
-                    <div onclick="switchView('quarters')" class="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 rounded-2xl p-5 border border-slate-500 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all cursor-pointer group flex flex-col justify-between text-white">
+                    <!-- Card 7: 宿舍分數計算器 (淺灰色與淺淺灰混合漸變底色) -->
+                    <div onclick="switchView('quarters')" class="h-full bg-gradient-to-br from-slate-100 via-slate-200 to-zinc-200 rounded-2xl p-4 md:p-5 border border-slate-300 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-slate-900">
                         <div class="space-y-3">
-                            <div class="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-md text-slate-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                <i data-lucide="building-2" class="w-6 h-6"></i>
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-800 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="building-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded-full font-black border border-slate-300 shadow-sm">附錄 VII</span>
                             </div>
                             <div>
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <h4 class="text-lg font-black text-white">宿舍分數計算</h4>
-                                    <span class="text-[10px] bg-slate-500 text-white px-1.5 py-0.5 rounded-full font-black shadow-sm">附錄 VII</span>
-                                </div>
-                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium">CNE 部門宿舍計分試算表，依據最新指引實時計算 Quartering Points。</p>
+                                <h4 class="text-base md:text-lg font-black text-slate-900">宿舍分數計算</h4>
+                                <p class="text-xs text-slate-600 mt-1 line-clamp-2 font-medium leading-relaxed">CNE 部門宿舍計分試算表，實時計算 Quartering Points。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-600/60 flex items-center justify-between text-xs text-slate-300 font-extrabold">
+                        <div class="mt-4 pt-3 border-t border-slate-300/80 flex items-center justify-between text-xs text-slate-800 font-extrabold">
+                            <span>開始試算</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 8: 退休金計算器 -->
+                    <div onclick="switchView('pension')" class="h-full bg-gradient-to-br from-amber-700 via-amber-800 to-yellow-900 rounded-2xl p-4 md:p-5 border border-amber-500/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/15 backdrop-blur-md text-amber-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                    <i data-lucide="coins" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full font-black shadow-sm">NPS 試算</span>
+                            </div>
+                            <div>
+                                <h4 class="text-base md:text-lg font-black text-white">退休金計算器</h4>
+                                <p class="text-xs text-amber-100 mt-1 line-clamp-2 font-medium leading-relaxed">新舊退休金計劃試算，支援紀律部隊運作退休及折算。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-amber-600/60 flex items-center justify-between text-xs text-amber-200 font-extrabold">
                             <span>開始試算</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
                 </div>
+            </div>
         </section>
 
         <!-- ================= PAGE 2: 行水神器 ================= -->
@@ -816,7 +861,7 @@
             </div>
         </section>
 
-        <!-- ================= PAGE 7: 輪班預約好幫手 (全新晚餐約會評級) ================= -->
+        <!-- ================= PAGE 7: 輪班預約好幫手 ================= -->
         <section id="view-shift" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center space-x-4 bg-gradient-to-r from-orange-100 to-red-100 p-5 rounded-2xl border-2 border-orange-200">
                 <div class="p-3 bg-gradient-to-tr from-orange-500 to-red-600 text-white rounded-xl shadow-md">
@@ -887,65 +932,242 @@
             </div>
         </section>
 
-            <!-- ================= PAGE 8: 宿舍分數計算器 ================= -->
+        <!-- ================= PAGE 8: 宿舍分數計算器 ================= -->
         <section id="view-quarters" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-slate-200/80 p-5 rounded-2xl border-2 border-slate-300">
-                <div class="p-3 bg-slate-800 text-white rounded-xl"><i data-lucide="building-2" class="w-8 h-8"></i></div>
-                <div><h2 class="text-2xl font-extrabold text-slate-900">宿舍分數計算器</h2><p class="text-base text-slate-600 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p></div>
+            <div class="flex items-center space-x-3 md:space-x-4 bg-slate-200/80 p-4 md:p-5 rounded-2xl border-2 border-slate-300">
+                <div class="p-2.5 md:p-3 bg-slate-800 text-white rounded-xl flex-shrink-0"><i data-lucide="building-2" class="w-6 h-6 md:w-8 md:h-8"></i></div>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">宿舍分數計算器</h2>
+                    <p class="text-xs md:text-sm text-slate-600 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p>
+                </div>
             </div>
             <div class="flex flex-wrap border-b border-slate-300 mb-2 bg-slate-200/80 rounded-t-xl p-1 shadow-sm">
-                <button onclick="switchQuartersTab('calculator')" id="qtab-calculator" class="quarters-tab-btn active px-5 py-2.5 font-bold text-xs md:text-sm rounded-lg transition-all duration-200 flex items-center space-x-2 text-slate-900 bg-white shadow-sm border border-slate-300"><i data-lucide="calculator" class="w-4 h-4 text-slate-700"></i><span>宿舍分數計算器</span></button>
-                
+                <button onclick="switchQuartersTab('calculator')" id="qtab-calculator" class="quarters-tab-btn active px-4 md:px-5 py-2 md:py-2.5 font-bold text-xs md:text-sm rounded-lg transition-all duration-200 flex items-center space-x-2 text-slate-900 bg-white shadow-sm border border-slate-300"><i data-lucide="calculator" class="w-4 h-4 text-slate-700"></i><span>宿舍分數計算器</span></button>
             </div>
-            <div id="qpanel-calculator" class="quarters-tab-panel space-y-6">
+            <div id="qpanel-calculator" class="quarters-tab-panel space-y-5 md:space-y-6">
                 <div class="bg-white rounded-xl shadow-md border border-slate-300 overflow-hidden">
-                    <div class="bg-slate-800 text-slate-100 px-5 py-3 flex justify-between items-center border-b border-slate-700"><span class="font-bold text-xs md:text-sm tracking-wide">CNE Departmental Quartering Points Calculator</span><span class="text-[11px] bg-slate-700 text-slate-200 px-2 py-0.5 rounded border border-slate-600">Version Oct-24</span></div>
+                    <div class="bg-slate-800 text-slate-100 px-4 md:px-5 py-2.5 md:py-3 flex justify-between items-center border-b border-slate-700 flex-wrap gap-1">
+                        <span class="font-bold text-xs md:text-sm tracking-wide">CNE Departmental Quartering Points Calculator</span>
+                        <span class="text-[10px] md:text-[11px] bg-slate-700 text-slate-200 px-2 py-0.5 rounded border border-slate-600">Version Oct-24</span>
+                    </div>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-xs text-left border-collapse">
-                            <thead><tr class="bg-slate-300 text-slate-900 font-bold border-b border-slate-400"><th class="p-3 border-r border-slate-300 w-5/12 min-w-[220px]">項目資料</th><th class="p-3 border-r border-slate-300 w-3/12 min-w-[180px]">填寫/選擇資料</th><th class="p-3 border-r border-slate-300 w-2/12 min-w-[120px] text-center">單項得分</th><th class="p-3 w-2/12 min-w-[140px]">計分基準與備註</th></tr></thead>
-                            <tbody class="divide-y divide-slate-200 text-slate-800">
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Substantive Monthly Salary</div><div class="text-slate-600">實職月薪 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><div class="relative w-full"><span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500 font-bold">$</span><input type="number" id="q-salary" step="any" min="0" value="0" placeholder="例如: 46000" oninput="calculateQuartersPoints()" class="w-full pl-7 pr-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></div></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-salary-score" class="font-extrabold text-sm text-slate-800">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>1 point each $538</div><div>每 $538 算 1 分</div></td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Date of Application Deadline</div><div class="text-slate-600">申請截止日期 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><input type="date" id="q-deadline" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 text-slate-400 align-middle">-</td><td class="p-3 text-slate-500 text-xs align-middle">計算服務年資基準截止日</td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Date of Appointment to Current Grade</div><div class="text-slate-600">現職級系入職日期 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><input type="date" id="q-appointment" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-service-score" class="font-extrabold text-sm text-slate-800">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>6 points each year</div><div>每年資 6 分</div></td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Days Not Counted as Years of Service</div><div class="text-slate-600">不計算在 CNE 服務年期的日數</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-daysNotCounted" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-service-days-info" class="text-xs font-bold text-slate-700">淨年資: 0天</span></td><td class="p-3 text-slate-500 align-middle">從總服務天數中扣除</td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Marital Status</div><div class="text-slate-600">婚姻狀況 <span class="text-red-500">*</span></div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-maritalStatus" onchange="handleQuartersMaritalChange()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="Married">Married 已婚</option><option value="Single">Single 單身</option><option value="Widowed">Widowed 喪偶</option><option value="Separated">Separated 分居</option><option value="Divorced">Divorced 離婚</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 text-slate-400 align-middle">-</td><td class="p-3 text-slate-500 text-xs align-middle">影響配偶分及單親首名子女計分</td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">Spouse Residing with Officer in HK</div><div class="text-slate-600">配偶與申請人在本港同住/預計1個月內抵港</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-spouseResiding" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="Yes">Yes 是</option><option value="No">No 否</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-spouse-score" class="font-extrabold text-sm text-slate-800">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>20 points each</div><div>每名 20 分</div></td></tr>
-                                <tr class="hover:bg-slate-200/50 border-l-4 border-l-slate-600"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Dependent Child in Hong Kong</div><div class="text-slate-700 font-medium">居於本港或於一個月內抵達的受供養子女數目</div></td><td class="p-3 border-r border-slate-200 bg-slate-200/60 align-middle"><select id="q-childHK" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border-2 border-slate-500 rounded focus:outline-none focus:ring-2 focus:ring-slate-600 text-slate-900 font-black h-9"><option value="0" selected>0 名</option><option value="1">1 名</option><option value="2">2 名</option><option value="3">3 名</option><option value="4">4 名</option><option value="5">5 名</option><option value="6">6 名</option><option value="7">7 名</option><option value="8">8 名</option><option value="9">9 名</option><option value="10">10 名</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-100 align-middle"><span id="q-row-childhk-score" class="font-black text-base text-slate-900">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>10 points each</div><div>一般每名 10 分</div><div class="text-[10px] text-slate-500 font-medium mt-0.5">(喪偶/離婚首名20分)</div></td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Child undergoing full-time Education outside HK</div><div class="text-slate-600 font-medium">正在本港以外接受全時間教育的子女數目 (21歲或以下)</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-childOutside" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="0" selected>0 名</option><option value="1">1 名</option><option value="2">2 名</option><option value="3">3 名</option><option value="4">4 名</option><option value="5">5 名</option><option value="6">6 名</option><option value="7">7 名</option><option value="8">8 名</option><option value="9">9 名</option><option value="10">10 名</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-childoutside-score" class="font-extrabold text-sm text-slate-700">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>5 points each</div><div>每名 5 分</div></td></tr>
-                                <tr class="hover:bg-slate-50"><td class="p-3 border-r border-slate-200 align-middle"><div class="font-bold text-slate-900">No. of Child expected to be Born within 4 months</div><div class="text-slate-600">預計在四個月內出生的子女數目</div></td><td class="p-3 border-r border-slate-200 bg-slate-100/70 align-middle"><select id="q-childExpected" onchange="calculateQuartersPoints()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-9"><option value="0" selected>0 名</option><option value="1">1 名</option><option value="2">2 名</option><option value="3">3 名</option><option value="4">4 名</option><option value="5">5 名</option></select></td><td class="p-3 border-r border-slate-200 text-center bg-slate-50 align-middle"><span id="q-row-childexpected-score" class="font-extrabold text-sm text-slate-700">0.000 分</span></td><td class="p-3 text-slate-600 align-middle"><div>10 points each</div><div>每名 10 分</div></td></tr>
+                        <table class="w-full text-xs text-left border-collapse min-w-[580px]">
+                            <thead>
+                                <tr class="bg-slate-300 text-slate-900 font-bold border-b border-slate-400 text-xs md:text-sm">
+                                    <th class="p-2.5 md:p-3 border-r border-slate-300 w-5/12 min-w-[170px]">項目資料</th>
+                                    <th class="p-2.5 md:p-3 border-r border-slate-300 w-3/12 min-w-[140px]">填寫/選擇資料</th>
+                                    <th class="p-2.5 md:p-3 border-r border-slate-300 w-2/12 min-w-[100px] text-center">單項得分</th>
+                                    <th class="p-2.5 md:p-3 w-2/12 min-w-[120px]">計分基準與備註</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-800 text-xs md:text-sm">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">Substantive Monthly Salary</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs">實職月薪 <span class="text-red-500">*</span></div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <div class="relative w-full">
+                                            <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500 font-bold text-xs md:text-sm">$</span>
+                                            <input type="number" id="q-salary" step="any" min="0" value="0" placeholder="例如: 46000" oninput="calculateQuartersPoints()" class="w-full pl-6 pr-2 py-1.5 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                        </div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 align-middle">
+                                        <span id="q-row-salary-score" class="font-extrabold text-xs md:text-sm text-slate-800">0.000 分</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-600 text-[11px] md:text-xs align-middle">
+                                        <div>1 point each $538</div>
+                                        <div>每 $538 算 1 分</div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">Date of Application Deadline</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs">申請截止日期 <span class="text-red-500">*</span></div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <input type="date" id="q-deadline" onchange="calculateQuartersPoints()" class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 text-slate-400 align-middle">-</td>
+                                    <td class="p-2.5 md:p-3 text-slate-500 text-[11px] md:text-xs align-middle">計算服務年資基準截止日</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">Date of Appointment to Current Grade</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs">現職級系入職日期 <span class="text-red-500">*</span></div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <input type="date" id="q-appointment" onchange="calculateQuartersPoints()" class="w-full px-2 py-1.5 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 align-middle">
+                                        <span id="q-row-service-score" class="font-extrabold text-xs md:text-sm text-slate-800">0.000 分</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-600 text-[11px] md:text-xs align-middle">
+                                        <div>6 points each year</div>
+                                        <div>每年資 6 分</div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">No. of Days Not Counted as Years of Service</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs">不計算在 CNE 服務年期的日數</div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <select id="q-daysNotCounted" onchange="calculateQuartersPoints()" class="w-full px-2 py-1 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9"></select>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 align-middle">
+                                        <span id="q-row-service-days-info" class="text-[11px] md:text-xs font-bold text-slate-700">淨年資: 0天</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-500 text-[11px] md:text-xs align-middle">從總服務天數中扣除</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">Marital Status</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs">婚姻狀況 <span class="text-red-500">*</span></div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <select id="q-maritalStatus" onchange="handleQuartersMaritalChange()" class="w-full px-2 py-1 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                            <option value="Married">Married 已婚</option>
+                                            <option value="Single">Single 單身</option>
+                                            <option value="Widowed">Widowed 喪偶</option>
+                                            <option value="Separated">Separated 分居</option>
+                                            <option value="Divorced">Divorced 離婚</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 text-slate-400 align-middle">-</td>
+                                    <td class="p-2.5 md:p-3 text-slate-500 text-[11px] md:text-xs align-middle">影響配偶分及單親首名子女計分</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">Spouse Residing with Officer in HK</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs leading-tight">配偶與申請人在本港同住/預計1個月內抵港</div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <select id="q-spouseResiding" onchange="calculateQuartersPoints()" class="w-full px-2 py-1 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                            <option value="Yes">Yes 是</option>
+                                            <option value="No">No 否</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 align-middle">
+                                        <span id="q-row-spouse-score" class="font-extrabold text-xs md:text-sm text-slate-800">0.000 分</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-600 text-[11px] md:text-xs align-middle">
+                                        <div>20 points each</div>
+                                        <div>每名 20 分</div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-200/50 border-l-4 border-l-slate-600">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">No. of Dependent Child in Hong Kong</div>
+                                        <div class="text-slate-700 font-medium text-[11px] md:text-xs leading-tight">居於本港或於一個月內抵達的受供養子女數目</div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-200/60 align-middle">
+                                        <select id="q-childHK" onchange="calculateQuartersPoints()" class="w-full px-2 py-1 bg-white border-2 border-slate-500 rounded focus:outline-none focus:ring-2 focus:ring-slate-600 text-slate-900 font-black h-8 md:h-9">
+                                            <option value="0" selected>0 名</option>
+                                            <option value="1">1 名</option>
+                                            <option value="2">2 名</option>
+                                            <option value="3">3 名</option>
+                                            <option value="4">4 名</option>
+                                            <option value="5">5 名</option>
+                                            <option value="6">6 名</option>
+                                            <option value="7">7 名</option>
+                                            <option value="8">8 名</option>
+                                            <option value="9">9 名</option>
+                                            <option value="10">10 名</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-100 align-middle">
+                                        <span id="q-row-childhk-score" class="font-black text-xs md:text-sm text-slate-900">0.000 分</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-600 text-[11px] md:text-xs align-middle">
+                                        <div>10 points each</div>
+                                        <div>一般每名 10 分</div>
+                                        <div class="text-[10px] text-slate-500 font-medium mt-0.5">(喪偶/離婚首名20分)</div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">No. of Child undergoing full-time Education outside HK</div>
+                                        <div class="text-slate-600 font-medium text-[11px] md:text-xs leading-tight">正在本港以外接受全時間教育的子女數目 (21歲或以下)</div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <select id="q-childOutside" onchange="calculateQuartersPoints()" class="w-full px-2 py-1 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                            <option value="0" selected>0 名</option>
+                                            <option value="1">1 名</option>
+                                            <option value="2">2 名</option>
+                                            <option value="3">3 名</option>
+                                            <option value="4">4 名</option>
+                                            <option value="5">5 名</option>
+                                            <option value="6">6 名</option>
+                                            <option value="7">7 名</option>
+                                            <option value="8">8 名</option>
+                                            <option value="9">9 名</option>
+                                            <option value="10">10 名</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 align-middle">
+                                        <span id="q-row-childoutside-score" class="font-extrabold text-xs md:text-sm text-slate-700">0.000 分</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-600 text-[11px] md:text-xs align-middle">
+                                        <div>5 points each</div>
+                                        <div>每名 5 分</div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50">
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 align-middle">
+                                        <div class="font-bold text-slate-900 text-xs md:text-sm">No. of Child expected to be Born within 4 months</div>
+                                        <div class="text-slate-600 text-[11px] md:text-xs leading-tight">預計在四個月內出生的子女數目</div>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 bg-slate-100/70 align-middle">
+                                        <select id="q-childExpected" onchange="calculateQuartersPoints()" class="w-full px-2 py-1 bg-white border border-slate-300 rounded focus:outline-none focus:ring-2 focus:ring-slate-500 text-slate-900 font-bold h-8 md:h-9">
+                                            <option value="0" selected>0 名</option>
+                                            <option value="1">1 名</option>
+                                            <option value="2">2 名</option>
+                                            <option value="3">3 名</option>
+                                            <option value="4">4 名</option>
+                                            <option value="5">5 名</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 border-r border-slate-200 text-center bg-slate-50 align-middle">
+                                        <span id="q-row-childexpected-score" class="font-extrabold text-xs md:text-sm text-slate-700">0.000 分</span>
+                                    </td>
+                                    <td class="p-2.5 md:p-3 text-slate-600 text-[11px] md:text-xs align-middle">
+                                        <div>10 points each</div>
+                                        <div>每名 10 分</div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="bg-slate-300 p-5 border-t-2 border-slate-400 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div class="text-center md:text-left"><div class="text-xs font-bold text-slate-600 uppercase tracking-widest">Your Quartering Points</div><div class="text-xl md:text-2xl font-black text-slate-900">你的宿舍總分數</div></div>
-                        <div id="q-errorState" class="bg-slate-700 text-slate-100 border border-slate-600 px-6 py-3 rounded-lg text-center shadow-sm min-w-[280px]"><div class="text-xl font-black tracking-wider text-amber-300">資料未完整 (Incomplete)</div><div class="text-xs font-normal mt-0.5 opacity-90">請填寫實職月薪、申請截止日期及入職日期。</div></div>
-                        <div id="q-successState" class="hidden bg-slate-800 text-white px-8 py-3.5 rounded-xl text-center shadow-md border-2 border-slate-500 min-w-[280px]"><div class="text-xs text-slate-300 uppercase tracking-widest font-semibold">總宿舍得分 (Total Points)</div><div class="text-3xl font-black text-amber-300 my-0.5 tracking-tight" id="q-totalPoints">0.000</div><div class="text-[11px] text-slate-300 font-normal">已依據規定計算至小數點後 3 位</div></div>
+                    <div class="bg-slate-300 p-4 md:p-5 border-t-2 border-slate-400 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
+                        <div class="text-center md:text-left"><div class="text-[11px] md:text-xs font-bold text-slate-600 uppercase tracking-widest">Your Quartering Points</div><div class="text-lg md:text-2xl font-black text-slate-900">你的宿舍總分數</div></div>
+                        <div id="q-errorState" class="bg-slate-700 text-slate-100 border border-slate-600 px-5 md:px-6 py-2.5 md:py-3 rounded-lg text-center shadow-sm w-full sm:w-auto min-w-[240px]"><div class="text-lg md:text-xl font-black tracking-wider text-amber-300">資料未完整 (Incomplete)</div><div class="text-[11px] md:text-xs font-normal mt-0.5 opacity-90">請填寫實職月薪、申請截止日期及入職日期。</div></div>
+                        <div id="q-successState" class="hidden bg-slate-800 text-white px-6 md:px-8 py-3 md:py-3.5 rounded-xl text-center shadow-md border-2 border-slate-500 w-full sm:w-auto min-w-[240px]"><div class="text-[11px] md:text-xs text-slate-300 uppercase tracking-widest font-semibold">總宿舍得分 (Total Points)</div><div class="text-2xl md:text-3xl font-black text-amber-300 my-0.5 tracking-tight" id="q-totalPoints">0.000</div><div class="text-[10px] md:text-[11px] text-slate-300 font-normal">已依據規定計算至小數點後 3 位</div></div>
                     </div>
                 </div>
-                <div id="q-breakdownSection" class="bg-white rounded-xl p-5 border border-slate-300 shadow-sm">
-                    <h4 class="font-bold text-slate-800 text-sm mb-3 flex items-center space-x-2 border-b border-slate-200 pb-2"><i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-700"></i><span>分數拆解總覽 (Score Summary)</span></h4>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
-                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">月薪得分</span><span class="text-base font-bold text-slate-800" id="q-bk-salary">0.000</span></div>
-                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">服務年資得分</span><span class="text-base font-bold text-slate-800" id="q-bk-service">0.000</span></div>
-                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">配偶得分</span><span class="text-base font-bold text-slate-800" id="q-bk-spouse">0.000</span></div>
-                        <div class="bg-slate-200 p-2.5 rounded border border-slate-300 text-center"><span class="text-slate-800 font-bold block">居港子女得分</span><span class="text-base font-black text-slate-900" id="q-bk-childhk">0.000</span></div>
-                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">境外就讀子女</span><span class="text-base font-bold text-slate-800" id="q-bk-childoutside">0.000</span></div>
-                        <div class="bg-slate-50 p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block">預產子女得分</span><span class="text-base font-bold text-slate-800" id="q-bk-childexpected">0.000</span></div>
+                <div id="q-breakdownSection" class="bg-white rounded-xl p-4 md:p-5 border border-slate-300 shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-xs md:text-sm mb-3 flex items-center space-x-2 border-b border-slate-200 pb-2"><i data-lucide="bar-chart-3" class="w-4 h-4 text-slate-700"></i><span>分數拆解總覽 (Score Summary)</span></h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 text-xs">
+                        <div class="bg-slate-50 p-2 md:p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block text-[11px]">月薪得分</span><span class="text-sm md:text-base font-bold text-slate-800" id="q-bk-salary">0.000</span></div>
+                        <div class="bg-slate-50 p-2 md:p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block text-[11px]">服務年資得分</span><span class="text-sm md:text-base font-bold text-slate-800" id="q-bk-service">0.000</span></div>
+                        <div class="bg-slate-50 p-2 md:p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block text-[11px]">配偶得分</span><span class="text-sm md:text-base font-bold text-slate-800" id="q-bk-spouse">0.000</span></div>
+                        <div class="bg-slate-200 p-2 md:p-2.5 rounded border border-slate-300 text-center"><span class="text-slate-800 font-bold block text-[11px]">居港子女得分</span><span class="text-sm md:text-base font-black text-slate-900" id="q-bk-childhk">0.000</span></div>
+                        <div class="bg-slate-50 p-2 md:p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block text-[11px]">境外就讀子女</span><span class="text-sm md:text-base font-bold text-slate-800" id="q-bk-childoutside">0.000</span></div>
+                        <div class="bg-slate-50 p-2 md:p-2.5 rounded border border-slate-200 text-center"><span class="text-slate-500 block text-[11px]">預產子女得分</span><span class="text-sm md:text-base font-bold text-slate-800" id="q-bk-childexpected">0.000</span></div>
                     </div>
                 </div>
-                <div class="flex flex-wrap gap-3">
-                    <button onclick="loadQuartersSampleData()" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-colors shadow-sm flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4"></i><span>填入示範數據試算</span></button>
-                    <button onclick="resetQuartersCalc()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-sm transition-colors border border-slate-300 flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i><span>重置所有資料</span></button>
+                <div class="flex flex-wrap gap-2.5">
+                    <button onclick="loadQuartersSampleData()" class="px-4 md:px-5 py-2 md:py-2.5 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-xl text-xs md:text-sm transition-colors shadow-sm flex items-center gap-2"><i data-lucide="flask-conical" class="w-4 h-4"></i><span>填入示範數據試算</span></button>
+                    <button onclick="resetQuartersCalc()" class="px-4 md:px-5 py-2 md:py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold rounded-xl text-xs md:text-sm transition-colors border border-slate-300 flex items-center gap-2"><i data-lucide="rotate-ccw" class="w-4 h-4"></i><span>重置所有資料</span></button>
                 </div>
-                <div class="bg-slate-200/80 p-4 rounded-xl border border-slate-300 text-xs text-slate-600 leading-relaxed space-y-1.5">
+                <div class="bg-slate-200/80 p-3.5 md:p-4 rounded-xl border border-slate-300 text-[11px] md:text-xs text-slate-600 leading-relaxed space-y-1">
                     <p class="font-bold text-slate-700">Disclaimer / 免責聲明：</p>
                     <p>上述計算結果只是粗略估計並僅供參考。實際宿舍分數以 CNE 部門宿舍指南所規定並經宿舍小組計算及宿舍編配委員會審核者為準。此計算器的設計者及管理人員對上述計算結果的準確性概不負任何責任。宿舍編配亦同時受包括但不限於職級等眾多因素影響，人員應閱讀部門宿舍指南所載與宿舍分數相關的規定。</p>
                 </div>
             </div>
-            
         </section>
 
-            <!-- ================= PAGE 9: 退休金計算器 ================= -->
+        <!-- ================= PAGE 9: 退休金計算器 ================= -->
         <section id="view-pension" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center space-x-4 bg-amber-100/80 p-5 rounded-2xl border-2 border-amber-300">
                 <div class="p-3 bg-amber-900 text-white rounded-xl">
@@ -1212,7 +1434,7 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-6 mt-12">
-        <div class="max-w-4xl mx-auto px-4 text-center text-sm text-slate-500 space-y-1 font-medium">
+        <div class="max-w-5xl mx-auto px-4 text-center text-sm text-slate-500 space-y-1 font-medium">
             <p>© CNE日常 • Designed for Healthcare Professionals</p>
             <p>輕鬆部署於 GitHub Pages • 每天持續新增項目</p>
         </div>
@@ -1374,7 +1596,6 @@
             updateLucideIcons();
         }
 
-        // ================= 煙棚計算 Logic =================
         function resetCigCalc() {
             document.getElementById('cig-sticks').value = '';
             document.getElementById('cigar-grams').value = '';
@@ -1505,7 +1726,6 @@
             document.getElementById('cig-calc-result').classList.remove('hidden');
         }
 
-        // ================= 抽籤模式 TRIPLE-MODE LOGIC =================
         function switchDrawMode(mode) {
             document.querySelectorAll('.draw-tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`tab-draw-${mode}`).classList.add('active');
@@ -1600,7 +1820,7 @@
             document.getElementById('multi-date').valueAsDate = new Date();
         }
 
-        // --- MODE 2: 畫鬼腳 ---
+        // --- Ghost Leg Drawing Engine ---
         let ghostParticipants = [];
         let ghostBridges = [];
         let ghostResults = [];
@@ -1927,7 +2147,6 @@
             document.getElementById('ghostOverlay').classList.add('hidden');
         }
 
-        // --- MODE 3: 二選一輪盤 ---
         let wheelRawNames = [];
         let wheelDisplayNames = [];
         let wheelDisplayColors = [];
@@ -2100,7 +2319,6 @@
             document.getElementById('wheelWinnerModal').classList.add('hidden');
         }
 
-        // ================= C R 金句 100 Data & Logic =================
         const crQuotesData = {
             stay: [
                 "本年度工作進展順利，與同事協作默契；建議引入 AI 圖像識別系統輔助 X 光判讀，全面提升清關效能。",
@@ -2158,7 +2376,6 @@
             document.body.removeChild(textArea);
         }
 
-        // ================= 輪班預約好幫手 (全新晚餐聚會邏輯) =================
         const SHIFT_PATTERNS = {
             pattern1: {
                 name: "Pattern1: 早1 早2 放假1 晏1 晏2 放假2",
@@ -2481,28 +2698,6 @@
             updateLucideIcons();
         }
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast-msg');
-            const toastText = document.getElementById('toast-text');
-            toastText.innerText = msg;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2500);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initTimeDropdowns();
-            initDailyQuote();
-            initQuartersDaysDropdown();
-            updateLucideIcons();
-            const multiDateElem = document.getElementById('multi-date');
-            if (multiDateElem) multiDateElem.valueAsDate = new Date();
-        });
-    
-        // ================= 宿舍分數計算器 (Quarters Calculator) =================
         function initQuartersDaysDropdown() {
             const select = document.getElementById('q-daysNotCounted');
             if (!select || select.options.length > 0) return;
@@ -2628,7 +2823,6 @@
             calculateQuartersPoints();
         }
 
-
         function resetShiftView() {
             staffList = [
                 { id: 1, name: "人員 A", patternKey: "pattern1", anchorDate: "", anchorType: 0 },
@@ -2650,14 +2844,12 @@
             showToast('輪班資料已重置');
         }
 
-
-        // ================= 退休金計算器 (Pension Calculator) =================
+        // --- Pension Calculator Functions ---
         function onPensionSchemeChange() {
             const scheme = document.getElementById('p-scheme').value;
             const commuteSelect = document.getElementById('p-commute');
             const hint = document.getElementById('p-commute-hint');
 
-            // Update commute options based on scheme
             commuteSelect.innerHTML = '';
             if (scheme === 'old') {
                 hint.innerText = '舊計劃最高可折算 25%';
@@ -2726,7 +2918,6 @@
             const excludeMonths = parseInt(document.getElementById('p-exclude').value) || 0;
             const pre1987Months = parseInt(document.getElementById('p-pre1987').value) || 0;
             const dob = document.getElementById('p-dob').value;
-            const retireAge = parseInt(document.getElementById('p-retire-age').value) || 60;
 
             if (!salary || !appointDate || !retireDate) {
                 document.getElementById('p-result').classList.add('hidden');
@@ -2738,7 +2929,6 @@
             let totalMonths = Math.floor((retire - appoint) / (1000 * 60 * 60 * 24 * 30.44));
             totalMonths = Math.max(0, totalMonths - excludeMonths);
 
-            // Operational retirement enhancement for disciplinary forces
             let enhancedMonths = totalMonths;
             let enhancementNote = '';
             if (reason === 'operational' && isDisc && scheme === 'new') {
@@ -2753,14 +2943,12 @@
                 if (ratio !== 1.0) {
                     const baseYears = totalMonths / 12;
                     const addedMonths = baseYears * (ratio - 1) * 12;
-                    // Cap at max pension service or service to age 60
                     const maxMonths = Math.min(450, (60 - (ageAtRetire - baseYears)) * 12);
                     enhancedMonths = Math.min(totalMonths + addedMonths, maxMonths);
                     enhancementNote = `運作退休增強係數 ${ratio}x`;
                 }
             }
 
-            // Incapacity doubling (up to 22.5 years = 270 months)
             if (reason === 'incapacity') {
                 const doubled = enhancedMonths * 2;
                 enhancedMonths = Math.min(doubled, 270);
@@ -2769,13 +2957,11 @@
 
             const annualSalary = salary * 12;
 
-            // Pension factor
             let factor = 1/675;
             let factorText = '1/675';
             let factorNote = '甲類人員 / 乙類1987年4月1日後';
 
             if (staffClass === 'B' && pre1987Months > 0) {
-                // Weighted average for Class B with pre-1987 service
                 const post1987Months = Math.max(0, enhancedMonths - pre1987Months);
                 const weightedFactor = (pre1987Months * (1/800) + post1987Months * (1/675)) / enhancedMonths;
                 factor = weightedFactor;
@@ -2791,10 +2977,8 @@
                 factorNote = staffClass === 'A' ? '甲類人員' : '乙類人員';
             }
 
-            // Calculate gross annual pension
             let grossAnnual = annualSalary * enhancedMonths * factor;
 
-            // Cap at 2/3 of annual salary
             const cap = annualSalary * (2/3);
             let capped = false;
             if (grossAnnual > cap) {
@@ -2802,13 +2986,11 @@
                 capped = true;
             }
 
-            // Commutation
             const commuteDecimal = commutePct / 100;
             const lumpSum = grossAnnual * commuteDecimal * 14;
             const reducedAnnual = grossAnnual * (1 - commuteDecimal);
             const monthlyPension = reducedAnnual / 12;
 
-            // Update display
             document.getElementById('p-res-months').innerText = Math.round(enhancedMonths);
             document.getElementById('p-res-years').innerText = (enhancedMonths / 12).toFixed(2);
             document.getElementById('p-res-annual').innerText = annualSalary.toLocaleString();
@@ -2834,7 +3016,6 @@
             document.getElementById('p-res-lump').innerText = Math.round(lumpSum).toLocaleString();
             document.getElementById('p-res-monthly').innerText = Math.round(monthlyPension).toLocaleString();
 
-            // Status badge
             const badge = document.getElementById('p-status-badge');
             const reasonMap = {
                 'normal': '正常退休', 'operational': '運作上需要退休',
@@ -2862,6 +3043,27 @@
             document.getElementById('p-result').classList.add('hidden');
         }
 
-</script>
+        function showToast(msg) {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            if (!toast || !toastText) return;
+            toastText.innerText = msg;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initTimeDropdowns();
+            initDailyQuote();
+            initQuartersDaysDropdown();
+            updateLucideIcons();
+            const multiDateElem = document.getElementById('multi-date');
+            if (multiDateElem) multiDateElem.valueAsDate = new Date();
+        });
+    </script>
 </body>
 </html>
