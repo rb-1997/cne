@@ -121,10 +121,28 @@
 
         <!-- ================= PAGE 1: HOME DASHBOARD (8-GRID BALANCED LAYOUT) ================= -->
         <section id="view-home" class="view-panel active space-y-6">
-            <!-- Banner with Premium Deep Emerald Blue Gradient -->
+            <!-- Banner with Action Buttons (QR Code & Add to Homescreen) -->
             <div class="bg-gradient-to-r from-teal-800 via-emerald-800 to-cyan-900 border border-teal-600/30 rounded-2xl p-5 md:p-6 text-white shadow-xl relative overflow-hidden space-y-3">
                 <div class="relative z-10 space-y-2">
-                    <span class="inline-block bg-teal-400/20 border border-teal-300/30 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-200 shadow-inner">每日更新 • 護理智慧</span>
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <span class="inline-block bg-teal-400/20 border border-teal-300/30 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-200 shadow-inner">每日更新 • 護理智慧</span>
+                        
+                        <!-- Top-Right Action Buttons: QR Code & Add to Homescreen Guide -->
+                        <div class="flex items-center gap-2">
+                            <!-- Button 1: QR Code -->
+                            <button onclick="openQrModal()" title="分享/掃描 QR Code" class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 active:scale-95 text-teal-100 hover:text-white px-3 py-1.5 rounded-xl text-xs md:text-sm font-bold border border-teal-300/30 backdrop-blur-md transition-all shadow-sm">
+                                <i data-lucide="qr-code" class="w-4 h-4 text-teal-200"></i>
+                                <span>QR Code</span>
+                            </button>
+
+                            <!-- Button 2: Add to Home Screen -->
+                            <button onclick="openPwaModal()" title="加入手機桌面捷徑" class="flex items-center gap-1.5 bg-amber-400/20 hover:bg-amber-400/30 active:scale-95 text-amber-200 hover:text-amber-100 px-3 py-1.5 rounded-xl text-xs md:text-sm font-bold border border-amber-300/40 backdrop-blur-md transition-all shadow-sm">
+                                <i data-lucide="smartphone" class="w-4 h-4 text-amber-300"></i>
+                                <span>一鍵生成去桌面</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <h2 class="text-2xl md:text-3xl font-black tracking-wide text-white drop-shadow-sm">歡迎來到 CNE日常 🛠️</h2>
                     
                     <!-- Daily Quote Box -->
@@ -776,7 +794,7 @@
                     </button>
                 </div>
 
-                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                     <div>
                         <label class="block font-extrabold text-slate-800 mb-1">幸運兒名單 (每行一個，輸入兩人將啟動黑白對決模式):</label>
                         <textarea id="wheel-names" rows="3" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">A&#10;B</textarea>
@@ -897,7 +915,7 @@
             <!-- Dify Chatbot Embedded iFrame Container -->
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[680px]">
                 <iframe
-                    src="https://udify.app/chatbot/8T3166qLrJeeoLUH"
+                    src="https://udify.app/chat/36Ctlt1ia7NiFXzQ"
                     style="width: 100%; height: 680px; border: 0;"
                     allow="microphone;clipboard-write">
                 </iframe>
@@ -1469,6 +1487,75 @@
 
     </main>
 
+    <!-- Modal 1: QR Code Modal -->
+    <div id="qrModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full border-2 border-slate-200 shadow-2xl space-y-4 text-center">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="qr-code" class="w-5 h-5 text-teal-600"></i>
+                    <h3 class="font-extrabold text-slate-900 text-lg">CNE日常 QR Code</h3>
+                </div>
+                <button onclick="closeQrModal()" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex justify-center items-center">
+                <img src="https://raw.githubusercontent.com/rb-1997/cne/main/cne_qr.jpg" alt="CNE日常 QR Code" class="w-64 h-64 object-contain rounded-xl shadow-md border border-slate-200" onerror="this.src='https://github.com/rb-1997/cne/blob/main/cne_qr.jpg?raw=true'">
+            </div>
+            <p class="text-xs text-slate-600 font-bold leading-relaxed">請使用手機相機或其他相機 App 掃描上方 QR Code，即可直接打開「CNE日常」！</p>
+            <button onclick="closeQrModal()" class="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-extrabold rounded-xl transition-all shadow-md shadow-teal-200">
+                關閉
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal 2: Add to Homescreen Guide Modal -->
+    <div id="pwaModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full border-2 border-slate-200 shadow-2xl space-y-5 text-left max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="smartphone" class="w-6 h-6 text-amber-500"></i>
+                    <h3 class="font-extrabold text-slate-900 text-lg">一鍵加入手機桌面教學</h3>
+                </div>
+                <button onclick="closePwaModal()" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- iOS Safari Guide -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
+                <div class="flex items-center gap-2 font-extrabold text-slate-900 text-base">
+                    <span class="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-lg text-xs font-black">iOS / Apple</span>
+                    <span>Safari 瀏覽器教學：</span>
+                </div>
+                <ol class="text-xs md:text-sm text-slate-700 font-semibold space-y-2 list-decimal list-inside leading-relaxed">
+                    <li>使用 iPhone / iPad 內建的 <strong>Safari 瀏覽器</strong> 開啟本網頁。</li>
+                    <li>點擊螢幕底部中間的 <strong>「分享」圖示</strong>（一個向上箭頭的方形方框 <i data-lucide="share" class="w-3.5 h-3.5 inline text-blue-600"></i>）。</li>
+                    <li>在彈出的選單中向下滾動，選擇 <strong>「加入主畫面 (Add to Home Screen)」</strong>。</li>
+                    <li>確認名稱為「CNE日常」後，點擊右上角的 <strong>「新增」</strong> 即可像 App 般快速開啟！</li>
+                </ol>
+            </div>
+
+            <!-- Android Chrome Guide -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
+                <div class="flex items-center gap-2 font-extrabold text-slate-900 text-base">
+                    <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-black">Android / 安卓</span>
+                    <span>Chrome 瀏覽器教學：</span>
+                </div>
+                <ol class="text-xs md:text-sm text-slate-700 font-semibold space-y-2 list-decimal list-inside leading-relaxed">
+                    <li>使用 Android 手機的 <strong>Chrome 瀏覽器</strong> 打開本網頁。</li>
+                    <li>點擊右上角的 <strong>三個小圓點選單 (⋮)</strong>。</li>
+                    <li>在下拉選單中點選 <strong>「加至主螢幕」</strong> 或 <strong>「安裝應用程式」</strong>。</li>
+                    <li>點擊確認 <strong>「新增」</strong>，即可在手機桌面建立專屬捷徑！</li>
+                </ol>
+            </div>
+
+            <button onclick="closePwaModal()" class="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-extrabold rounded-xl transition-all shadow-md">
+                了解並關閉
+            </button>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-6 mt-12">
         <div class="max-w-5xl mx-auto px-4 text-center text-sm text-slate-500 space-y-1 font-medium">
@@ -1499,6 +1586,32 @@
                 const randomIndex = Math.floor(Math.random() * dailyQuotes.length);
                 quoteTextElem.innerText = dailyQuotes[randomIndex];
             }
+        }
+
+        function openQrModal() {
+            const modal = document.getElementById('qrModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                updateLucideIcons();
+            }
+        }
+
+        function closeQrModal() {
+            const modal = document.getElementById('qrModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function openPwaModal() {
+            const modal = document.getElementById('pwaModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                updateLucideIcons();
+            }
+        }
+
+        function closePwaModal() {
+            const modal = document.getElementById('pwaModal');
+            if (modal) modal.classList.add('hidden');
         }
 
         function switchView(viewId) {
@@ -1729,7 +1842,7 @@
             document.getElementById('res-excess-cigar-grams').innerText = excessCigarGrams;
 
             document.getElementById('res-tax-amount').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
-            document.getElementById('res-fine-5x-amount').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximum配信FractionDigits: 1});
+            document.getElementById('res-fine-5x-amount').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('res-compounding-total-display').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
 
             document.getElementById('res-driver-tag').innerText = isDriver ? '🚗 跨境駕駛員' : '🧳 一般旅客';
