@@ -794,7 +794,7 @@
                     </button>
                 </div>
 
-                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
+                <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
                     <div>
                         <label class="block font-extrabold text-slate-800 mb-1">幸運兒名單 (每行一個，輸入兩人將啟動黑白對決模式):</label>
                         <textarea id="wheel-names" rows="3" class="w-full p-3 border-2 border-slate-300 rounded-xl font-bold bg-white">A&#10;B</textarea>
@@ -922,7 +922,7 @@
             </div>
         </section>
 
-        <!-- ================= PAGE 7: 輪班預約好幫手 ================= -->
+        <!-- ================= PAGE 7: 輪班預約好幫手 (支援 LocalStorage 本地記憶 + ⭐ 我的最愛功能) ================= -->
         <section id="view-shift" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center space-x-4 bg-gradient-to-r from-orange-100 to-red-100 p-5 rounded-2xl border-2 border-orange-200">
                 <div class="p-3 bg-gradient-to-tr from-orange-500 to-red-600 text-white rounded-xl shadow-md">
@@ -930,12 +930,12 @@
                 </div>
                 <div>
                     <h2 class="text-2xl font-extrabold text-slate-900">輪班預約好幫手</h2>
-                    <p class="text-base text-slate-600 font-medium">支援多位同事選擇不同 Pattern 班別，精準交叉比對食晚飯/聚會黃金日子</p>
+                    <p class="text-base text-slate-600 font-medium">支援多位同事選擇不同 Pattern 班別，交叉比對食晚飯/聚會黃金日子</p>
                 </div>
-                <div class="ml-auto">
-                    <button onclick="resetShiftView()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                <div class="ml-auto flex items-center gap-2">
+                    <button onclick="resetShiftView()" title="重置回預設名單" class="text-xs md:text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1 bg-white hover:bg-red-50 px-3 py-2 rounded-xl border border-slate-300 transition-colors shadow-sm">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                        <span>重置</span>
+                        <span class="hidden sm:inline">重置</span>
                     </button>
                 </div>
             </div>
@@ -945,14 +945,37 @@
                 <!-- Staff Anchor Settings Section -->
                 <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3 flex-wrap gap-2">
-                        <h3 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
-                            <i data-lucide="user-plus" class="w-5 h-5 text-orange-600"></i>
-                            1. 設定同事所屬 Pattern 與基準班別
-                        </h3>
-                        <button onclick="addStaffRow()" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all">
-                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                            <span>新增同事</span>
-                        </button>
+                        <div>
+                            <h3 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
+                                <i data-lucide="user-plus" class="w-5 h-5 text-orange-600"></i>
+                                1. 設定同事所屬 Pattern 與基準班別
+                            </h3>
+                            <p class="text-xs text-slate-500 font-bold mt-0.5">💡 系統會**自動記錄**你輸入的同事與最愛設定，下次開啟網頁無需重複輸入！</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="saveStaffToStorage(true)" title="立即手動保存名單" class="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-xs md:text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all active:scale-95">
+                                <i data-lucide="save" class="w-4 h-4 text-emerald-400"></i>
+                                <span>儲存名單</span>
+                            </button>
+                            <button onclick="addStaffRow()" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-xs md:text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all active:scale-95">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                <span>新增同事</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Favorite Staff Filter / Quick Bar -->
+                    <div id="favorite-quick-bar" class="hidden bg-amber-50/80 p-3 rounded-xl border border-amber-200 flex items-center justify-between gap-2 flex-wrap text-xs">
+                        <div class="flex items-center gap-1.5 font-extrabold text-amber-900">
+                            <i data-lucide="star" class="w-4 h-4 text-amber-500 fill-amber-400"></i>
+                            <span>我的最愛同事已標記：</span>
+                            <span id="fav-count-tag" class="bg-amber-200 text-amber-950 px-2 py-0.5 rounded-full font-black">0 人</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="keepOnlyFavorites()" class="px-2.5 py-1 bg-white hover:bg-amber-100 text-amber-950 font-bold rounded-lg border border-amber-300 shadow-sm transition-colors">
+                                ⭐ 只保留最愛名單
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Staff Config Dynamic Container -->
@@ -2585,14 +2608,47 @@
             }
         };
 
-        let staffList = [
-            { id: 1, name: "人員 A", patternKey: "pattern1", anchorDate: "", anchorType: 0 },
-            { id: 2, name: "人員 B", patternKey: "pattern4", anchorDate: "", anchorType: 4 }
+        // --- Multi-Staff Memory with LocalStorage & Favorite Star Support ---
+        const DEFAULT_STAFF_LIST = [
+            { id: 1, name: "人員 A", patternKey: "pattern1", anchorDate: "", anchorType: 0, isFavorite: true },
+            { id: 2, name: "人員 B", patternKey: "pattern4", anchorDate: "", anchorType: 4, isFavorite: false }
         ];
+
+        let staffList = [];
+
+        function loadStaffFromStorage() {
+            try {
+                const saved = localStorage.getItem('cne_shift_staff_list');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        staffList = parsed;
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // Fallback to default
+            staffList = JSON.parse(JSON.stringify(DEFAULT_STAFF_LIST));
+            const todayIso = new Date().toISOString().split('T')[0];
+            staffList.forEach(s => { if (!s.anchorDate) s.anchorDate = todayIso; });
+        }
+
+        function saveStaffToStorage(showNotice = false) {
+            try {
+                localStorage.setItem('cne_shift_staff_list', JSON.stringify(staffList));
+                if (showNotice) {
+                    showToast('💾 同事名單與最愛已成功儲存至瀏覽器！');
+                }
+            } catch (e) {}
+            updateFavoriteQuickBar();
+        }
 
         function initShiftView() {
             const today = new Date();
             const todayIso = today.toISOString().split('T')[0];
+
+            loadStaffFromStorage();
 
             staffList.forEach(s => {
                 if (!s.anchorDate) s.anchorDate = todayIso;
@@ -2607,6 +2663,49 @@
 
             renderStaffConfigRows();
             renderMultiShiftRoster();
+            updateFavoriteQuickBar();
+        }
+
+        function updateFavoriteQuickBar() {
+            const bar = document.getElementById('favorite-quick-bar');
+            const countTag = document.getElementById('fav-count-tag');
+            if (!bar || !countTag) return;
+
+            const favCount = staffList.filter(s => s.isFavorite).length;
+            countTag.innerText = `${favCount} 人`;
+
+            if (favCount > 0) {
+                bar.classList.remove('hidden');
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+
+        function toggleFavorite(id) {
+            const staff = staffList.find(s => s.id === id);
+            if (staff) {
+                staff.isFavorite = !staff.isFavorite;
+                saveStaffToStorage();
+                renderStaffConfigRows();
+                if (staff.isFavorite) {
+                    showToast(`⭐ 已將「${staff.name}」加入我的最愛！`);
+                } else {
+                    showToast(`已取消「${staff.name}」的最愛標記`);
+                }
+            }
+        }
+
+        function keepOnlyFavorites() {
+            const favorites = staffList.filter(s => s.isFavorite);
+            if (favorites.length === 0) {
+                showToast('尚未標記任何最愛同事！點擊同事名稱旁邊的 ⭐ 星星即可加入最愛。');
+                return;
+            }
+            staffList = favorites;
+            saveStaffToStorage();
+            renderStaffConfigRows();
+            renderMultiShiftRoster();
+            showToast('已切換為純最愛名單！');
         }
 
         function renderStaffConfigRows() {
@@ -2628,16 +2727,26 @@
                     return `<span class="px-2 py-0.5 rounded-lg border text-[11px] whitespace-nowrap ${pillBg}">${pIdx + 1}.${s.name}${noteTag}</span>`;
                 }).join('<span class="text-slate-300 text-xs font-bold">➔</span>');
 
+                const isFav = !!staff.isFavorite;
+
                 const rowHtml = `
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3 shadow-sm">
+                    <div class="bg-white p-4 rounded-xl border ${isFav ? 'border-amber-400 ring-1 ring-amber-400 bg-amber-50/20' : 'border-slate-200'} space-y-3 shadow-sm transition-all">
                         <div class="grid sm:grid-cols-12 gap-3 items-center">
+                            
+                            <!-- Name & Favorite Star Button -->
                             <div class="sm:col-span-3 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-extrabold text-xs flex items-center justify-center">${index + 1}</span>
-                                <input type="text" value="${staff.name}" onchange="updateStaffName(${staff.id}, this.value)" placeholder="同事姓名" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm font-extrabold text-slate-900 bg-slate-50 focus:bg-white">
+                                <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-extrabold text-xs flex items-center justify-center flex-shrink-0">${index + 1}</span>
+                                
+                                <button type="button" onclick="toggleFavorite(${staff.id})" title="${isFav ? '點擊取消最愛' : '點擊加入我的最愛 (下次自動記住)'}" class="p-1 rounded-lg hover:bg-amber-100 active:scale-95 transition-transform flex-shrink-0">
+                                    <i data-lucide="star" class="w-5 h-5 ${isFav ? 'text-amber-500 fill-amber-400' : 'text-slate-300 hover:text-amber-400'}"></i>
+                                </button>
+
+                                <input type="text" value="${staff.name}" onchange="updateStaffName(${staff.id}, this.value)" placeholder="同事姓名" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm font-extrabold text-slate-900 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-orange-500">
                             </div>
+
                             <div class="sm:col-span-4">
                                 <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">選擇 Pattern:</span>
-                                <select onchange="updateStaffPattern(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-slate-50 text-slate-900">
+                                <select onchange="updateStaffPattern(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-slate-50 text-slate-900 focus:bg-white focus:ring-1 focus:ring-orange-500">
                                     <option value="pattern1" ${staff.patternKey === 'pattern1' ? 'selected' : ''}>Pattern1: 早1 早2 放假1 晏1 晏2 放假2</option>
                                     <option value="pattern2" ${staff.patternKey === 'pattern2' ? 'selected' : ''}>Pattern2: 早1 晏1 Swing 早2 晏2 放假1 早3 晏3 放假2</option>
                                     <option value="pattern3" ${staff.patternKey === 'pattern3' ? 'selected' : ''}>Pattern3: 早1 晏1 Swing 早2 晏2 放假</option>
@@ -2645,23 +2754,25 @@
                                     <option value="pattern5" ${staff.patternKey === 'pattern5' ? 'selected' : ''}>Pattern5: 五天工作週，星期六日放假</option>
                                 </select>
                             </div>
+
                             <div class="sm:col-span-3">
                                 <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">已知日期:</span>
-                                <input type="date" value="${staff.anchorDate}" onchange="updateStaffDate(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white">
+                                <input type="date" value="${staff.anchorDate}" onchange="updateStaffDate(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-orange-500">
                             </div>
-                            <div class="sm:col-span-2">
-                                <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">當天班別:</span>
-                                ${staff.patternKey === 'pattern5' ? `
-                                    <span class="text-xs font-bold text-slate-500 block px-1 py-1.5">自動按週六日</span>
-                                ` : `
-                                    <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900">
-                                        ${patternObj.shifts.map((p, i) => `<option value="${i}" ${staff.anchorType === i ? 'selected' : ''}>${p.name}</option>`).join('')}
-                                    </select>
-                                `}
-                            </div>
-                            <div class="sm:col-span-1 flex justify-end">
+
+                            <div class="sm:col-span-2 flex items-center justify-between gap-1">
+                                <div class="w-full">
+                                    <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">當天班別:</span>
+                                    ${staff.patternKey === 'pattern5' ? `
+                                        <span class="text-xs font-bold text-slate-500 block px-1 py-1.5">自動按週六日</span>
+                                    ` : `
+                                        <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-orange-500">
+                                            ${patternObj.shifts.map((p, i) => `<option value="${i}" ${staff.anchorType === i ? 'selected' : ''}>${p.name}</option>`).join('')}
+                                        </select>
+                                    `}
+                                </div>
                                 ${staffList.length > 1 ? `
-                                    <button onclick="removeStaffRow(${staff.id})" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="刪除此同事">
+                                    <button type="button" onclick="removeStaffRow(${staff.id})" class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0" title="刪除此同事">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 ` : ''}
@@ -2682,6 +2793,7 @@
                 container.insertAdjacentHTML('beforeend', rowHtml);
             });
             updateLucideIcons();
+            updateFavoriteQuickBar();
         }
 
         function addStaffRow() {
@@ -2693,8 +2805,10 @@
                 name: `人員 ${nextLetter}`,
                 patternKey: "pattern1",
                 anchorDate: todayIso,
-                anchorType: 0
+                anchorType: 0,
+                isFavorite: false
             });
+            saveStaffToStorage();
             renderStaffConfigRows();
             renderMultiShiftRoster();
         }
@@ -2702,14 +2816,18 @@
         function removeStaffRow(id) {
             if (staffList.length <= 1) return;
             staffList = staffList.filter(s => s.id !== id);
+            saveStaffToStorage();
             renderStaffConfigRows();
             renderMultiShiftRoster();
         }
 
         function updateStaffName(id, val) {
             const staff = staffList.find(s => s.id === id);
-            if (staff) staff.name = val.trim() || '同事';
-            renderMultiShiftRoster();
+            if (staff) {
+                staff.name = val.trim() || '同事';
+                saveStaffToStorage();
+                renderMultiShiftRoster();
+            }
         }
 
         function updateStaffPattern(id, key) {
@@ -2717,21 +2835,28 @@
             if (staff) {
                 staff.patternKey = key;
                 staff.anchorType = 0;
+                saveStaffToStorage();
+                renderStaffConfigRows();
+                renderMultiShiftRoster();
             }
-            renderStaffConfigRows();
-            renderMultiShiftRoster();
         }
 
         function updateStaffDate(id, val) {
             const staff = staffList.find(s => s.id === id);
-            if (staff && val) staff.anchorDate = val;
-            renderMultiShiftRoster();
+            if (staff && val) {
+                staff.anchorDate = val;
+                saveStaffToStorage();
+                renderMultiShiftRoster();
+            }
         }
 
         function updateStaffType(id, val) {
             const staff = staffList.find(s => s.id === id);
-            if (staff) staff.anchorType = parseInt(val, 10);
-            renderMultiShiftRoster();
+            if (staff) {
+                staff.anchorType = parseInt(val, 10);
+                saveStaffToStorage();
+                renderMultiShiftRoster();
+            }
         }
 
         function renderMultiShiftRoster() {
@@ -2787,7 +2912,8 @@
 
                     staffShiftResults.push({
                         staffName: staff.name,
-                        shift: shiftObj
+                        shift: shiftObj,
+                        isFavorite: !!staff.isFavorite
                     });
                 });
 
@@ -2809,10 +2935,11 @@
 
                 let staffCardsHtml = staffShiftResults.map(res => {
                     const noteHtml = res.shift.note ? `<span class="text-[11px] font-bold text-slate-500 block">${res.shift.note}</span>` : '';
+                    const favStar = res.isFavorite ? `<i data-lucide="star" class="w-3.5 h-3.5 text-amber-500 fill-amber-400 inline ml-1"></i>` : '';
                     return `
                         <div class="p-3 rounded-xl border flex items-center justify-between ${res.shift.bg} shadow-sm">
                             <div>
-                                <span class="text-xs font-extrabold block text-slate-700">${res.staffName}</span>
+                                <span class="text-xs font-extrabold text-slate-700 flex items-center">${res.staffName}${favStar}</span>
                                 <span class="text-base font-black">${res.shift.name}</span>
                                 ${noteHtml}
                             </div>
@@ -2974,10 +3101,8 @@
         }
 
         function resetShiftView() {
-            staffList = [
-                { id: 1, name: "人員 A", patternKey: "pattern1", anchorDate: "", anchorType: 0 },
-                { id: 2, name: "人員 B", patternKey: "pattern4", anchorDate: "", anchorType: 4 }
-            ];
+            localStorage.removeItem('cne_shift_staff_list');
+            staffList = JSON.parse(JSON.stringify(DEFAULT_STAFF_LIST));
             const today = new Date();
             const todayIso = today.toISOString().split('T')[0];
             staffList.forEach(s => { if (!s.anchorDate) s.anchorDate = todayIso; });
@@ -2991,7 +3116,7 @@
 
             renderStaffConfigRows();
             renderMultiShiftRoster();
-            showToast('輪班資料已重置');
+            showToast('輪班名單已恢復預設！');
         }
 
         // --- Pension Calculator Functions ---
