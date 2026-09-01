@@ -912,17 +912,17 @@
                 </div>
             </div>
 
-            <!-- Dify Chatbot Embedded iFrame Container -->
+            <!-- Dify Chatbot Embedded iFrame Container (Updated Link) -->
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[680px]">
                 <iframe
-                    src="https://udify.app/chat/36Ctlt1ia7NiFXzQ"
+                    src="https://udify.app/chat/OnwMNyxa3hx6Wp7S"
                     style="width: 100%; height: 680px; border: 0;"
                     allow="microphone;clipboard-write">
                 </iframe>
             </div>
         </section>
 
-        <!-- ================= PAGE 7: 輪班預約好幫手 (支援 LocalStorage 本地記憶 + ⭐ 我的最愛功能) ================= -->
+        <!-- ================= PAGE 7: 輪班預約好幫手 ================= -->
         <section id="view-shift" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center space-x-4 bg-gradient-to-r from-orange-100 to-red-100 p-5 rounded-2xl border-2 border-orange-200">
                 <div class="p-3 bg-gradient-to-tr from-orange-500 to-red-600 text-white rounded-xl shadow-md">
@@ -2628,7 +2628,6 @@
                 }
             } catch (e) {}
 
-            // Fallback to default
             staffList = JSON.parse(JSON.stringify(DEFAULT_STAFF_LIST));
             const todayIso = new Date().toISOString().split('T')[0];
             staffList.forEach(s => { if (!s.anchorDate) s.anchorDate = todayIso; });
