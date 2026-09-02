@@ -2,10 +2,17 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>長官晉升大冒險 - 全螢幕自適應隨機版</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>長官晉升大冒險 - 手機全兼容終極修復版</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      user-select: none; 
+      -webkit-user-select: none; 
+      -webkit-touch-callout: none;
+    }
     html, body {
       width: 100%;
       height: 100%;
@@ -14,11 +21,13 @@
       color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       touch-action: none;
+      overscroll-behavior: none;
     }
     #gameWrapper {
       position: relative;
       width: 100vw;
       height: 100vh;
+      height: 100dvh; /* 相容手機動態高度 */
       background: radial-gradient(circle at 50% 15%, #1e1b4b, #030712);
       overflow: hidden;
     }
@@ -26,97 +35,94 @@
       width: 100%;
       height: 100%;
       display: block;
+      touch-action: none;
     }
-    /* 頂部職業選擇 UI：自適應置中與限寬 */
     .career-bar {
       position: absolute;
-      top: 14px;
+      top: env(safe-area-inset-top, 12px);
       left: 50%;
       transform: translateX(-50%);
-      width: 94%;
-      max-width: 540px;
+      width: 92%;
+      max-width: 500px;
       display: flex;
-      gap: 8px;
+      gap: 6px;
       z-index: 10;
+      margin-top: 6px;
     }
     .career-btn {
       flex: 1;
-      padding: 8px 0;
-      background: rgba(15, 23, 42, 0.85);
+      padding: 7px 0;
+      background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(8px);
       border: 1px solid #334155;
       border-radius: 8px;
       color: #94a3b8;
-      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      font-size: clamp(0.68rem, 2.8vw, 0.85rem);
       font-weight: 700;
       cursor: pointer;
       text-align: center;
-      transition: 0.2s;
+      transition: 0.15s;
     }
     .career-btn.active {
       background: #38bdf8;
       border-color: #e0f2fe;
       color: #030712;
-      box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
     }
     .career-btn.promoted {
       border-color: #fbbf24;
       color: #fbbf24;
     }
-
-    /* 頂部 HUD 資訊 */
     .hud-bar {
       position: absolute;
-      top: 64px;
+      top: calc(env(safe-area-inset-top, 12px) + 48px);
       left: 50%;
       transform: translateX(-50%);
-      width: 94%;
-      max-width: 600px;
+      width: 92%;
+      max-width: 560px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       pointer-events: none;
       z-index: 10;
-      font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+      font-size: clamp(0.78rem, 2.5vw, 0.95rem);
       font-weight: 600;
       text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
     .status-left {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
     .heart-box {
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      letter-spacing: 3px;
+      font-size: clamp(0.95rem, 3vw, 1.2rem);
+      letter-spacing: 2px;
       filter: drop-shadow(0 2px 6px rgba(239, 68, 68, 0.6));
     }
     .ammo-box {
-      font-size: clamp(0.85rem, 2vw, 1.05rem);
+      font-size: clamp(0.8rem, 2.4vw, 0.95rem);
       letter-spacing: 2px;
       color: #facc15;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
     }
     .audio-btn {
       pointer-events: auto;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       border: 1px solid #475569;
       color: #f8fafc;
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      font-size: 1rem;
+      width: 34px;
+      height: 34px;
+      font-size: 0.95rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
-
-    /* 底部提示文字 */
     .guide-overlay {
       position: absolute;
-      bottom: 24px;
+      bottom: calc(env(safe-area-inset-bottom, 16px) + 12px);
       left: 0;
       right: 0;
       text-align: center;
@@ -124,18 +130,16 @@
       z-index: 10;
     }
     .guide-text {
-      font-size: clamp(0.8rem, 2vw, 0.95rem);
+      font-size: clamp(0.78rem, 2.5vw, 0.9rem);
       font-weight: 600;
       color: #f8fafc;
-      background: rgba(15, 23, 42, 0.88);
-      padding: 8px 24px;
-      border-radius: 24px;
+      background: rgba(15, 23, 42, 0.9);
+      padding: 7px 18px;
+      border-radius: 20px;
       display: inline-block;
       border: 1px solid #334155;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     }
-
-    /* 彈窗 */
     .modal {
       position: absolute;
       inset: 0;
@@ -148,22 +152,22 @@
       text-align: center;
       z-index: 30;
     }
-    .modal h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 12px; }
-    .modal p { font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: #cbd5e1; margin-bottom: 24px; line-height: 1.6; max-width: 500px; }
+    .modal h2 { font-size: clamp(1.4rem, 4vw, 2rem); margin-bottom: 10px; }
+    .modal p { font-size: clamp(0.85rem, 2.5vw, 1rem); color: #cbd5e1; margin-bottom: 22px; line-height: 1.6; max-width: 440px; }
     .btn-action {
       background: linear-gradient(135deg, #ef4444, #dc2626);
       border: none;
       color: white;
-      padding: 14px 36px;
-      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      padding: 13px 32px;
+      font-size: clamp(0.9rem, 2.8vw, 1.05rem);
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
     }
     .btn-gold {
       background: linear-gradient(135deg, #f59e0b, #d97706);
-      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
     }
   </style>
 </head>
@@ -206,6 +210,25 @@
 </div>
 
 <script>
+  // ============================================
+  // 手機舊版 Safari / WebView roundRect 相容修正
+  // ============================================
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+      if (w < 2 * r) r = w / 2;
+      if (h < 2 * r) r = h / 2;
+      this.beginPath();
+      this.moveTo(x + r, y);
+      this.arcTo(x + w, y, x + w, y + h, r);
+      this.arcTo(x + w, y + h, x, y + h, r);
+      this.arcTo(x, y + h, x, y, r);
+      this.arcTo(x, y, x + w, y, r);
+      this.closePath();
+      return this;
+    };
+  }
+
+  // 音效合成器
   let audioCtx = null;
   let isAudioEnabled = false;
   let bgmInterval = null;
@@ -278,14 +301,16 @@
 
   function toggleAudio() {
     initAudio();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     isAudioEnabled = !isAudioEnabled;
     document.getElementById('audioToggleBtn').innerText = isAudioEnabled ? '🔊' : '🔇';
     if (isAudioEnabled) startBGM();
     else if (bgmInterval) clearInterval(bgmInterval);
   }
 
-  // Canvas 全螢幕高解析度自適應
+  // ============================================
+  // 手機全螢幕自適應視窗管理
+  // ============================================
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
   const guideText = document.getElementById('guideText');
@@ -295,16 +320,17 @@
   const winModal = document.getElementById('winModal');
   const loseModal = document.getElementById('loseModal');
 
-  let W = window.innerWidth;
-  let H = window.innerHeight;
+  let W = window.innerWidth || document.documentElement.clientWidth || 360;
+  let H = window.innerHeight || document.documentElement.clientHeight || 640;
 
   function resizeCanvas() {
-    W = window.innerWidth;
-    H = window.innerHeight;
+    W = window.innerWidth || document.documentElement.clientWidth || 360;
+    H = window.innerHeight || document.documentElement.clientHeight || 640;
     canvas.width = W;
     canvas.height = H;
   }
   window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
   resizeCanvas();
 
   let currentCareer = 'Cargo';
@@ -326,7 +352,6 @@
   let drones = [];
   let fireworks = [];
 
-  // 「CNE」相對於畫面中央 (W/2, CenterY) 的置中點陣
   const CNE_DOTS_CENTERED = [
     [-110, -28], [-125, -28], [-138, -18], [-142, -5], [-142, 8], [-138, 20], [-125, 30], [-110, 30],
     [-70, 30], [-70, 11], [-70, -8], [-70, -28],
@@ -369,7 +394,7 @@
   function spawnFirework(originX, originY) {
     const colors = ['#f43f5e', '#38bdf8', '#facc15', '#a855f7', '#22c55e', '#fb923c'];
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const count = 28;
+    const count = 24;
     for (let i = 0; i < count; i++) {
       const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.4;
       const speed = 2.5 + Math.random() * 4.5;
@@ -380,15 +405,13 @@
         vy: Math.sin(angle) * speed,
         color: color,
         life: 1,
-        decay: 0.02 + Math.random() * 0.015
+        decay: 0.025 + Math.random() * 0.015
       });
     }
     sfxFirework();
   }
 
-  // ============================================
-  // 全面隨機化浮台演算法 (每次生成全新不同位置)
-  // ============================================
+  // 隨機浮台演算法
   function initPlatforms() {
     platforms = [];
     isGameWon = false;
@@ -400,36 +423,31 @@
     let prevX = W / 2;
 
     for (let i = 0; i <= 12; i++) {
-      let width = 160;
+      let width = 140;
       let type = 'normal';
 
-      if (i <= 5) width = Math.min(185, Math.max(130, W * 0.32 - i * 6));
-      else if (i <= 10) width = Math.min(130, Math.max(95, W * 0.24));
-      else if (i === 11) { width = Math.min(110, Math.max(85, W * 0.2)); type = 'board_gate'; }
-      else if (i === 12) { width = Math.min(100, Math.max(75, W * 0.18)); type = 'promotion_seat'; }
+      if (i <= 5) width = Math.min(180, Math.max(120, W * 0.35 - i * 6));
+      else if (i <= 10) width = Math.min(125, Math.max(90, W * 0.26));
+      else if (i === 11) { width = Math.min(110, Math.max(85, W * 0.22)); type = 'board_gate'; }
+      else if (i === 12) { width = Math.min(95, Math.max(75, W * 0.2)); type = 'promotion_seat'; }
 
       let x = W / 2 - width / 2;
 
       if (i === 0) {
-        // 第 0 格起點置中
         x = W / 2 - width / 2;
         prevX = x;
       } else {
-        // 核心隨機化：用盡螢幕闊度，並限制相鄰跳躍跨度在可達範圍內
-        const padding = 24;
+        const padding = 20;
         const minX = padding;
-        const maxX = W - width - padding;
-
-        // 最大左右隨機跳躍跨度限制在螢幕可達範圍
-        const maxJumpSpan = Math.min(W * 0.42, 280);
+        const maxX = Math.max(minX + 10, W - width - padding);
+        const maxJumpSpan = Math.min(W * 0.45, 240);
         const randOffset = (Math.random() - 0.5) * 2 * maxJumpSpan;
 
         let candidateX = prevX + randOffset;
         candidateX = Math.max(minX, Math.min(maxX, candidateX));
 
-        // 如果過度重疊，強制產生錯位感
-        if (Math.abs(candidateX - prevX) < width * 0.35) {
-          candidateX = (candidateX < W / 2) ? candidateX + width * 0.6 : candidateX - width * 0.6;
+        if (Math.abs(candidateX - prevX) < width * 0.3) {
+          candidateX = (candidateX < W / 2) ? candidateX + width * 0.5 : candidateX - width * 0.5;
           candidateX = Math.max(minX, Math.min(maxX, candidateX));
         }
 
@@ -447,19 +465,18 @@
         width: width,
         height: 18,
         type: type,
-        vx: i === 12 ? (Math.random() > 0.5 ? 2.8 : -2.8) : 0
+        vx: i === 12 ? (Math.random() > 0.5 ? 2.6 : -2.6) : 0
       });
     }
 
-    // 障礙物高度與隨機生成
     const p11Y = platforms[11].y;
     const p12Y = platforms[12].y;
     const stepY = (p11Y - p12Y) / 4;
 
     obstacles = [
-      { x: Math.random() * (W - 100) + 50, baseY: p11Y - stepY * 1, y: p11Y - stepY * 1, vx: 2.5, radius: 16, wavePhase: Math.random() * Math.PI, alive: true },
-      { x: Math.random() * (W - 100) + 50, baseY: p11Y - stepY * 2, y: p11Y - stepY * 2, vx: -2.3, radius: 16, wavePhase: Math.random() * Math.PI, alive: true },
-      { x: Math.random() * (W - 100) + 50, baseY: p11Y - stepY * 3, y: p11Y - stepY * 3, vx: 2.8, radius: 16, wavePhase: Math.random() * Math.PI, alive: true }
+      { x: Math.random() * (W - 80) + 40, baseY: p11Y - stepY * 1, y: p11Y - stepY * 1, vx: 2.3, radius: 16, wavePhase: Math.random() * Math.PI, alive: true },
+      { x: Math.random() * (W - 80) + 40, baseY: p11Y - stepY * 2, y: p11Y - stepY * 2, vx: -2.1, radius: 16, wavePhase: Math.random() * Math.PI, alive: true },
+      { x: Math.random() * (W - 80) + 40, baseY: p11Y - stepY * 3, y: p11Y - stepY * 3, vx: 2.5, radius: 16, wavePhase: Math.random() * Math.PI, alive: true }
     ];
   }
 
@@ -468,7 +485,7 @@
     y: H - 165,
     vx: 0,
     vy: 0,
-    radius: 24,
+    radius: 23,
     isGrounded: true,
     wobble: 0,
     shootingTimer: 0
@@ -480,13 +497,13 @@
   let dragCurrent = { x: 0, y: 0 };
 
   let particles = [];
-  function createParticles(x, y, color, count = 14) {
+  function createParticles(x, y, color, count = 12) {
     for (let i = 0; i < count; i++) {
       particles.push({
         x, y,
-        vx: (Math.random() - 0.5) * 9,
-        vy: (Math.random() - 0.5) * 9 - 2,
-        radius: Math.random() * 4 + 2,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8 - 2,
+        radius: Math.random() * 3.5 + 2,
         color,
         life: 1
       });
@@ -728,7 +745,7 @@
     const cheerBob = Math.sin(officer.wobble * 2) * 3;
 
     ctx.save();
-    ctx.translate(p12.x - 30, p12.y + 2 + cheerBob);
+    ctx.translate(p12.x - 28, p12.y + 2 + cheerBob);
     ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.roundRect(-8, -12, 16, 12, 3); ctx.fill();
     ctx.fillStyle = '#14532d';
@@ -741,7 +758,7 @@
     ctx.restore();
 
     ctx.save();
-    ctx.translate(p12.x + p12.width + 30, p12.y + 2 - cheerBob);
+    ctx.translate(p12.x + p12.width + 28, p12.y + 2 - cheerBob);
     ctx.fillStyle = '#a3e635';
     ctx.beginPath(); ctx.roundRect(-8, -12, 16, 12, 3); ctx.fill();
     ctx.fillStyle = '#1e293b';
@@ -767,93 +784,50 @@
 
       if (currentCareer === 'Cargo') {
         ctx.fillStyle = '#64748b';
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 14, 8, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(10, -4); ctx.lineTo(20, 0); ctx.lineTo(10, 4);
-        ctx.fill();
+        ctx.beginPath(); ctx.ellipse(0, 0, 14, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(10, -4); ctx.lineTo(20, 0); ctx.lineTo(10, 4); ctx.fill();
         ctx.fillStyle = '#f472b6';
-        ctx.beginPath();
-        ctx.arc(-2, -8, 4, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(-2, -8, 4, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = '#0f172a';
-        ctx.beginPath();
-        ctx.arc(8, -3, 1.5, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(8, -3, 1.5, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = '#ef4444';
-        ctx.beginPath();
-        ctx.arc(19, 0, 1.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#f472b6';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(-14, 0);
-        ctx.quadraticCurveTo(-22, -8, -24, 4);
-        ctx.stroke();
+        ctx.beginPath(); ctx.arc(19, 0, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#f472b6'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(-14, 0); ctx.quadraticCurveTo(-22, -8, -24, 4); ctx.stroke();
 
       } else if (currentCareer === 'Pax') {
-        ctx.strokeStyle = '#15803d';
-        ctx.lineWidth = 6;
-        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#15803d'; ctx.lineWidth = 6; ctx.lineCap = 'round';
         ctx.beginPath();
         ctx.moveTo(-18, 0);
         ctx.quadraticCurveTo(-8, -10 + Math.sin(obs.wavePhase) * 4, 0, 0);
         ctx.quadraticCurveTo(8, 10 - Math.sin(obs.wavePhase) * 4, 16, -2);
         ctx.stroke();
         ctx.fillStyle = '#16a34a';
-        ctx.beginPath();
-        ctx.ellipse(18, -2, 6, 4, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = '#ef4444';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(24, -2); ctx.lineTo(30, -2);
-        ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(18, -2, 6, 4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(24, -2); ctx.lineTo(30, -2); ctx.stroke();
         ctx.fillStyle = '#facc15';
-        ctx.beginPath();
-        ctx.arc(19, -4, 1.5, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(19, -4, 1.5, 0, Math.PI * 2); ctx.fill();
 
       } else if (currentCareer === '老民') {
         ctx.fillStyle = '#0f172a';
-        ctx.beginPath();
-        ctx.roundRect(-18, -4, 36, 12, 4);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.roundRect(-8, -12, 18, 9, 3);
-        ctx.fill();
-        ctx.fillStyle = '#38bdf8';
-        ctx.fillRect(-6, -10, 14, 6);
+        ctx.beginPath(); ctx.roundRect(-18, -4, 36, 12, 4); ctx.fill();
+        ctx.beginPath(); ctx.roundRect(-8, -12, 18, 9, 3); ctx.fill();
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(-6, -10, 14, 6);
         ctx.fillStyle = '#475569';
-        ctx.beginPath();
-        ctx.arc(-11, 8, 4, 0, Math.PI * 2);
-        ctx.arc(11, 8, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#facc15';
-        ctx.fillRect(17, -2, 3, 5);
+        ctx.beginPath(); ctx.arc(-11, 8, 4, 0, Math.PI * 2); ctx.arc(11, 8, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#facc15'; ctx.fillRect(17, -2, 3, 5);
 
       } else if (currentCareer === '水佬') {
         ctx.fillStyle = '#334155';
         ctx.beginPath();
-        ctx.moveTo(-20, -5);
-        ctx.lineTo(14, -5);
-        ctx.lineTo(24, 4);
-        ctx.lineTo(-20, 6);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(-6, -12, 12, 7);
-        ctx.fillStyle = '#38bdf8';
-        ctx.fillRect(-4, -10, 8, 4);
-        ctx.fillStyle = '#ef4444';
-        ctx.fillRect(-23, -2, 5, 8);
-        ctx.strokeStyle = 'rgba(248, 250, 252, 0.7)';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(-24, 4);
-        ctx.lineTo(-34, 7 + Math.sin(obs.wavePhase * 2) * 3);
-        ctx.stroke();
+        ctx.moveTo(-20, -5); ctx.lineTo(14, -5); ctx.lineTo(24, 4); ctx.lineTo(-20, 6);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#0f172a'; ctx.fillRect(-6, -12, 12, 7);
+        ctx.fillStyle = '#38bdf8'; ctx.fillRect(-4, -10, 8, 4);
+        ctx.fillStyle = '#ef4444'; ctx.fillRect(-23, -2, 5, 8);
+        ctx.strokeStyle = 'rgba(248, 250, 252, 0.7)'; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(-24, 4); ctx.lineTo(-34, 7 + Math.sin(obs.wavePhase * 2) * 3); ctx.stroke();
       }
 
       ctx.restore();
@@ -870,14 +844,9 @@
       ctx.save();
       ctx.fillStyle = d.color;
       ctx.globalAlpha = alpha * 0.45;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, 9, 0, Math.PI * 2);
-      ctx.fill();
-
+      ctx.beginPath(); ctx.arc(d.x, d.y, 8.5, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = alpha;
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, 3.8, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(d.x, d.y, 3.5, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     });
   }
@@ -889,9 +858,7 @@
       ctx.save();
       ctx.fillStyle = fw.color;
       ctx.globalAlpha = fw.life;
-      ctx.beginPath();
-      ctx.arc(fw.x, fw.y, 2.8, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(fw.x, fw.y, 2.8, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     });
   }
@@ -900,12 +867,8 @@
     bullets.forEach(b => {
       ctx.save();
       ctx.fillStyle = '#facc15';
-      ctx.beginPath();
-      ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.stroke();
       ctx.restore();
     });
   }
@@ -963,8 +926,8 @@
 
       if (droneTimer % 22 === 0 && droneTimer > 40) {
         const p12 = platforms[12];
-        const launchX = Math.random() > 0.5 ? (p12.x - 40) : (p12.x + p12.width + 40);
-        const burstY = p12.y - 120 - Math.random() * 120;
+        const launchX = Math.random() > 0.5 ? (p12.x - 30) : (p12.x + p12.width + 30);
+        const burstY = p12.y - 120 - Math.random() * 110;
         spawnFirework(launchX, burstY);
       }
 
@@ -1008,9 +971,9 @@
       if (!obs.alive) return;
       obs.x += obs.vx;
       obs.wavePhase += 0.055;
-      obs.y = obs.baseY + Math.sin(obs.wavePhase) * 36;
+      obs.y = obs.baseY + Math.sin(obs.wavePhase) * 34;
 
-      if (obs.x < 30 || obs.x > W - 30) obs.vx *= -1;
+      if (obs.x < 24 || obs.x > W - 24) obs.vx *= -1;
     });
 
     for (let i = bullets.length - 1; i >= 0; i--) {
@@ -1093,10 +1056,9 @@
       }
     }
 
-    // 第 12 格左右擺動
     const p12 = platforms[12];
     p12.x += p12.vx;
-    if (p12.x < 25 || p12.x + p12.width > W - 25) p12.vx *= -1;
+    if (p12.x < 20 || p12.x + p12.width > W - 20) p12.vx *= -1;
     if (currentPoint === 12 && officer.isGrounded) officer.x += p12.vx;
 
     targetCameraY = -platforms[currentPoint].y + H * 0.65;
@@ -1224,7 +1186,7 @@
     serviceYears = 1;
     bullets = [];
     fireworks = [];
-    initPlatforms(); // 重新隨機生成整局浮台
+    initPlatforms();
     resetOfficerToPlatform(0);
     updateHUD();
     guideText.innerText = "重新出發！保持專注，拉動箭頭瞄準起跳！";
@@ -1238,7 +1200,7 @@
     serviceYears = 1;
     bullets = [];
     fireworks = [];
-    initPlatforms(); // 轉生隨機生成全新浮台
+    initPlatforms();
     resetOfficerToPlatform(0);
     updateHUD();
     guideText.innerText = "🔄 砍掉重練成功！全新天梯地圖已生成，再創最速紀錄！";
@@ -1315,22 +1277,34 @@
     requestAnimationFrame(loop);
   }
 
-  function getEventPos(e) {
-    if (e.touches && e.touches.length > 0) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  // ============================================
+  // 手機觸控精準座標與手勢防衝突處理
+  // ============================================
+  function getTouchPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    let touch = null;
+    if (e.touches && e.touches.length > 0) touch = e.touches[0];
+    else if (e.changedTouches && e.changedTouches.length > 0) touch = e.changedTouches[0];
+
+    if (touch) {
+      return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
     }
-    return { x: e.clientX, y: e.clientY };
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
-  function onPointerDown(e) {
-    if (e.target.tagName === 'BUTTON' || !officer.isGrounded || hearts <= 0 || isGameWon || isDroneShow) return;
-    initAudio();
-    const pos = getEventPos(e);
+  function handleStart(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    if (e.cancelable) e.preventDefault(); // 防止下拉刷新手勢
 
+    if (!officer.isGrounded || hearts <= 0 || isGameWon || isDroneShow) return;
+    initAudio();
+
+    const pos = getTouchPos(e);
     const screenOfficerY = officer.y + cameraY;
     const distToOfficer = Math.hypot(pos.x - officer.x, pos.y - screenOfficerY);
 
-    if (currentPoint === 11 && distToOfficer < officer.radius + 20 && ammo > 0) {
+    // 點擊長官開槍
+    if (currentPoint === 11 && distToOfficer < officer.radius + 24 && ammo > 0) {
       fireGun();
       return;
     }
@@ -1340,17 +1314,21 @@
     dragCurrent = pos;
   }
 
-  function onPointerMove(e) {
+  function handleMove(e) {
     if (!isDragging) return;
-    dragCurrent = getEventPos(e);
+    if (e.cancelable) e.preventDefault(); // 阻止畫面跟隨手指滑動
+    dragCurrent = getTouchPos(e);
   }
 
-  function onPointerUp(e) {
+  function handleEnd(e) {
     if (!isDragging || !officer.isGrounded || isGameWon || isDroneShow) return;
+    if (e.cancelable) e.preventDefault();
     isDragging = false;
 
-    const dx = dragStart.x - dragCurrent.x;
-    const dy = dragStart.y - dragCurrent.y;
+    // 使用放手時最終座標
+    const endPos = getTouchPos(e);
+    const dx = dragStart.x - endPos.x;
+    const dy = dragStart.y - endPos.y;
     const distance = Math.hypot(dx, dy);
 
     if (distance > 12) {
@@ -1365,13 +1343,16 @@
     }
   }
 
-  window.addEventListener('mousedown', onPointerDown);
-  window.addEventListener('mousemove', onPointerMove);
-  window.addEventListener('mouseup', onPointerUp);
+  // 綁定觸控事件 (passive: false 確保可阻止瀏覽器手勢)
+  canvas.addEventListener('touchstart', handleStart, { passive: false });
+  window.addEventListener('touchmove', handleMove, { passive: false });
+  window.addEventListener('touchend', handleEnd, { passive: false });
+  window.addEventListener('touchcancel', handleEnd, { passive: false });
 
-  window.addEventListener('touchstart', onPointerDown, { passive: false });
-  window.addEventListener('touchmove', onPointerMove, { passive: false });
-  window.addEventListener('touchend', onPointerUp, { passive: false });
+  // 電腦滑鼠備援
+  canvas.addEventListener('mousedown', handleStart);
+  window.addEventListener('mousemove', handleMove);
+  window.addEventListener('mouseup', handleEnd);
 
   function switchCareer(career) {
     if (currentPoint > 0 && currentPoint < 12) {
@@ -1384,7 +1365,7 @@
     ammo = 3;
     bullets = [];
     fireworks = [];
-    initPlatforms(); // 切換職業隨機生成新浮台
+    initPlatforms();
     resetOfficerToPlatform(0);
     updateCareerUI();
     updateHUD();
@@ -1402,6 +1383,7 @@
     });
   }
 
+  // 啟動遊戲
   initPlatforms();
   resetOfficerToPlatform(0);
   updateHUD();
