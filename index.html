@@ -119,7 +119,7 @@
     <!-- Main Content Container -->
     <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6">
 
-        <!-- ================= PAGE 1: HOME DASHBOARD ================= -->
+        <!-- ================= PAGE 1: HOME DASHBOARD (10-CARD GRID BALANCED LAYOUT) ================= -->
         <section id="view-home" class="view-panel active space-y-6">
             <!-- Banner -->
             <div class="bg-gradient-to-r from-teal-800 via-emerald-800 to-cyan-900 border border-teal-600/30 rounded-2xl p-5 md:p-6 text-white shadow-xl relative overflow-hidden space-y-3">
@@ -155,17 +155,18 @@
                 <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
             </div>
 
-            <!-- Balanced Grid Layout (9 Items) -->
+            <!-- Balanced 10-Card Grid (All Equal Size) -->
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
                         <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
-                        核心項目選單 (9項實用工具)
+                        核心項目選單 (10項實用工具)
                     </h3>
-                    <span class="text-xs font-bold text-slate-400 bg-slate-200/60 px-2.5 py-1 rounded-full">適合手機/平板</span>
+                    <span class="text-xs font-bold text-slate-400 bg-slate-200/60 px-2.5 py-1 rounded-full">點選進入</span>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3.5 md:gap-4.5">
+                <!-- 10-Grid System: Mobile (2 cols), Desktop (5 cols) -->
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 md:gap-4.5">
 
                     <!-- Card 1: 行水神器 -->
                     <div onclick="switchView('drip')" class="h-full bg-gradient-to-br from-white via-slate-100 to-slate-300 rounded-2xl p-4 md:p-5 border border-slate-300 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-slate-900">
@@ -207,21 +208,21 @@
                         </div>
                     </div>
 
-                    <!-- Card 3: 抽籤模式 -->
-                    <div onclick="switchView('draw')" class="h-full bg-gradient-to-br from-emerald-600 via-teal-600 to-emerald-700 rounded-2xl p-4 md:p-5 border border-emerald-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
+                    <!-- Card 3: 抽籤模式 (極淺柔和淺綠漸變) -->
+                    <div onclick="switchView('draw')" class="h-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-2xl p-4 md:p-5 border border-emerald-200 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-emerald-950">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-emerald-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
                                     <i data-lucide="dices" class="w-5 h-5 md:w-6 md:h-6"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">假期排位</span>
+                                <span class="text-[10px] md:text-xs bg-emerald-200/80 text-emerald-900 font-bold px-2 py-0.5 rounded-full border border-emerald-300">假期排位</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">抽籤模式</h4>
-                                <p class="text-xs text-emerald-100 mt-1 line-clamp-2 font-medium leading-relaxed">長假期同事抽假、畫鬼腳視覺版、二選一幸運輪盤。</p>
+                                <h4 class="text-base md:text-lg font-black text-emerald-950">抽籤模式</h4>
+                                <p class="text-xs text-emerald-800 mt-1 line-clamp-2 font-semibold leading-relaxed">長假期同事抽假、畫鬼腳視覺版、二選一幸運輪盤。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-emerald-400/60 flex items-center justify-between text-xs text-emerald-100 font-black">
+                        <div class="mt-4 pt-3 border-t border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-black">
                             <span>選擇模式</span>
                             <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
@@ -328,7 +329,7 @@
                     </div>
 
                     <!-- Card 9: 跳格加2小遊戲 (深桃粉紅色) -->
-                    <div onclick="window.open('https://rb-1997.github.io/cne/jump12game.html', '_blank')" class="h-full bg-gradient-to-br from-pink-600 via-rose-600 to-pink-700 rounded-2xl p-4 md:p-5 border border-pink-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
+                    <div onclick="switchView('game')" class="h-full bg-gradient-to-br from-pink-600 via-rose-600 to-pink-700 rounded-2xl p-4 md:p-5 border border-pink-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
                                 <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
@@ -343,46 +344,77 @@
                         </div>
                         <div class="mt-4 pt-3 border-t border-pink-400/60 flex items-center justify-between text-xs text-pink-100 font-extrabold">
                             <span>開始遊戲</span>
-                            <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 10: CNE無人駕駛 (同尺寸平排) -->
+                    <div onclick="switchView('board')" class="h-full bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 rounded-2xl p-4 md:p-5 border border-slate-700 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-700 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-slate-600">
+                                    <i data-lucide="message-square" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-400/30">匿名討論</span>
+                            </div>
+                            <div>
+                                <h4 class="text-base md:text-lg font-black text-white">CNE無人駕駛</h4>
+                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium leading-relaxed">自由交流留言板，可匿名留言，暢所欲言。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-700 flex items-center justify-between text-xs text-amber-300 font-extrabold">
+                            <span>進入留言</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </div>
                     </div>
 
                 </div>
             </div>
+        </section>
 
-            <!-- Card 10: CNE無人駕駛留言板入口（暗黑底色樣式） -->
-            <div class="mt-6">
-                <div onclick="switchView('board')" class="relative h-full bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 rounded-2xl p-5 md:p-6 border-2 border-slate-700 shadow-xl hover:shadow-2xl hover:scale-[1.01] active:scale-95 transition-all cursor-pointer group overflow-hidden">
-                    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,0.2) 0px, rgba(255,255,255,0.2) 3px, transparent 3px, transparent 15px), repeating-linear-gradient(45deg, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 2px, transparent 2px, transparent 10px);"></div>
-                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 rounded-xl bg-slate-700/80 text-amber-400 border border-slate-600 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-                                <i data-lucide="message-square" class="w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-lg md:text-xl font-black text-white">CNE無人駕駛留言板</h4>
-                                <p class="text-xs md:text-sm text-slate-300 font-bold mt-1">可匿名留言，不可侵犯私隱及觸犯國安言論</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2 text-slate-200 font-extrabold text-sm bg-slate-800/80 px-5 py-2.5 rounded-xl border border-slate-600 backdrop-blur-sm shadow-sm group-hover:bg-slate-700 group-hover:text-white transition-all">
-                            <span>進入留言</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                        </div>
+        <!-- ================= PAGE 10: 跳格加2小遊戲 (內嵌並有返回按鈕) ================= -->
+        <section id="view-game" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center justify-between bg-gradient-to-r from-pink-600 to-rose-600 p-5 rounded-2xl border-2 border-pink-400 text-white shadow-md flex-wrap gap-3">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-white/20 backdrop-blur-md rounded-xl shadow-md border border-white/30">
+                        <i data-lucide="gamepad-2" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">跳格加2小遊戲</h2>
+                        <p class="text-base text-pink-100 font-medium">工餘輕鬆減壓 • 考驗敏捷反應</p>
                     </div>
                 </div>
+                <button onclick="switchView('home')" class="flex items-center space-x-1.5 text-sm bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition-all font-bold border border-white/40 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[720px]">
+                <iframe
+                    src="https://rb-1997.github.io/cne/jump12game.html"
+                    style="width: 100%; height: 750px; border: 0;"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture">
+                </iframe>
             </div>
         </section>
 
         <!-- ================= PAGE: CNE無人駕駛留言板 ================= -->
         <section id="view-board" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-gradient-to-r from-slate-900 to-slate-800 p-5 rounded-2xl border-2 border-slate-700 text-white shadow-md">
-                <div class="p-3 bg-slate-700 text-amber-400 rounded-xl shadow-md border border-slate-600">
-                    <i data-lucide="message-square" class="w-8 h-8"></i>
+            <div class="flex items-center justify-between bg-gradient-to-r from-slate-900 to-slate-800 p-5 rounded-2xl border-2 border-slate-700 text-white shadow-md flex-wrap gap-3">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-slate-700 text-amber-400 rounded-xl shadow-md border border-slate-600">
+                        <i data-lucide="message-square" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">CNE無人駕駛留言板</h2>
+                        <p class="text-base text-slate-300 font-medium">同僚自由討論區 • 可匿名留言</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-white">CNE無人駕駛留言板</h2>
-                    <p class="text-base text-slate-300 font-medium">同僚自由討論區 • 可匿名留言</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center space-x-1.5 text-sm bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition-all font-bold border border-slate-600 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[720px]">
@@ -927,7 +959,6 @@
                 </div>
             </div>
 
-            <!-- Dify Chatbot Embedded iFrame Container (Updated Link) -->
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[680px]">
                 <iframe
                     src="https://udify.app/chat/OnwMNyxa3hx6Wp7S"
