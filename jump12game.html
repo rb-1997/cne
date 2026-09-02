@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>長官晉升大冒險 - Career Ladder (CNE 置中與煙花狂歡版)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+    body {
+      background: #030712;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      touch-action: none;
+    }
+    #gameWrapper {
+      position: relative;
+      width: 100vw;
+      max-width: 440px;
+      height: 100vh;
+      max-height: 840px;
+      background: radial-gradient(circle at 50% 15%, #1e1b4b, #030712);
+      box-shadow: 0 0 35px rgba(0,0,0,0.9);
+      overflow: hidden;
+      border-radius: 14px;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .career-bar {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+    .career-btn {
+      flex: 1;
+      padding: 7px 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.2s;
+    }
+    .career-btn.active {
+      background: #38bdf8;
+      border-color: #e0f2fe;
+      color: #030712;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+    }
+    .career-btn.promoted {
+      border-color: #fbbf24;
+      color: #fbbf24;
+    }
+    .hud-bar {
+      position: absolute;
+      top: 56px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+      z-index: 10;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .status-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .heart-box {
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      filter: drop-shadow(0 2px 6px rgba(239, 68, 68, 0.6));
+    }
+    .ammo-box {
+      font-size: 0.95rem;
+      letter-spacing: 2px;
+      color: #facc15;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+    }
+    .audio-btn {
+      pointer-events: auto;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #475569;
+      color: #f8fafc;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+    .guide-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .guide-text {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #f8fafc;
+      background: rgba(15, 23, 42, 0.88);
+      padding: 6px 18px;
+      border-radius: 20px;
+      display: inline-block;
+      border: 1px solid #334155;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .modal {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.96);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      text-align: center;
+      z-index: 30;
+    }
+    .modal h2 { font-size: 1.8rem; margin-bottom: 12px; }
+    .modal p { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 24px; line-height: 1.6; }
+    .btn-action {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      border: none;
+      color: white;
+      padding: 14px 32px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+    }
+    .btn-gold {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+<div id="gameWrapper">
+  <div class="career-bar">
+    <button class="career-btn active" onclick="switchCareer('Cargo')">📦 Cargo</button>
+    <button class="career-btn" onclick="switchCareer('Pax')">✈️ Pax</button>
+    <button class="career-btn" onclick="switchCareer('老民')">📁 老民</button>
+    <button class="career-btn" onclick="switchCareer('水佬')">🚤 水佬</button>
+  </div>
+
+  <div class="hud-bar">
+    <div class="status-left">
+      <div class="heart-box" id="heartDisplay">❤️❤️❤️</div>
+      <div class="ammo-box" id="ammoDisplay"></div>
+    </div>
+    <div id="statDisplay">職級：第 0 / 12 格 ｜ 第 1 年</div>
+    <button class="audio-btn" id="audioToggleBtn" onclick="toggleAudio()">🔇</button>
+  </div>
+
+  <canvas id="gameCanvas"></canvas>
+
+  <div class="guide-overlay">
+    <div class="guide-text" id="guideText">向後拉出箭頭 ➔ 瞄準放手起跳！</div>
+  </div>
+
+  <div class="modal" id="winModal">
+    <h2 style="color: #f59e0b;">👑 榮譽大晉升！</h2>
+    <p id="winDesc">長官成功闖過 12 格難關，榮升頂薪主管！</p>
+    <button class="btn-action btn-gold" onclick="reincarnate()">🔄 砍掉重練（累積轉生榮譽）</button>
+  </div>
+
+  <div class="modal" id="loseModal">
+    <h2 style="color: #ef4444;">💔 考核未能通過 (Game Over)</h2>
+    <p>3 格心心已耗盡！職場路途充滿挑戰，收拾心情重新出發！</p>
+    <button class="btn-action" onclick="restartGame()">🔁 重新挑戰</button>
+  </div>
+</div>
+
+<script>
+  let audioCtx = null;
+  let isAudioEnabled = false;
+  let bgmInterval = null;
+
+  function initAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  function playTone(freq, type = 'sine', duration = 0.15, vol = 0.1) {
+    if (!isAudioEnabled || !audioCtx) return;
+    try {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  function sfxJump() { playTone(440, 'triangle', 0.12, 0.15); }
+  function sfxLand() { playTone(260, 'sine', 0.1, 0.1); }
+  function sfxScore() {
+    playTone(523, 'square', 0.08, 0.08);
+    setTimeout(() => playTone(659, 'square', 0.12, 0.08), 80);
+  }
+  function sfxHurt() {
+    playTone(180, 'sawtooth', 0.25, 0.2);
+    setTimeout(() => playTone(120, 'sawtooth', 0.25, 0.2), 100);
+  }
+  function sfxGunshot() {
+    playTone(850, 'sawtooth', 0.08, 0.25);
+    setTimeout(() => playTone(300, 'square', 0.12, 0.2), 20);
+  }
+  function sfxDroneLight() {
+    [440, 554, 659, 880].forEach((f, i) => {
+      setTimeout(() => playTone(f, 'sine', 0.4, 0.08), i * 100);
+    });
+  }
+  function sfxFirework() {
+    playTone(700 + Math.random() * 300, 'triangle', 0.08, 0.12);
+    setTimeout(() => playTone(220, 'sawtooth', 0.2, 0.15), 60);
+  }
+  function sfxDroneDisperse() {
+    [880, 659, 554, 440].forEach((f, i) => {
+      setTimeout(() => playTone(f, 'triangle', 0.3, 0.06), i * 80);
+    });
+  }
+  function sfxWin() {
+    [523, 659, 784, 1046].forEach((f, i) => {
+      setTimeout(() => playTone(f, 'square', 0.2, 0.12), i * 140);
+    });
+  }
+
+  const bgmNotes = [261.6, 293.7, 329.6, 392.0, 329.6, 293.7];
+  let bgmStep = 0;
+  function startBGM() {
+    if (bgmInterval) clearInterval(bgmInterval);
+    bgmInterval = setInterval(() => {
+      if (isAudioEnabled) {
+        playTone(bgmNotes[bgmStep % bgmNotes.length], 'sine', 0.2, 0.03);
+        bgmStep++;
+      }
+    }, 450);
+  }
+
+  function toggleAudio() {
+    initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    isAudioEnabled = !isAudioEnabled;
+    document.getElementById('audioToggleBtn').innerText = isAudioEnabled ? '🔊' : '🔇';
+    if (isAudioEnabled) startBGM();
+    else if (bgmInterval) clearInterval(bgmInterval);
+  }
+
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const wrapper = document.getElementById('gameWrapper');
+  const guideText = document.getElementById('guideText');
+  const heartDisplay = document.getElementById('heartDisplay');
+  const ammoDisplay = document.getElementById('ammoDisplay');
+  const statDisplay = document.getElementById('statDisplay');
+  const winModal = document.getElementById('winModal');
+  const loseModal = document.getElementById('loseModal');
+
+  let W = canvas.width = wrapper.clientWidth;
+  let H = canvas.height = wrapper.clientHeight;
+
+  window.addEventListener('resize', () => {
+    W = canvas.width = wrapper.clientWidth;
+    H = canvas.height = wrapper.clientHeight;
+  });
+
+  let currentCareer = 'Cargo';
+  let promotedCareers = { Cargo: false, Pax: false, 老民: false, 水佬: false };
+  let currentPoint = 0;
+  let serviceYears = 1;
+  let hearts = 3;
+  let ammo = 3;
+  let cameraY = 0;
+  let targetCameraY = 0;
+  let isGameWon = false;
+
+  let platforms = [];
+  const PLATFORM_GAP = 145;
+  let obstacles = [];
+
+  // ============================================
+  // CNE 置中無人機矩陣與煙花粒子系統
+  // ============================================
+  let isDroneShow = false;
+  let droneTimer = 0;
+  let drones = [];
+  let fireworks = [];
+
+  // 「CNE」相對於畫面中央 (W/2, CenterY) 的精準置中點陣
+  const CNE_DOTS_CENTERED = [
+    // 字母 'C' (置左)
+    [-110, -28], [-125, -28], [-138, -18], [-142, -5], [-142, 8], [-138, 20], [-125, 30], [-110, 30],
+    // 字母 'N' (置中)
+    [-70, 30], [-70, 11], [-70, -8], [-70, -28],
+    [-52, -10], [-35, 5], [-18, 18],
+    [-2, 30], [-2, 11], [-2, -8], [-2, -28],
+    // 字母 'E' (置右)
+    [35, 30], [35, 11], [35, -8], [35, -28],
+    [52, -28], [68, -28], [84, -28],
+    [52, 1], [68, 1],
+    [52, 30], [68, 30], [84, 30]
+  ];
+
+  function startDroneShow() {
+    isDroneShow = true;
+    droneTimer = 360; // 6秒倒數
+    fireworks = [];
+    sfxDroneLight();
+    guideText.innerText = "✨ 無人機匯聚螢幕中央！背後同事發放慶祝煙花！";
+
+    // 完美置中座標：以螢幕正中心 (W / 2) 為基準
+    const p12 = platforms[12];
+    const centerTargetY = p12.y - 170;
+
+    drones = CNE_DOTS_CENTERED.map(pt => {
+      const angle = Math.random() * Math.PI * 2;
+      const startDist = 380 + Math.random() * 200;
+      const exitAngle = Math.random() * Math.PI * 2;
+
+      return {
+        targetX: W / 2 + pt[0],
+        targetY: centerTargetY + pt[1],
+        x: W / 2 + Math.cos(angle) * startDist,
+        y: centerTargetY + Math.sin(angle) * startDist,
+        exitVx: Math.cos(exitAngle) * (8 + Math.random() * 7),
+        exitVy: Math.sin(exitAngle) * (8 + Math.random() * 7),
+        color: Math.random() > 0.35 ? '#facc15' : '#38bdf8',
+        twinkle: Math.random() * Math.PI * 2
+      };
+    });
+  }
+
+  // 煙花產生器
+  function spawnFirework(originX, originY) {
+    const colors = ['#f43f5e', '#38bdf8', '#facc15', '#a855f7', '#22c55e', '#fb923c'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const count = 28;
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.4;
+      const speed = 2.5 + Math.random() * 4.5;
+      fireworks.push({
+        x: originX,
+        y: originY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        color: color,
+        life: 1,
+        decay: 0.02 + Math.random() * 0.015
+      });
+    }
+    sfxFirework();
+  }
+
+  function initPlatforms() {
+    platforms = [];
+    isGameWon = false;
+    isDroneShow = false;
+    drones = [];
+    fireworks = [];
+    let accumulatedY = H - 140;
+
+    for (let i = 0; i <= 12; i++) {
+      let width = 160;
+      let type = 'normal';
+
+      if (i <= 5) width = 175 - i * 6;
+      else if (i <= 10) width = 120;
+      else if (i === 11) { width = 100; type = 'board_gate'; }
+      else if (i === 12) { width = 90; type = 'promotion_seat'; }
+
+      let x = W / 2 - width / 2;
+      if (i > 0) {
+        const offsetRange = (W - width - 60) / 2;
+        x = W / 2 - width / 2 + Math.sin(i * 1.7) * offsetRange;
+      }
+
+      const currentGap = (i === 12) ? PLATFORM_GAP * 2.0 : PLATFORM_GAP;
+      if (i > 0) accumulatedY -= currentGap;
+
+      platforms.push({
+        level: i,
+        x: x,
+        y: accumulatedY,
+        width: width,
+        height: 18,
+        type: type,
+        vx: i === 12 ? 2.8 : 0
+      });
+    }
+
+    const p11Y = platforms[11].y;
+    const p12Y = platforms[12].y;
+    const stepY = (p11Y - p12Y) / 4;
+
+    obstacles = [
+      { x: 50, baseY: p11Y - stepY * 1, y: p11Y - stepY * 1, vx: 2.5, radius: 16, wavePhase: 0, alive: true },
+      { x: W - 50, baseY: p11Y - stepY * 2, y: p11Y - stepY * 2, vx: -2.3, radius: 16, wavePhase: 2.1, alive: true },
+      { x: 80, baseY: p11Y - stepY * 3, y: p11Y - stepY * 3, vx: 2.8, radius: 16, wavePhase: 4.2, alive: true }
+    ];
+  }
+
+  const officer = {
+    x: W / 2,
+    y: H - 165,
+    vx: 0,
+    vy: 0,
+    radius: 24,
+    isGrounded: true,
+    wobble: 0,
+    shootingTimer: 0
+  };
+
+  let bullets = [];
+  let isDragging = false;
+  let dragStart = { x: 0, y: 0 };
+  let dragCurrent = { x: 0, y: 0 };
+
+  let particles = [];
+  function createParticles(x, y, color, count = 14) {
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x, y,
+        vx: (Math.random() - 0.5) * 9,
+        vy: (Math.random() - 0.5) * 9 - 2,
+        radius: Math.random() * 4 + 2,
+        color,
+        life: 1
+      });
+    }
+  }
+
+  function drawOfficer(ctx, x, y, career, level) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    const isJumping = !officer.isGrounded;
+    const isShooting = officer.shootingTimer > 0;
+
+    let scaleX = 1;
+    let scaleY = 1;
+    if (isJumping) {
+      scaleY = officer.vy < 0 ? 1.18 : 1.08;
+      scaleX = 0.9;
+    } else {
+      scaleY = 1 + Math.sin(officer.wobble) * 0.03;
+      scaleX = 1 - Math.sin(officer.wobble) * 0.03;
+    }
+    ctx.scale(scaleX, scaleY);
+
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    ctx.roundRect(-12, 18, 9, 6, 3);
+    ctx.roundRect(3, 18, 9, 6, 3);
+    ctx.fill();
+
+    if (career === 'Pax') ctx.fillStyle = '#14532d';
+    else if (career === '老民') ctx.fillStyle = '#2563eb';
+    else ctx.fillStyle = '#1e293b';
+
+    ctx.beginPath();
+    ctx.roundRect(-13, 8, 26, 12, 3);
+    ctx.fill();
+
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(-13, 7, 26, 2.5);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(-2.5, 7, 5, 2.5);
+
+    if (career === 'Cargo') {
+      ctx.fillStyle = '#1e3a8a';
+      ctx.beginPath();
+      ctx.roundRect(-14, -6, 28, 14, 4);
+      ctx.fill();
+      ctx.fillStyle = '#a3e635';
+      ctx.beginPath();
+      ctx.roundRect(-13, -5, 26, 13, 3);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(-13, 1, 26, 2.5);
+      ctx.fillRect(1, -3, 8, 5);
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(2, -2, 6, 1);
+    } else if (career === 'Pax') {
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(-14, -6, 28, 14, 4);
+      ctx.fill();
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    } else if (career === '老民') {
+      ctx.fillStyle = '#09090b';
+      ctx.beginPath();
+      ctx.roundRect(-14, -6, 28, 14, 4);
+      ctx.fill();
+    } else if (career === '水佬') {
+      ctx.fillStyle = '#1e3a8a';
+      ctx.beginPath();
+      ctx.roundRect(-14, -6, 28, 14, 4);
+      ctx.fill();
+      ctx.fillStyle = '#ea580c';
+      ctx.beginPath();
+      ctx.roundRect(-15, -5, 30, 13, 5);
+      ctx.fill();
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(-5, -5); ctx.lineTo(-5, 8);
+      ctx.moveTo(5, -5);  ctx.lineTo(5, 8);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = level >= 11 ? '#fbbf24' : '#f59e0b';
+    ctx.fillRect(-15, -6, 4, 2.5);
+    ctx.fillRect(11, -6, 4, 2.5);
+
+    ctx.fillStyle = '#fed7aa';
+    if (isShooting) {
+      ctx.beginPath();
+      ctx.arc(4, -8, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(4, -14, 5, 8);
+      ctx.fillRect(6, -16, 4, 4);
+
+      ctx.fillStyle = '#facc15';
+      ctx.beginPath();
+      ctx.arc(8, -18, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(8, -18, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.arc(-16, 2, 4, 0, Math.PI * 2);
+      ctx.arc(16, 0, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(-18, 0, 4, 2);
+    }
+
+    ctx.fillStyle = '#ffedd5';
+    ctx.beginPath();
+    ctx.arc(0, -15, 15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(251, 146, 60, 0.25)';
+    ctx.beginPath();
+    ctx.arc(-9, -12, 3, 0, Math.PI * 2);
+    ctx.arc(9, -12, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    ctx.arc(0, -20, 14.5, Math.PI, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-14, -20);
+    ctx.quadraticCurveTo(-4, -24, 6, -18);
+    ctx.quadraticCurveTo(12, -22, 14, -18);
+    ctx.lineTo(14, -24);
+    ctx.lineTo(-14, -24);
+    ctx.closePath();
+    ctx.fill();
+
+    if (career === '老民') {
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(-6.5, -15, 5.5, 0, Math.PI * 2);
+      ctx.arc(6.5, -15, 5.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    } else {
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(-6.5, -15, 5.5, 0, Math.PI * 2);
+      ctx.arc(6.5, -15, 5.5, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-1, -15); ctx.lineTo(1, -15);
+      ctx.stroke();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.beginPath();
+      ctx.arc(-6.5, -15, 2.8, 0, Math.PI * 2);
+      ctx.arc(6.5, -15, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-5.5, -16, 1, 0, Math.PI * 2);
+      ctx.arc(7.5, -16, 1, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath();
+    ctx.arc(0, -12, 1.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#7c2d12';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.arc(0, -11, 4.2, 0.2, Math.PI - 0.2);
+    ctx.stroke();
+
+    if (career === 'Pax') {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-14, -30, 28, 6);
+      ctx.fillStyle = '#f59e0b';
+      ctx.fillRect(-4, -29, 8, 4);
+    }
+    if (level === 12) {
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(-12, -34);
+      ctx.lineTo(-6, -28);
+      ctx.lineTo(0, -36);
+      ctx.lineTo(6, -28);
+      ctx.lineTo(12, -34);
+      ctx.lineTo(10, -26);
+      ctx.lineTo(-10, -26);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    if (level === 11 && officer.isGrounded) {
+      const bubbleBob = Math.sin(officer.wobble * 1.5) * 3;
+      ctx.save();
+      ctx.translate(0, -48 + bubbleBob);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.roundRect(-85, -14, 170, 26, 8);
+      ctx.fill();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.moveTo(-6, 12);
+      ctx.lineTo(6, 12);
+      ctx.lineTo(0, 18);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#0f172a';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText("💡 點擊我進入射擊狀態！", 0, 3);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  // 繪製第 12 格背後熱烈歡呼發放煙花的同事們
+  function drawCelebratingColleagues(ctx) {
+    if (!isDroneShow) return;
+
+    const p12 = platforms[12];
+    const cheerBob = Math.sin(officer.wobble * 2) * 3;
+
+    // 左側歡呼同事 (Pax / Cargo 制服)
+    ctx.save();
+    ctx.translate(p12.x - 30, p12.y + 2 + cheerBob);
+    ctx.fillStyle = '#ffffff'; // 白衫
+    ctx.beginPath(); ctx.roundRect(-8, -12, 16, 12, 3); ctx.fill();
+    ctx.fillStyle = '#14532d'; // 綠褲
+    ctx.beginPath(); ctx.roundRect(-7, 0, 14, 10, 2); ctx.fill();
+    ctx.fillStyle = '#ffedd5'; // 頭部
+    ctx.beginPath(); ctx.arc(0, -18, 6, 0, Math.PI * 2); ctx.fill();
+    // 舉起雙手
+    ctx.strokeStyle = '#fed7aa'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(-6, -10); ctx.lineTo(-12, -22); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(6, -10); ctx.lineTo(12, -22); ctx.stroke();
+    ctx.restore();
+
+    // 右側歡呼同事 (反光衣 / 水佬)
+    ctx.save();
+    ctx.translate(p12.x + p12.width + 30, p12.y + 2 - cheerBob);
+    ctx.fillStyle = '#a3e635'; // 螢光黃綠背心
+    ctx.beginPath(); ctx.roundRect(-8, -12, 16, 12, 3); ctx.fill();
+    ctx.fillStyle = '#1e293b'; // 藍褲
+    ctx.beginPath(); ctx.roundRect(-7, 0, 14, 10, 2); ctx.fill();
+    ctx.fillStyle = '#ffedd5'; // 頭部
+    ctx.beginPath(); ctx.arc(0, -18, 6, 0, Math.PI * 2); ctx.fill();
+    // 舉手揮舞彩帶
+    ctx.strokeStyle = '#fed7aa'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(-6, -10); ctx.lineTo(-12, -22); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(6, -10); ctx.lineTo(12, -22); ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawObstacles(ctx) {
+    if (currentPoint < 10) return;
+
+    obstacles.forEach(obs => {
+      if (!obs.alive) return;
+
+      ctx.save();
+      ctx.translate(obs.x, obs.y);
+      const dir = obs.vx > 0 ? 1 : -1;
+      ctx.scale(dir, 1);
+
+      if (currentCareer === 'Cargo') {
+        ctx.fillStyle = '#64748b';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 14, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(10, -4); ctx.lineTo(20, 0); ctx.lineTo(10, 4);
+        ctx.fill();
+        ctx.fillStyle = '#f472b6';
+        ctx.beginPath();
+        ctx.arc(-2, -8, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(8, -3, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(19, 0, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#f472b6';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-14, 0);
+        ctx.quadraticCurveTo(-22, -8, -24, 4);
+        ctx.stroke();
+
+      } else if (currentCareer === 'Pax') {
+        ctx.strokeStyle = '#15803d';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-18, 0);
+        ctx.quadraticCurveTo(-8, -10 + Math.sin(obs.wavePhase) * 4, 0, 0);
+        ctx.quadraticCurveTo(8, 10 - Math.sin(obs.wavePhase) * 4, 16, -2);
+        ctx.stroke();
+        ctx.fillStyle = '#16a34a';
+        ctx.beginPath();
+        ctx.ellipse(18, -2, 6, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(24, -2); ctx.lineTo(30, -2);
+        ctx.stroke();
+        ctx.fillStyle = '#facc15';
+        ctx.beginPath();
+        ctx.arc(19, -4, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+      } else if (currentCareer === '老民') {
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.roundRect(-18, -4, 36, 12, 4);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.roundRect(-8, -12, 18, 9, 3);
+        ctx.fill();
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(-6, -10, 14, 6);
+        ctx.fillStyle = '#475569';
+        ctx.beginPath();
+        ctx.arc(-11, 8, 4, 0, Math.PI * 2);
+        ctx.arc(11, 8, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#facc15';
+        ctx.fillRect(17, -2, 3, 5);
+
+      } else if (currentCareer === '水佬') {
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.moveTo(-20, -5);
+        ctx.lineTo(14, -5);
+        ctx.lineTo(24, 4);
+        ctx.lineTo(-20, 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(-6, -12, 12, 7);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(-4, -10, 8, 4);
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(-23, -2, 5, 8);
+        ctx.strokeStyle = 'rgba(248, 250, 252, 0.7)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-24, 4);
+        ctx.lineTo(-34, 7 + Math.sin(obs.wavePhase * 2) * 3);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    });
+  }
+
+  // 繪製 CNE 置中無人機
+  function drawDrones(ctx) {
+    if (!isDroneShow) return;
+
+    drones.forEach(d => {
+      d.twinkle += 0.15;
+      const alpha = 0.7 + Math.sin(d.twinkle) * 0.3;
+
+      ctx.save();
+      ctx.fillStyle = d.color;
+      ctx.globalAlpha = alpha * 0.45;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, 9, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, 3.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  // 繪製慶祝煙花
+  function drawFireworks(ctx) {
+    if (!isDroneShow && fireworks.length === 0) return;
+
+    fireworks.forEach(fw => {
+      ctx.save();
+      ctx.fillStyle = fw.color;
+      ctx.globalAlpha = fw.life;
+      ctx.beginPath();
+      ctx.arc(fw.x, fw.y, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function drawBullets(ctx) {
+    bullets.forEach(b => {
+      ctx.save();
+      ctx.fillStyle = '#facc15';
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  function drawAimingArrow() {
+    if (!isDragging || !officer.isGrounded || isGameWon || isDroneShow) return;
+
+    const dx = dragStart.x - dragCurrent.x;
+    const dy = dragStart.y - dragCurrent.y;
+    const distance = Math.hypot(dx, dy);
+    if (distance < 10) return;
+
+    const maxDist = 140;
+    const power = Math.min(distance, maxDist) / maxDist;
+    const angle = Math.atan2(dy, dx);
+
+    const simVx = Math.cos(angle) * power * 15;
+    const simVy = -Math.abs(Math.sin(angle)) * power * 22;
+
+    ctx.save();
+    ctx.translate(0, cameraY);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([6, 6]);
+
+    ctx.beginPath();
+    let simX = officer.x;
+    let simY = officer.y;
+    ctx.moveTo(simX, simY);
+
+    for (let t = 0; t < 18; t++) {
+      simX += simVx;
+      simY += simVy + 0.65 * t;
+      ctx.lineTo(simX, simY);
+    }
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    const arrowX = officer.x + Math.cos(angle) * (40 + power * 40);
+    const arrowY = officer.y - Math.abs(Math.sin(angle)) * (40 + power * 40);
+    ctx.arc(arrowX, arrowY, 6 + power * 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  function update() {
+    officer.wobble += 0.08;
+    if (officer.shootingTimer > 0) officer.shootingTimer--;
+
+    // 6 秒無人機燈光匯演與煙花更新
+    if (isDroneShow) {
+      droneTimer--;
+
+      // 定時自兩側同事背後發放煙花 (每 20 幀發放一發)
+      if (droneTimer % 22 === 0 && droneTimer > 40) {
+        const p12 = platforms[12];
+        const launchX = Math.random() > 0.5 ? (p12.x - 40) : (p12.x + p12.width + 40);
+        const burstY = p12.y - 120 - Math.random() * 120;
+        spawnFirework(launchX, burstY);
+      }
+
+      // 階段 1：0.0s - 1.5s ➔ 由四面八方飛向螢幕中央
+      if (droneTimer > 270) {
+        guideText.innerText = "✨ 無人機正飛向畫面正中央聚攏！";
+        drones.forEach(d => {
+          d.x += (d.targetX - d.x) * 0.09;
+          d.y += (d.targetY - d.y) * 0.09;
+        });
+      }
+      // 階段 2：1.5s - 4.5s (維持 3 秒) ➔ 於螢幕中心完美定型排列「CNE」
+      else if (droneTimer > 90) {
+        guideText.innerText = "🌟 同事熱烈放煙花！無人機精準置中排列「CNE」！";
+        drones.forEach(d => {
+          d.x += (d.targetX - d.x) * 0.2;
+          d.y += (d.targetY - d.y) * 0.2;
+        });
+      }
+      // 階段 3：4.5s - 6.0s ➔ 散開飛離
+      else {
+        if (droneTimer === 90) sfxDroneDisperse();
+        guideText.innerText = "🚀 匯演圓滿落幕！長官榮譽晉升！";
+        drones.forEach(d => {
+          d.x += d.exitVx;
+          d.y += d.exitVy;
+        });
+      }
+
+      if (droneTimer <= 0) {
+        isDroneShow = false;
+        triggerFinalWinModal();
+      }
+    }
+
+    // 更新煙花粒子
+    for (let i = fireworks.length - 1; i >= 0; i--) {
+      const fw = fireworks[i];
+      fw.x += fw.vx;
+      fw.y += fw.vy;
+      fw.vy += 0.08; // 輕微重力沉降
+      fw.life -= fw.decay;
+      if (fw.life <= 0) fireworks.splice(i, 1);
+    }
+
+    obstacles.forEach(obs => {
+      if (!obs.alive) return;
+      obs.x += obs.vx;
+      obs.wavePhase += 0.055;
+      obs.y = obs.baseY + Math.sin(obs.wavePhase) * 36;
+
+      if (obs.x < 30 || obs.x > W - 30) obs.vx *= -1;
+    });
+
+    for (let i = bullets.length - 1; i >= 0; i--) {
+      const b = bullets[i];
+      b.x += b.vx;
+      b.y += b.vy;
+
+      obstacles.forEach(obs => {
+        if (obs.alive) {
+          const dist = Math.hypot(b.x - obs.x, b.y - obs.y);
+          if (dist < b.radius + obs.radius + 8) {
+            obs.alive = false;
+            createParticles(obs.x, obs.y, '#f59e0b', 24);
+            createParticles(obs.x, obs.y, '#ffffff', 12);
+            guideText.innerText = "🎯 命中目標！成功清除空中威脅！";
+            bullets.splice(i, 1);
+          }
+        }
+      });
+
+      if (b.y < platforms[12].y - 120) {
+        bullets.splice(i, 1);
+      }
+    }
+
+    if (!officer.isGrounded && !isGameWon) {
+      officer.vy += 0.65;
+      officer.x += officer.vx;
+      officer.y += officer.vy;
+
+      if (officer.x - officer.radius < 0) { officer.x = officer.radius; officer.vx *= -0.5; }
+      if (officer.x + officer.radius > W) { officer.x = W - officer.radius; officer.vx *= -0.5; }
+
+      if (currentPoint >= 10) {
+        obstacles.forEach(obs => {
+          if (obs.alive) {
+            const dist = Math.hypot(officer.x - obs.x, officer.y - obs.y);
+            if (dist < officer.radius + obs.radius) {
+              officer.vx = (officer.x > obs.x ? 1 : -1) * 9;
+              officer.vy = 8;
+              createParticles(officer.x, officer.y, '#ef4444', 24);
+              hearts--;
+              updateHUD();
+              sfxHurt();
+              guideText.innerText = "💥 撞擊目標障礙！扣 1 格心心並被擊退！";
+
+              if (hearts <= 0) {
+                loseModal.style.display = 'flex';
+                return;
+              }
+            }
+          }
+        });
+      }
+
+      if (officer.vy > 0) {
+        for (let i = 0; i < platforms.length; i++) {
+          const p = platforms[i];
+          if (
+            officer.x > p.x - 14 &&
+            officer.x < p.x + p.width + 14 &&
+            officer.y + officer.radius >= p.y - 6 &&
+            officer.y + officer.radius <= p.y + p.height + officer.vy + 8
+          ) {
+            if (i < currentPoint) continue;
+
+            officer.isGrounded = true;
+            officer.y = p.y - officer.radius;
+            officer.vy = 0;
+            officer.vx = 0;
+
+            onLanding(i);
+            break;
+          }
+        }
+      }
+
+      if (officer.y > platforms[currentPoint].y + 160) {
+        onFreezeFall();
+      }
+    }
+
+    const p12 = platforms[12];
+    p12.x += p12.vx;
+    if (p12.x < 25 || p12.x + p12.width > W - 25) p12.vx *= -1;
+    if (currentPoint === 12 && officer.isGrounded) officer.x += p12.vx;
+
+    targetCameraY = -platforms[currentPoint].y + H * 0.65;
+    cameraY += (targetCameraY - cameraY) * 0.1;
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const pt = particles[i];
+      pt.x += pt.vx;
+      pt.y += pt.vy;
+      pt.life -= 0.03;
+      if (pt.life <= 0) particles.splice(i, 1);
+    }
+  }
+
+  function onLanding(landedLevel) {
+    if (landedLevel === currentPoint && currentPoint !== 12) return;
+
+    serviceYears++;
+
+    if (currentPoint === 10 && landedLevel > 11) {
+      landedLevel = 11;
+      guideText.innerText = "⚠️ 第10格強制鎖定上限！穩企第11格！";
+    }
+
+    const jumped = landedLevel - currentPoint;
+    currentPoint = landedLevel;
+
+    if (currentPoint === 12) {
+      createParticles(officer.x, officer.y, '#fbbf24', 36);
+      isGameWon = true;
+      promotedCareers[currentCareer] = true;
+      updateCareerUI();
+      updateHUD();
+      startDroneShow();
+      return;
+    }
+
+    if (jumped >= 2) {
+      createParticles(officer.x, officer.y, '#f59e0b', 22);
+      guideText.innerText = `🔥 Outstanding！連續跳升 +${jumped} 格！`;
+      sfxScore();
+    } else {
+      createParticles(officer.x, officer.y, '#38bdf8', 12);
+      guideText.innerText = `✅ 穩步上揚！成功跳上第 ${currentPoint} 格！`;
+      sfxLand();
+    }
+
+    if (currentPoint === 11) {
+      ammo = 3;
+      guideText.innerText = "🔥 已企穩 11 格！點擊角色開槍擊落前方障礙，直衝 12 格！";
+    }
+
+    updateHUD();
+  }
+
+  function onFreezeFall() {
+    hearts--;
+    updateHUD();
+    sfxHurt();
+    createParticles(officer.x, officer.y, '#ef4444', 20);
+
+    if (hearts <= 0) {
+      loseModal.style.display = 'flex';
+      return;
+    }
+
+    serviceYears++;
+    officer.isGrounded = true;
+    officer.vx = 0;
+    officer.vy = 0;
+
+    const p = platforms[currentPoint];
+    officer.x = p.x + p.width / 2;
+    officer.y = p.y - officer.radius;
+    guideText.innerText = `💔 踩空跌落！扣 1 格心心！企穩第 ${currentPoint} 格下年再戰！`;
+  }
+
+  function updateHUD() {
+    let heartStr = '';
+    for (let i = 0; i < 3; i++) heartStr += i < hearts ? '❤️' : '🖤';
+    heartDisplay.innerText = heartStr;
+
+    if (currentPoint >= 11) {
+      let ammoStr = '';
+      for (let i = 0; i < 3; i++) ammoStr += i < ammo ? '🔫' : '◽';
+      ammoDisplay.innerText = `子彈: ${ammoStr}`;
+    } else {
+      ammoDisplay.innerText = '';
+    }
+
+    statDisplay.innerText = `職級：第 ${currentPoint} / 12 格 ｜ 第 ${serviceYears} 年`;
+  }
+
+  function fireGun() {
+    if (ammo <= 0 || currentPoint < 11 || !officer.isGrounded || isDroneShow) return;
+
+    ammo--;
+    officer.shootingTimer = 12;
+    sfxGunshot();
+    updateHUD();
+
+    bullets.push({
+      x: officer.x + 8,
+      y: officer.y - 18,
+      vx: 0,
+      vy: -14,
+      radius: 4
+    });
+
+    createParticles(officer.x + 8, officer.y - 20, '#facc15', 8);
+  }
+
+  function triggerFinalWinModal() {
+    sfxWin();
+    document.getElementById('winDesc').innerText = 
+      `🎉 歷經 ${serviceYears} 年考核磨練，${currentCareer} 長官成功榮升 12 格頂薪主管！`;
+    winModal.style.display = 'flex';
+  }
+
+  function restartGame() {
+    loseModal.style.display = 'none';
+    hearts = 3;
+    ammo = 3;
+    currentPoint = 0;
+    serviceYears = 1;
+    bullets = [];
+    fireworks = [];
+    initPlatforms();
+    resetOfficerToPlatform(0);
+    updateHUD();
+    guideText.innerText = "重新出發！保持專注，拉動箭頭瞄準起跳！";
+  }
+
+  function reincarnate() {
+    winModal.style.display = 'none';
+    hearts = 3;
+    ammo = 3;
+    currentPoint = 0;
+    serviceYears = 1;
+    bullets = [];
+    fireworks = [];
+    initPlatforms();
+    resetOfficerToPlatform(0);
+    updateHUD();
+    guideText.innerText = "🔄 砍掉重練成功！保留成就，再創最速晉升紀錄！";
+  }
+
+  function resetOfficerToPlatform(lvl) {
+    const p = platforms[lvl];
+    officer.x = p.x + p.width / 2;
+    officer.y = p.y - officer.radius;
+    officer.isGrounded = true;
+    officer.vx = 0;
+    officer.vy = 0;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.save();
+    ctx.translate(0, cameraY);
+
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 12; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, platforms[i].y + 10);
+      ctx.lineTo(W, platforms[i].y + 10);
+      ctx.stroke();
+    }
+
+    platforms.forEach((p) => {
+      if (p.level <= 5) ctx.fillStyle = '#0ea5e9';
+      else if (p.level <= 10) ctx.fillStyle = '#eab308';
+      else if (p.level === 11) ctx.fillStyle = '#f97316';
+      else ctx.fillStyle = '#ef4444';
+
+      ctx.beginPath();
+      ctx.roundRect(p.x, p.y, p.width, p.height, 6);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      let label = `第 ${p.level} 格`;
+      if (p.level === 0) label = "起步點 (0格)";
+      if (p.level === 11) label = "🚪 11格決戰門檻";
+      if (p.level === 12) label = "👑 12格 Promotion";
+      ctx.fillText(label, p.x + p.width / 2, p.y + 13);
+    });
+
+    drawObstacles(ctx);
+    drawBullets(ctx);
+    drawCelebratingColleagues(ctx); // 繪製背後同事
+    drawFireworks(ctx); // 繪製慶祝煙花
+    drawDrones(ctx); // 繪製置中 CNE 無人機
+    drawOfficer(ctx, officer.x, officer.y, currentCareer, currentPoint);
+
+    particles.forEach(pt => {
+      ctx.fillStyle = pt.color;
+      ctx.globalAlpha = pt.life;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1.0;
+
+    ctx.restore();
+
+    drawAimingArrow();
+  }
+
+  function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+
+  function getEventPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches && e.touches.length > 0) {
+      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    }
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function onPointerDown(e) {
+    if (e.target.tagName === 'BUTTON' || !officer.isGrounded || hearts <= 0 || isGameWon || isDroneShow) return;
+    initAudio();
+    const pos = getEventPos(e);
+
+    const screenOfficerY = officer.y + cameraY;
+    const distToOfficer = Math.hypot(pos.x - officer.x, pos.y - screenOfficerY);
+
+    if (currentPoint === 11 && distToOfficer < officer.radius + 18 && ammo > 0) {
+      fireGun();
+      return;
+    }
+
+    isDragging = true;
+    dragStart = pos;
+    dragCurrent = pos;
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    dragCurrent = getEventPos(e);
+  }
+
+  function onPointerUp(e) {
+    if (!isDragging || !officer.isGrounded || isGameWon || isDroneShow) return;
+    isDragging = false;
+
+    const dx = dragStart.x - dragCurrent.x;
+    const dy = dragStart.y - dragCurrent.y;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance > 12) {
+      const maxDist = 140;
+      const power = Math.min(distance, maxDist) / maxDist;
+      const angle = Math.atan2(dy, dx);
+
+      officer.isGrounded = false;
+      officer.vx = Math.cos(angle) * power * 15;
+      officer.vy = -Math.abs(Math.sin(angle)) * power * 22;
+      sfxJump();
+    }
+  }
+
+  canvas.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousemove', onPointerMove);
+  window.addEventListener('mouseup', onPointerUp);
+
+  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+  window.addEventListener('touchmove', onPointerMove, { passive: false });
+  window.addEventListener('touchend', onPointerUp, { passive: false });
+
+  function switchCareer(career) {
+    if (currentPoint > 0 && currentPoint < 12) {
+      if (!confirm("切換職業將由 0 格重新起步，確定？")) return;
+    }
+    currentCareer = career;
+    currentPoint = 0;
+    serviceYears = 1;
+    hearts = 3;
+    ammo = 3;
+    bullets = [];
+    fireworks = [];
+    initPlatforms();
+    resetOfficerToPlatform(0);
+    updateCareerUI();
+    updateHUD();
+    guideText.innerText = `長官已換裝為 ${career}！拉動箭頭瞄準起跳！`;
+  }
+
+  function updateCareerUI() {
+    const btns = document.querySelectorAll('.career-btn');
+    const keys = ['Cargo', 'Pax', '老民', '水佬'];
+    btns.forEach((btn, idx) => {
+      const k = keys[idx];
+      btn.className = 'career-btn' + 
+        (currentCareer === k ? ' active' : '') + 
+        (promotedCareers[k] ? ' promoted' : '');
+    });
+  }
+
+  initPlatforms();
+  resetOfficerToPlatform(0);
+  updateHUD();
+  loop();
+</script>
+</body>
+</html>
