@@ -3,54 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>長官晉升大冒險 - Career Ladder (CNE 置中與煙花狂歡版)</title>
+  <title>長官晉升大冒險 - 全螢幕自適應隨機版</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       background: #030712;
       color: #f8fafc;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
       touch-action: none;
     }
     #gameWrapper {
       position: relative;
       width: 100vw;
-      max-width: 440px;
       height: 100vh;
-      max-height: 840px;
       background: radial-gradient(circle at 50% 15%, #1e1b4b, #030712);
-      box-shadow: 0 0 35px rgba(0,0,0,0.9);
       overflow: hidden;
-      border-radius: 14px;
     }
     canvas {
       width: 100%;
       height: 100%;
       display: block;
     }
+    /* 頂部職業選擇 UI：自適應置中與限寬 */
     .career-bar {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 94%;
+      max-width: 540px;
       display: flex;
-      gap: 6px;
+      gap: 8px;
       z-index: 10;
     }
     .career-btn {
       flex: 1;
-      padding: 7px 0;
+      padding: 8px 0;
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
       border: 1px solid #334155;
       border-radius: 8px;
       color: #94a3b8;
-      font-size: 0.75rem;
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
       font-weight: 700;
       cursor: pointer;
       text-align: center;
@@ -60,38 +57,42 @@
       background: #38bdf8;
       border-color: #e0f2fe;
       color: #030712;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
     }
     .career-btn.promoted {
       border-color: #fbbf24;
       color: #fbbf24;
     }
+
+    /* 頂部 HUD 資訊 */
     .hud-bar {
       position: absolute;
-      top: 56px;
-      left: 14px;
-      right: 14px;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 94%;
+      max-width: 600px;
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       pointer-events: none;
       z-index: 10;
-      font-size: 0.88rem;
+      font-size: clamp(0.8rem, 2.2vw, 0.95rem);
       font-weight: 600;
       text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
     .status-left {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
     .heart-box {
-      font-size: 1.1rem;
-      letter-spacing: 2px;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      letter-spacing: 3px;
       filter: drop-shadow(0 2px 6px rgba(239, 68, 68, 0.6));
     }
     .ammo-box {
-      font-size: 0.95rem;
+      font-size: clamp(0.85rem, 2vw, 1.05rem);
       letter-spacing: 2px;
       color: #facc15;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
@@ -102,18 +103,20 @@
       border: 1px solid #475569;
       color: #f8fafc;
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      font-size: 0.9rem;
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
     }
+
+    /* 底部提示文字 */
     .guide-overlay {
       position: absolute;
-      bottom: 20px;
+      bottom: 24px;
       left: 0;
       right: 0;
       text-align: center;
@@ -121,16 +124,18 @@
       z-index: 10;
     }
     .guide-text {
-      font-size: 0.88rem;
+      font-size: clamp(0.8rem, 2vw, 0.95rem);
       font-weight: 600;
       color: #f8fafc;
       background: rgba(15, 23, 42, 0.88);
-      padding: 6px 18px;
-      border-radius: 20px;
+      padding: 8px 24px;
+      border-radius: 24px;
       display: inline-block;
       border: 1px solid #334155;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
     }
+
+    /* 彈窗 */
     .modal {
       position: absolute;
       inset: 0;
@@ -143,22 +148,22 @@
       text-align: center;
       z-index: 30;
     }
-    .modal h2 { font-size: 1.8rem; margin-bottom: 12px; }
-    .modal p { font-size: 0.95rem; color: #cbd5e1; margin-bottom: 24px; line-height: 1.6; }
+    .modal h2 { font-size: clamp(1.5rem, 4vw, 2.2rem); margin-bottom: 12px; }
+    .modal p { font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: #cbd5e1; margin-bottom: 24px; line-height: 1.6; max-width: 500px; }
     .btn-action {
       background: linear-gradient(135deg, #ef4444, #dc2626);
       border: none;
       color: white;
-      padding: 14px 32px;
-      font-size: 1.05rem;
+      padding: 14px 36px;
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
     }
     .btn-gold {
       background: linear-gradient(135deg, #f59e0b, #d97706);
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      box-shadow: 0 4px 16px rgba(245, 158, 11, 0.4);
     }
   </style>
 </head>
@@ -280,9 +285,9 @@
     else if (bgmInterval) clearInterval(bgmInterval);
   }
 
+  // Canvas 全螢幕高解析度自適應
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-  const wrapper = document.getElementById('gameWrapper');
   const guideText = document.getElementById('guideText');
   const heartDisplay = document.getElementById('heartDisplay');
   const ammoDisplay = document.getElementById('ammoDisplay');
@@ -290,13 +295,17 @@
   const winModal = document.getElementById('winModal');
   const loseModal = document.getElementById('loseModal');
 
-  let W = canvas.width = wrapper.clientWidth;
-  let H = canvas.height = wrapper.clientHeight;
+  let W = window.innerWidth;
+  let H = window.innerHeight;
 
-  window.addEventListener('resize', () => {
-    W = canvas.width = wrapper.clientWidth;
-    H = canvas.height = wrapper.clientHeight;
-  });
+  function resizeCanvas() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
   let currentCareer = 'Cargo';
   let promotedCareers = { Cargo: false, Pax: false, 老民: false, 水佬: false };
@@ -312,23 +321,17 @@
   const PLATFORM_GAP = 145;
   let obstacles = [];
 
-  // ============================================
-  // CNE 置中無人機矩陣與煙花粒子系統
-  // ============================================
   let isDroneShow = false;
   let droneTimer = 0;
   let drones = [];
   let fireworks = [];
 
-  // 「CNE」相對於畫面中央 (W/2, CenterY) 的精準置中點陣
+  // 「CNE」相對於畫面中央 (W/2, CenterY) 的置中點陣
   const CNE_DOTS_CENTERED = [
-    // 字母 'C' (置左)
     [-110, -28], [-125, -28], [-138, -18], [-142, -5], [-142, 8], [-138, 20], [-125, 30], [-110, 30],
-    // 字母 'N' (置中)
     [-70, 30], [-70, 11], [-70, -8], [-70, -28],
     [-52, -10], [-35, 5], [-18, 18],
     [-2, 30], [-2, 11], [-2, -8], [-2, -28],
-    // 字母 'E' (置右)
     [35, 30], [35, 11], [35, -8], [35, -28],
     [52, -28], [68, -28], [84, -28],
     [52, 1], [68, 1],
@@ -337,18 +340,17 @@
 
   function startDroneShow() {
     isDroneShow = true;
-    droneTimer = 360; // 6秒倒數
+    droneTimer = 360;
     fireworks = [];
     sfxDroneLight();
     guideText.innerText = "✨ 無人機匯聚螢幕中央！背後同事發放慶祝煙花！";
 
-    // 完美置中座標：以螢幕正中心 (W / 2) 為基準
     const p12 = platforms[12];
     const centerTargetY = p12.y - 170;
 
     drones = CNE_DOTS_CENTERED.map(pt => {
       const angle = Math.random() * Math.PI * 2;
-      const startDist = 380 + Math.random() * 200;
+      const startDist = Math.max(W, H) * 0.6 + Math.random() * 200;
       const exitAngle = Math.random() * Math.PI * 2;
 
       return {
@@ -364,7 +366,6 @@
     });
   }
 
-  // 煙花產生器
   function spawnFirework(originX, originY) {
     const colors = ['#f43f5e', '#38bdf8', '#facc15', '#a855f7', '#22c55e', '#fb923c'];
     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -385,6 +386,9 @@
     sfxFirework();
   }
 
+  // ============================================
+  // 全面隨機化浮台演算法 (每次生成全新不同位置)
+  // ============================================
   function initPlatforms() {
     platforms = [];
     isGameWon = false;
@@ -393,19 +397,44 @@
     fireworks = [];
     let accumulatedY = H - 140;
 
+    let prevX = W / 2;
+
     for (let i = 0; i <= 12; i++) {
       let width = 160;
       let type = 'normal';
 
-      if (i <= 5) width = 175 - i * 6;
-      else if (i <= 10) width = 120;
-      else if (i === 11) { width = 100; type = 'board_gate'; }
-      else if (i === 12) { width = 90; type = 'promotion_seat'; }
+      if (i <= 5) width = Math.min(185, Math.max(130, W * 0.32 - i * 6));
+      else if (i <= 10) width = Math.min(130, Math.max(95, W * 0.24));
+      else if (i === 11) { width = Math.min(110, Math.max(85, W * 0.2)); type = 'board_gate'; }
+      else if (i === 12) { width = Math.min(100, Math.max(75, W * 0.18)); type = 'promotion_seat'; }
 
       let x = W / 2 - width / 2;
-      if (i > 0) {
-        const offsetRange = (W - width - 60) / 2;
-        x = W / 2 - width / 2 + Math.sin(i * 1.7) * offsetRange;
+
+      if (i === 0) {
+        // 第 0 格起點置中
+        x = W / 2 - width / 2;
+        prevX = x;
+      } else {
+        // 核心隨機化：用盡螢幕闊度，並限制相鄰跳躍跨度在可達範圍內
+        const padding = 24;
+        const minX = padding;
+        const maxX = W - width - padding;
+
+        // 最大左右隨機跳躍跨度限制在螢幕可達範圍
+        const maxJumpSpan = Math.min(W * 0.42, 280);
+        const randOffset = (Math.random() - 0.5) * 2 * maxJumpSpan;
+
+        let candidateX = prevX + randOffset;
+        candidateX = Math.max(minX, Math.min(maxX, candidateX));
+
+        // 如果過度重疊，強制產生錯位感
+        if (Math.abs(candidateX - prevX) < width * 0.35) {
+          candidateX = (candidateX < W / 2) ? candidateX + width * 0.6 : candidateX - width * 0.6;
+          candidateX = Math.max(minX, Math.min(maxX, candidateX));
+        }
+
+        x = candidateX;
+        prevX = x;
       }
 
       const currentGap = (i === 12) ? PLATFORM_GAP * 2.0 : PLATFORM_GAP;
@@ -418,18 +447,19 @@
         width: width,
         height: 18,
         type: type,
-        vx: i === 12 ? 2.8 : 0
+        vx: i === 12 ? (Math.random() > 0.5 ? 2.8 : -2.8) : 0
       });
     }
 
+    // 障礙物高度與隨機生成
     const p11Y = platforms[11].y;
     const p12Y = platforms[12].y;
     const stepY = (p11Y - p12Y) / 4;
 
     obstacles = [
-      { x: 50, baseY: p11Y - stepY * 1, y: p11Y - stepY * 1, vx: 2.5, radius: 16, wavePhase: 0, alive: true },
-      { x: W - 50, baseY: p11Y - stepY * 2, y: p11Y - stepY * 2, vx: -2.3, radius: 16, wavePhase: 2.1, alive: true },
-      { x: 80, baseY: p11Y - stepY * 3, y: p11Y - stepY * 3, vx: 2.8, radius: 16, wavePhase: 4.2, alive: true }
+      { x: Math.random() * (W - 100) + 50, baseY: p11Y - stepY * 1, y: p11Y - stepY * 1, vx: 2.5, radius: 16, wavePhase: Math.random() * Math.PI, alive: true },
+      { x: Math.random() * (W - 100) + 50, baseY: p11Y - stepY * 2, y: p11Y - stepY * 2, vx: -2.3, radius: 16, wavePhase: Math.random() * Math.PI, alive: true },
+      { x: Math.random() * (W - 100) + 50, baseY: p11Y - stepY * 3, y: p11Y - stepY * 3, vx: 2.8, radius: 16, wavePhase: Math.random() * Math.PI, alive: true }
     ];
   }
 
@@ -691,38 +721,33 @@
     ctx.restore();
   }
 
-  // 繪製第 12 格背後熱烈歡呼發放煙花的同事們
   function drawCelebratingColleagues(ctx) {
     if (!isDroneShow) return;
 
     const p12 = platforms[12];
     const cheerBob = Math.sin(officer.wobble * 2) * 3;
 
-    // 左側歡呼同事 (Pax / Cargo 制服)
     ctx.save();
     ctx.translate(p12.x - 30, p12.y + 2 + cheerBob);
-    ctx.fillStyle = '#ffffff'; // 白衫
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.roundRect(-8, -12, 16, 12, 3); ctx.fill();
-    ctx.fillStyle = '#14532d'; // 綠褲
+    ctx.fillStyle = '#14532d';
     ctx.beginPath(); ctx.roundRect(-7, 0, 14, 10, 2); ctx.fill();
-    ctx.fillStyle = '#ffedd5'; // 頭部
+    ctx.fillStyle = '#ffedd5';
     ctx.beginPath(); ctx.arc(0, -18, 6, 0, Math.PI * 2); ctx.fill();
-    // 舉起雙手
     ctx.strokeStyle = '#fed7aa'; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.moveTo(-6, -10); ctx.lineTo(-12, -22); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(6, -10); ctx.lineTo(12, -22); ctx.stroke();
     ctx.restore();
 
-    // 右側歡呼同事 (反光衣 / 水佬)
     ctx.save();
     ctx.translate(p12.x + p12.width + 30, p12.y + 2 - cheerBob);
-    ctx.fillStyle = '#a3e635'; // 螢光黃綠背心
+    ctx.fillStyle = '#a3e635';
     ctx.beginPath(); ctx.roundRect(-8, -12, 16, 12, 3); ctx.fill();
-    ctx.fillStyle = '#1e293b'; // 藍褲
+    ctx.fillStyle = '#1e293b';
     ctx.beginPath(); ctx.roundRect(-7, 0, 14, 10, 2); ctx.fill();
-    ctx.fillStyle = '#ffedd5'; // 頭部
+    ctx.fillStyle = '#ffedd5';
     ctx.beginPath(); ctx.arc(0, -18, 6, 0, Math.PI * 2); ctx.fill();
-    // 舉手揮舞彩帶
     ctx.strokeStyle = '#fed7aa'; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.moveTo(-6, -10); ctx.lineTo(-12, -22); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(6, -10); ctx.lineTo(12, -22); ctx.stroke();
@@ -835,7 +860,6 @@
     });
   }
 
-  // 繪製 CNE 置中無人機
   function drawDrones(ctx) {
     if (!isDroneShow) return;
 
@@ -858,7 +882,6 @@
     });
   }
 
-  // 繪製慶祝煙花
   function drawFireworks(ctx) {
     if (!isDroneShow && fireworks.length === 0) return;
 
@@ -935,11 +958,9 @@
     officer.wobble += 0.08;
     if (officer.shootingTimer > 0) officer.shootingTimer--;
 
-    // 6 秒無人機燈光匯演與煙花更新
     if (isDroneShow) {
       droneTimer--;
 
-      // 定時自兩側同事背後發放煙花 (每 20 幀發放一發)
       if (droneTimer % 22 === 0 && droneTimer > 40) {
         const p12 = platforms[12];
         const launchX = Math.random() > 0.5 ? (p12.x - 40) : (p12.x + p12.width + 40);
@@ -947,24 +968,19 @@
         spawnFirework(launchX, burstY);
       }
 
-      // 階段 1：0.0s - 1.5s ➔ 由四面八方飛向螢幕中央
       if (droneTimer > 270) {
         guideText.innerText = "✨ 無人機正飛向畫面正中央聚攏！";
         drones.forEach(d => {
           d.x += (d.targetX - d.x) * 0.09;
           d.y += (d.targetY - d.y) * 0.09;
         });
-      }
-      // 階段 2：1.5s - 4.5s (維持 3 秒) ➔ 於螢幕中心完美定型排列「CNE」
-      else if (droneTimer > 90) {
+      } else if (droneTimer > 90) {
         guideText.innerText = "🌟 同事熱烈放煙花！無人機精準置中排列「CNE」！";
         drones.forEach(d => {
           d.x += (d.targetX - d.x) * 0.2;
           d.y += (d.targetY - d.y) * 0.2;
         });
-      }
-      // 階段 3：4.5s - 6.0s ➔ 散開飛離
-      else {
+      } else {
         if (droneTimer === 90) sfxDroneDisperse();
         guideText.innerText = "🚀 匯演圓滿落幕！長官榮譽晉升！";
         drones.forEach(d => {
@@ -979,12 +995,11 @@
       }
     }
 
-    // 更新煙花粒子
     for (let i = fireworks.length - 1; i >= 0; i--) {
       const fw = fireworks[i];
       fw.x += fw.vx;
       fw.y += fw.vy;
-      fw.vy += 0.08; // 輕微重力沉降
+      fw.vy += 0.08;
       fw.life -= fw.decay;
       if (fw.life <= 0) fireworks.splice(i, 1);
     }
@@ -1078,6 +1093,7 @@
       }
     }
 
+    // 第 12 格左右擺動
     const p12 = platforms[12];
     p12.x += p12.vx;
     if (p12.x < 25 || p12.x + p12.width > W - 25) p12.vx *= -1;
@@ -1208,7 +1224,7 @@
     serviceYears = 1;
     bullets = [];
     fireworks = [];
-    initPlatforms();
+    initPlatforms(); // 重新隨機生成整局浮台
     resetOfficerToPlatform(0);
     updateHUD();
     guideText.innerText = "重新出發！保持專注，拉動箭頭瞄準起跳！";
@@ -1222,10 +1238,10 @@
     serviceYears = 1;
     bullets = [];
     fireworks = [];
-    initPlatforms();
+    initPlatforms(); // 轉生隨機生成全新浮台
     resetOfficerToPlatform(0);
     updateHUD();
-    guideText.innerText = "🔄 砍掉重練成功！保留成就，再創最速晉升紀錄！";
+    guideText.innerText = "🔄 砍掉重練成功！全新天梯地圖已生成，再創最速紀錄！";
   }
 
   function resetOfficerToPlatform(lvl) {
@@ -1274,9 +1290,9 @@
 
     drawObstacles(ctx);
     drawBullets(ctx);
-    drawCelebratingColleagues(ctx); // 繪製背後同事
-    drawFireworks(ctx); // 繪製慶祝煙花
-    drawDrones(ctx); // 繪製置中 CNE 無人機
+    drawCelebratingColleagues(ctx);
+    drawFireworks(ctx);
+    drawDrones(ctx);
     drawOfficer(ctx, officer.x, officer.y, currentCareer, currentPoint);
 
     particles.forEach(pt => {
@@ -1300,11 +1316,10 @@
   }
 
   function getEventPos(e) {
-    const rect = canvas.getBoundingClientRect();
     if (e.touches && e.touches.length > 0) {
-      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
     }
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    return { x: e.clientX, y: e.clientY };
   }
 
   function onPointerDown(e) {
@@ -1315,7 +1330,7 @@
     const screenOfficerY = officer.y + cameraY;
     const distToOfficer = Math.hypot(pos.x - officer.x, pos.y - screenOfficerY);
 
-    if (currentPoint === 11 && distToOfficer < officer.radius + 18 && ammo > 0) {
+    if (currentPoint === 11 && distToOfficer < officer.radius + 20 && ammo > 0) {
       fireGun();
       return;
     }
@@ -1350,17 +1365,17 @@
     }
   }
 
-  canvas.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('mousedown', onPointerDown);
   window.addEventListener('mousemove', onPointerMove);
   window.addEventListener('mouseup', onPointerUp);
 
-  canvas.addEventListener('touchstart', onPointerDown, { passive: false });
+  window.addEventListener('touchstart', onPointerDown, { passive: false });
   window.addEventListener('touchmove', onPointerMove, { passive: false });
   window.addEventListener('touchend', onPointerUp, { passive: false });
 
   function switchCareer(career) {
     if (currentPoint > 0 && currentPoint < 12) {
-      if (!confirm("切換職業將由 0 格重新起步，確定？")) return;
+      if (!confirm("切換職業將重新隨機生成關卡地圖，確定？")) return;
     }
     currentCareer = career;
     currentPoint = 0;
@@ -1369,11 +1384,11 @@
     ammo = 3;
     bullets = [];
     fireworks = [];
-    initPlatforms();
+    initPlatforms(); // 切換職業隨機生成新浮台
     resetOfficerToPlatform(0);
     updateCareerUI();
     updateHUD();
-    guideText.innerText = `長官已換裝為 ${career}！拉動箭頭瞄準起跳！`;
+    guideText.innerText = `長官已換裝為 ${career}！新天梯已隨機生成，拉動箭頭瞄準起跳！`;
   }
 
   function updateCareerUI() {
