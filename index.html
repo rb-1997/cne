@@ -208,7 +208,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 3: 抽籤模式 (極淺柔和淺綠漸變) -->
+                    <!-- Card 3: 抽籤模式 -->
                     <div onclick="switchView('draw')" class="h-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-2xl p-4 md:p-5 border border-emerald-200 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-emerald-950">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
@@ -268,7 +268,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 6: CNE AI BOT -->
+                    <!-- Card 6: CNE AI BOT (已更新描述) -->
                     <div onclick="switchView('ai')" class="h-full bg-gradient-to-br from-purple-800 via-indigo-900 to-purple-900 rounded-2xl p-4 md:p-5 border border-purple-500/50 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
@@ -279,7 +279,7 @@
                             </div>
                             <div>
                                 <h4 class="text-base md:text-lg font-black tracking-wide text-white">CNE AI BOT</h4>
-                                <p class="text-xs text-purple-100 mt-1 line-clamp-2 font-medium leading-relaxed">內建資深 CNE 智庫，隨時解答法例條文與算式。</p>
+                                <p class="text-xs text-purple-100 mt-1 line-clamp-2 font-medium leading-relaxed">內建資深 CNE 智庫，隨時解答法例條，全新植入DS模式。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-purple-700/60 flex items-center justify-between text-xs text-amber-300 font-extrabold">
@@ -328,7 +328,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 9: 跳格加2小遊戲 (深桃粉紅色) -->
+                    <!-- Card 9: 跳格加2小遊戲 -->
                     <div onclick="switchView('game')" class="h-full bg-gradient-to-br from-pink-600 via-rose-600 to-pink-700 rounded-2xl p-4 md:p-5 border border-pink-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
@@ -348,7 +348,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 10: CNE無人駕駛 (同尺寸平排) -->
+                    <!-- Card 10: CNE無人駕駛 (已更新描述) -->
                     <div onclick="switchView('board')" class="h-full bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 rounded-2xl p-4 md:p-5 border border-slate-700 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
@@ -359,7 +359,7 @@
                             </div>
                             <div>
                                 <h4 class="text-base md:text-lg font-black text-white">CNE無人駕駛</h4>
-                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium leading-relaxed">自由交流留言板，可匿名留言，暢所欲言。</p>
+                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium leading-relaxed">自由交流，可匿名留言， 不可侵犯私隱及國安條例。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-700 flex items-center justify-between text-xs text-amber-300 font-extrabold">
@@ -372,7 +372,7 @@
             </div>
         </section>
 
-        <!-- ================= PAGE 10: 跳格加2小遊戲 (內嵌並有返回按鈕) ================= -->
+        <!-- ================= PAGE 10: 跳格加2小遊戲 ================= -->
         <section id="view-game" class="view-panel child-view-panel space-y-6">
             <div class="flex items-center justify-between bg-gradient-to-r from-pink-600 to-rose-600 p-5 rounded-2xl border-2 border-pink-400 text-white shadow-md flex-wrap gap-3">
                 <div class="flex items-center space-x-4">
@@ -959,6 +959,7 @@
                 </div>
             </div>
 
+            <!-- Dify Chatbot Embedded iFrame Container -->
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[680px]">
                 <iframe
                     src="https://udify.app/chat/OnwMNyxa3hx6Wp7S"
@@ -2809,7 +2810,7 @@
                                     ${staff.patternKey === 'pattern5' ? `
                                         <span class="text-xs font-bold text-slate-500 block px-1 py-1.5">自動按週六日</span>
                                     ` : `
-                                        <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-orange-500">
+                                        <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-orange-500">
                                             ${patternObj.shifts.map((p, i) => `<option value="${i}" ${staff.anchorType === i ? 'selected' : ''}>${p.name}</option>`).join('')}
                                         </select>
                                     `}
