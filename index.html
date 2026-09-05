@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CNE日常 - 護理實用小工具</title>
+
+    <!-- 網站 Favicon 及 手機桌面新增捷徑專屬 Icon -->
+    <link rel="icon" type="image/png" href="https://rb-1997.github.io/cne/cne_daily180.png">
+    <link rel="apple-touch-icon" href="https://rb-1997.github.io/cne/cne_daily180.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://rb-1997.github.io/cne/cne_daily180.png">
+    <meta name="apple-mobile-web-app-title" content="CNE日常">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -98,9 +107,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
         <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="switchView('home')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-emerald-500 flex items-center justify-between p-2 text-white shadow-md shadow-teal-100">
-                    <i data-lucide="cross" class="w-6 h-6 mx-auto"></i>
-                </div>
+                <img src="https://rb-1997.github.io/cne/cne_daily180.png" alt="CNE日常 Logo" class="w-10 h-10 rounded-xl object-contain shadow-md shadow-teal-100/50">
                 <div>
                     <h1 class="font-extrabold text-xl leading-tight text-slate-900">CNE日常</h1>
                     <p class="text-xs text-slate-500 font-medium">護理實用工具庫</p>
@@ -279,7 +286,7 @@
                             </div>
                             <div>
                                 <h4 class="text-base md:text-lg font-black tracking-wide text-white">CNE AI BOT</h4>
-                                <p class="text-xs text-purple-100 mt-1 line-clamp-2 font-medium leading-relaxed">內建資深 CNE 智庫，隨時解答法例條，全新植入DS模式。</p>
+                                <p class="text-xs text-purple-100 mt-1 line-clamp-3 font-medium leading-relaxed">全新植入DS模式，執法情境、法例罪行、口岸程序、職涯疑惑，Draft Post Record 體驗， 即獲實時精準解答。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-purple-700/60 flex items-center justify-between text-xs text-amber-300 font-extrabold">
@@ -348,7 +355,7 @@
                         </div>
                     </div>
 
-                    <!-- Card 10: CNE無人駕駛 (已更新描述) -->
+                    <!-- Card 10: CNE無人駕駛 -->
                     <div onclick="switchView('board')" class="h-full bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 rounded-2xl p-4 md:p-5 border border-slate-700 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
@@ -359,7 +366,7 @@
                             </div>
                             <div>
                                 <h4 class="text-base md:text-lg font-black text-white">CNE無人駕駛</h4>
-                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium leading-relaxed">自由交流，可匿名留言， 不可侵犯私隱及國安條例。</p>
+                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium leading-relaxed">自由交流，可匿名留言，不可侵犯私隱及國安條例。</p>
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-700 flex items-center justify-between text-xs text-amber-300 font-extrabold">
