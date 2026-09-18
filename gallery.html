@@ -153,7 +153,7 @@
     }
 
     /* ============================================================
-       未登入存取防護門（Login Gate）
+       未登入防護門（Login Gate）
     ============================================================ */
     .gate-container {
       background: var(--surface);
@@ -183,7 +183,7 @@
     }
 
     /* ============================================================
-       發布區域（登入後可見）
+       發布區域（登入後解鎖）
     ============================================================ */
     .publish-section {
       background: var(--surface);
@@ -243,7 +243,7 @@
       max-width: 100%;
       max-height: 50vh;
       height: auto;
-      object-fit: contain; /* 預覽也合比例全圖顯示 */
+      object-fit: contain;
     }
     .preview-remove-btn {
       position: absolute;
@@ -341,7 +341,7 @@
       color: #fff;
     }
 
-    /* 圖片容器：背景為深色優雅襯托，合比例置中 */
+    /* 圖片合比例全景縮放，最高限 75vh */
     .post-image-wrap {
       width: 100%;
       background: #090d16;
@@ -351,12 +351,11 @@
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
-    /* 核心調整：全圖合比例縮小，最高限螢幕 75% 高度，完整顯露無裁切 */
     .post-image-wrap img {
       width: 100%;
       height: auto;
-      max-height: 75vh; /* 確保不超出螢幕視野 */
-      object-fit: contain; /* 合比例全景，絕不裁剪任何部分 */
+      max-height: 75vh;
+      object-fit: contain;
       display: block;
     }
 
@@ -485,9 +484,7 @@
 
   <main class="main-container">
     
-    <!-- ============================================================
-         1. 未登入防護門（未登入者僅看得到此區塊，圖庫完全封鎖）
-    ============================================================ -->
+    <!-- 1. 未登入防護門 -->
     <div id="login-gate" class="gate-container">
       <div class="gate-icon">🔒</div>
       <div class="gate-title">私人專屬 AI 藝廊</div>
@@ -500,9 +497,7 @@
       </button>
     </div>
 
-    <!-- ============================================================
-         2. 已登入主內容區（只有登入後才會顯示及向資料庫抓取圖片）
-    ============================================================ -->
+    <!-- 2. 已登入主內容區 -->
     <div id="authenticated-area" style="display: none;">
       
       <!-- 發布區域 -->
@@ -531,7 +526,7 @@
         </button>
       </div>
 
-      <!-- 作品展示牆（合比例完整縮放） -->
+      <!-- 作品展示牆 -->
       <div id="posts-feed">
         <p style="text-align: center; color: var(--text-muted); padding: 40px;">作品載入中...</p>
       </div>
@@ -549,6 +544,8 @@
     import { 
       getAuth, 
       signInWithPopup, 
+      signInWithRedirect,
+      getRedirectResult,
       GoogleAuthProvider, 
       signOut, 
       onAuthStateChanged 
@@ -598,9 +595,15 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // 檢查是否有從 Redirect 登入跳轉回來的結果
+    getRedirectResult(auth).catch(err => {
+      console.warn("Redirect 登入檢查：", err);
+    });
+
     let currentUser = null;
     let selectedFile = null;
-    let unsubscribePosts = null; // 即時監聽控制器
+    let unsubscribePosts = null;
+    let isLoginProcessing = false; // 防重複點擊鎖
 
     // DOM 元素
     const navLoginBtn = document.getElementById("nav-login-btn");
@@ -627,20 +630,20 @@
     function showToast(text) {
       toastEl.textContent = text;
       toastEl.classList.add("show");
-      setTimeout(() => toastEl.classList.remove("show"), 3000);
+      setTimeout(() => toastEl.classList.remove("show"), 3500);
     }
 
     function isUserAdmin(user) {
       return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
     }
 
-    // ============================================================
-    // 嚴格監聽登入狀態：未登入者完全不讀取資料
-    // ============================================================
+    // 監聽登入狀態改變
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
+      isLoginProcessing = false;
+      setLoginButtonsState(false);
+
       if (user) {
-        // 已登入：解鎖主內容，開啟即時監聽
         navLoginBtn.style.display = "none";
         userInfo.style.display = "flex";
         userName.textContent = user.displayName || "創作者";
@@ -657,7 +660,6 @@
 
         startListeningPosts();
       } else {
-        // 未登入：鎖定畫面，切斷讀取
         navLoginBtn.style.display = "inline-flex";
         userInfo.style.display = "none";
         adminBadge.style.display = "none";
@@ -673,24 +675,59 @@
       }
     });
 
-    // 登入
+    function setLoginButtonsState(loading) {
+      navLoginBtn.disabled = loading;
+      gateLoginBtn.disabled = loading;
+      if (loading) {
+        navLoginBtn.textContent = "登入中...";
+        gateLoginBtn.textContent = "正在開啟登入視窗...";
+      } else {
+        navLoginBtn.textContent = "使用 Google 登入";
+        gateLoginBtn.textContent = "立即使用 Google 登入解鎖";
+      }
+    }
+
+    // ============================================================
+    // 核心修復：彈窗自動轉跳轉備援（100% 解決 popup-blocked 與 cancelled）
+    // ============================================================
     async function handleLogin() {
+      if (isLoginProcessing) return; // 阻擋重複點擊
+      isLoginProcessing = true;
+      setLoginButtonsState(true);
+
       if (window.location.protocol === "file:") {
         alert("【提示】請將此檔案上傳到 GitHub Pages (https://rb-1997.github.io/cne/) 開啟，Google 登入不支援直接雙擊本地檔案。");
+        isLoginProcessing = false;
+        setLoginButtonsState(false);
         return;
       }
+
       try {
+        // 首先嘗試正常的彈窗登入
         await signInWithPopup(auth, provider);
         showToast("登入成功！已解鎖藝廊");
       } catch (err) {
-        console.error("登入錯誤：", err);
+        console.warn("彈窗被攔截或取消，自動改用全頁面跳轉 (Redirect)...", err);
+
+        // 如果被瀏覽器攔截 (popup-blocked) 或請求取消 (cancelled-popup-request)，自動改為重定向跳轉
+        if (
+          err.code === "auth/popup-blocked" || 
+          err.code === "auth/cancelled-popup-request" ||
+          err.code === "auth/popup-closed-by-user"
+        ) {
+          showToast("瀏覽器已啟動保護，正在為你跳轉至 Google 官方登入頁面...");
+          // 直接全頁面跳轉，任何瀏覽器都絕對不會攔截！
+          await signInWithRedirect(auth, provider);
+          return;
+        }
+
         if (err.code === "auth/unauthorized-domain") {
           alert("【網域未授權】請確認 Firebase 授權網域中已加入 rb-1997.github.io。");
-        } else if (err.code === "auth/popup-blocked") {
-          alert("瀏覽器攔截了登入視窗，請允許彈出視窗。");
         } else {
           alert("登入遇到問題：" + err.message);
         }
+        isLoginProcessing = false;
+        setLoginButtonsState(false);
       }
     }
 
@@ -798,9 +835,7 @@
       }
     });
 
-    // ============================================================
-    // 只有在登入後才調用：即時監聽與合比例全圖渲染
-    // ============================================================
+    // 即時監聽與合比例全圖渲染
     function startListeningPosts() {
       if (unsubscribePosts) unsubscribePosts();
 
@@ -857,7 +892,7 @@
               ` : ''}
             </div>
 
-            <!-- 核心：合比例全景縮放，最高限螢幕 75%，保證一眼完整看到整幅圖 -->
+            <!-- 合比例全景縮放，最高限 75vh -->
             <div class="post-image-wrap">
               <img src="${post.imageUrl}" alt="${post.title}" loading="lazy">
             </div>
