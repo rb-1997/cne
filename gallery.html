@@ -40,19 +40,19 @@
       padding-bottom: 80px;
     }
 
-    /* 頂部導覽列 (毛玻璃效果) */
+    /* 頂部導覽列 */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 12px 20px;
     }
     .header-inner {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -75,7 +75,7 @@
       gap: 10px;
     }
 
-    /* 通用按鈕 */
+    /* 按鈕樣式 */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -114,7 +114,7 @@
       box-shadow: none;
     }
 
-    /* 使用者個人資訊膠囊 */
+    /* 個人資訊 */
     .user-pill {
       display: flex;
       align-items: center;
@@ -146,66 +146,53 @@
       font-weight: 700;
     }
 
-    /* 主內容容器 */
     .main-container {
-      max-width: 680px;
+      max-width: 720px;
       margin: 24px auto 0;
       padding: 0 16px;
     }
 
     /* ============================================================
-       發布區域（未登入半透明灰色鎖定狀態）
+       未登入存取防護門（Login Gate）
+    ============================================================ */
+    .gate-container {
+      background: var(--surface);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      padding: 50px 24px;
+      text-align: center;
+      margin: 40px auto;
+      max-width: 520px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    }
+    .gate-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+    .gate-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+    .gate-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    /* ============================================================
+       發布區域（登入後可見）
     ============================================================ */
     .publish-section {
-      position: relative;
       background: var(--surface);
       border-radius: 20px;
       border: 1px solid var(--border);
       padding: 22px;
       margin-bottom: 32px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-      overflow: hidden;
-      transition: all 0.3s ease;
     }
-    .publish-section.locked {
-      background: #f1f5f9;
-      filter: grayscale(15%);
-    }
-    /* 未登入遮罩 */
-    .lock-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(241, 245, 249, 0.88);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 24px;
-      z-index: 10;
-      transition: opacity 0.3s ease;
-    }
-    .lock-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
-    }
-    .lock-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 6px;
-      max-width: 440px;
-      line-height: 1.5;
-    }
-    .lock-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    /* 發布表單元素 */
     .publish-header-title {
       font-size: 16px;
       font-weight: 700;
@@ -244,17 +231,19 @@
     .preview-box {
       position: relative;
       width: 100%;
-      height: 220px;
+      max-height: 50vh;
       border-radius: 12px;
       overflow: hidden;
       margin-bottom: 12px;
       display: none;
       background: #0f172a;
+      text-align: center;
     }
     .preview-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+      max-width: 100%;
+      max-height: 50vh;
+      height: auto;
+      object-fit: contain; /* 預覽也合比例全圖顯示 */
     }
     .preview-remove-btn {
       position: absolute;
@@ -285,19 +274,15 @@
     .form-input:focus { border-color: var(--primary); }
 
     /* ============================================================
-       貼文卡片：風格 B（統一高度 420px）
+       貼文卡片：合比例全圖顯示（絕不裁切，個 Mon 睇曬）
     ============================================================ */
     .post-card {
       background: var(--surface);
       border-radius: 20px;
       border: 1px solid var(--border);
-      margin-bottom: 28px;
+      margin-bottom: 30px;
       overflow: hidden;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-      transition: box-shadow 0.25s ease;
-    }
-    .post-card:hover {
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
     }
     .post-header {
       padding: 14px 18px;
@@ -327,7 +312,7 @@
       color: var(--text-muted);
     }
     
-    /* 刪除按鈕樣式 */
+    /* 刪除按鈕 */
     .delete-btn {
       background: var(--danger-bg);
       color: var(--danger);
@@ -356,25 +341,23 @@
       color: #fff;
     }
 
-    /* 風格 B：固定統一高度 420px */
+    /* 圖片容器：背景為深色優雅襯托，合比例置中 */
     .post-image-wrap {
       width: 100%;
-      height: 420px;
       background: #090d16;
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
+    /* 核心調整：全圖合比例縮小，最高限螢幕 75% 高度，完整顯露無裁切 */
     .post-image-wrap img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      max-height: 75vh; /* 確保不超出螢幕視野 */
+      object-fit: contain; /* 合比例全景，絕不裁剪任何部分 */
       display: block;
-      transition: transform 0.3s ease;
-    }
-    .post-image-wrap:hover img {
-      transform: scale(1.02);
     }
 
     .post-body {
@@ -387,7 +370,7 @@
       color: var(--text-main);
     }
 
-    /* 互動按讚區 */
+    /* 點讚列 */
     .post-actions {
       display: flex;
       align-items: center;
@@ -502,48 +485,57 @@
 
   <main class="main-container">
     
-    <!-- 發布區域（未登入半透明灰色） -->
-    <div id="publish-section" class="publish-section locked">
-      <!-- 鎖定遮罩 -->
-      <div id="lock-overlay" class="lock-overlay">
-        <div class="lock-icon">🔒</div>
-        <div class="lock-title">
-          請先使用 Google 帳號登入，即可刊登及分享刪除您的專屬 AI 作品 ✨
-        </div>
-        <div class="lock-sub">支援即時預覽、5MB 圖片上傳及作品審核管理</div>
-        <button id="overlay-login-btn" class="btn" style="padding: 10px 22px; font-size: 14px;">
-          立即以 Google 登入
-        </button>
+    <!-- ============================================================
+         1. 未登入防護門（未登入者僅看得到此區塊，圖庫完全封鎖）
+    ============================================================ -->
+    <div id="login-gate" class="gate-container">
+      <div class="gate-icon">🔒</div>
+      <div class="gate-title">私人專屬 AI 藝廊</div>
+      <div class="gate-desc">
+        本站內容受私隱保護。<br>
+        <strong>請先使用 Google 帳號登入，即可瀏覽、刊登及分享您的專屬 AI 作品 ✨</strong>
       </div>
-
-      <!-- 發布表單本體 -->
-      <div class="publish-header-title">
-        <span>🎨</span> 發布作品
-      </div>
-
-      <div id="dropzone" class="dropzone">
-        <div class="dropzone-icon">🖼️</div>
-        <div class="dropzone-text"><strong>點擊選擇作品圖片</strong> 或將圖片拖曳至此</div>
-        <div class="dropzone-limit">單圖大小上限：5 MB</div>
-        <input type="file" id="file-input" accept="image/*" style="display: none;">
-      </div>
-
-      <!-- 預覽圖 -->
-      <div id="preview-box" class="preview-box">
-        <img id="preview-img" src="" alt="預覽圖">
-        <button id="preview-remove" class="preview-remove-btn" title="重新選擇">&times;</button>
-      </div>
-
-      <input type="text" id="post-title" class="form-input" placeholder="作品標題或名稱（例如：午夜街景）">
-      
-      <button id="publish-btn" class="btn" style="width: 100%; padding: 12px; border-radius: 12px; font-size: 14px;">
-        立即發布到藝廊
+      <button id="gate-login-btn" class="btn" style="padding: 12px 28px; font-size: 15px;">
+        立即使用 Google 登入解鎖
       </button>
     </div>
 
-    <!-- 作品動態展示牆 (風格 B) -->
-    <div id="posts-feed">
-      <p style="text-align: center; color: var(--text-muted); padding: 40px;">作品載入中...</p>
+    <!-- ============================================================
+         2. 已登入主內容區（只有登入後才會顯示及向資料庫抓取圖片）
+    ============================================================ -->
+    <div id="authenticated-area" style="display: none;">
+      
+      <!-- 發布區域 -->
+      <div class="publish-section">
+        <div class="publish-header-title">
+          <span>🎨</span> 發布作品
+        </div>
+
+        <div id="dropzone" class="dropzone">
+          <div class="dropzone-icon">🖼️</div>
+          <div class="dropzone-text"><strong>點擊選擇作品圖片</strong> 或將圖片拖曳至此</div>
+          <div class="dropzone-limit">單圖大小上限：5 MB（合比例預覽）</div>
+          <input type="file" id="file-input" accept="image/*" style="display: none;">
+        </div>
+
+        <!-- 圖片合比例預覽框 -->
+        <div id="preview-box" class="preview-box">
+          <img id="preview-img" src="" alt="預覽圖">
+          <button id="preview-remove" class="preview-remove-btn" title="重新選擇">&times;</button>
+        </div>
+
+        <input type="text" id="post-title" class="form-input" placeholder="作品標題或名稱（例如：午夜街景）">
+        
+        <button id="publish-btn" class="btn" style="width: 100%; padding: 12px; border-radius: 12px; font-size: 14px;">
+          立即發布到藝廊
+        </button>
+      </div>
+
+      <!-- 作品展示牆（合比例完整縮放） -->
+      <div id="posts-feed">
+        <p style="text-align: center; color: var(--text-muted); padding: 40px;">作品載入中...</p>
+      </div>
+
     </div>
 
   </main>
@@ -577,11 +569,10 @@
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // ============================================================
-    // 【管理員名單設定】
-    // 已將站長 Email 寫入，並強制轉小寫以確保比對完全正確
+    // 【管理員名單】在此填入你的 Google 登入信箱
     // ============================================================
     const ADMIN_EMAILS = [
-      "scrippsovermann@gmail.com" 
+      "your_email@gmail.com" // ★ 請替換為你的站長 Gmail
     ];
 
     // 1. Cloudinary 參數
@@ -591,7 +582,7 @@
     // 2. 5MB 大小限制
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-    // 3. Firebase 專案設定 (rb-1997)
+    // 3. Firebase 專案金鑰 (rb-1997)
     const firebaseConfig = {
       apiKey: "AIzaSyDUcN7Is1mbl-pGdzOdTrsdoDfCbl0D3S0",
       authDomain: "rb-1997.firebaseapp.com",
@@ -609,21 +600,22 @@
 
     let currentUser = null;
     let selectedFile = null;
+    let unsubscribePosts = null; // 即時監聽控制器
 
     // DOM 元素
     const navLoginBtn = document.getElementById("nav-login-btn");
-    const overlayLoginBtn = document.getElementById("overlay-login-btn");
+    const gateLoginBtn = document.getElementById("gate-login-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const userInfo = document.getElementById("user-info");
     const userPhoto = document.getElementById("user-photo");
     const userName = document.getElementById("user-name");
     const adminBadge = document.getElementById("admin-badge");
+    const loginGate = document.getElementById("login-gate");
+    const authenticatedArea = document.getElementById("authenticated-area");
     const postsFeed = document.getElementById("posts-feed");
     const toastEl = document.getElementById("toast");
 
     // 發布區域元素
-    const publishSection = document.getElementById("publish-section");
-    const lockOverlay = document.getElementById("lock-overlay");
     const dropzone = document.getElementById("dropzone");
     const fileInput = document.getElementById("file-input");
     const previewBox = document.getElementById("preview-box");
@@ -638,36 +630,46 @@
       setTimeout(() => toastEl.classList.remove("show"), 3000);
     }
 
-    // 檢查目前使用者是否為管理員
     function isUserAdmin(user) {
       return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
     }
 
-    // 監聽登入狀態改變
+    // ============================================================
+    // 嚴格監聽登入狀態：未登入者完全不讀取資料
+    // ============================================================
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
+        // 已登入：解鎖主內容，開啟即時監聽
         navLoginBtn.style.display = "none";
         userInfo.style.display = "flex";
         userName.textContent = user.displayName || "創作者";
         userPhoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
 
-        // 若為管理員顯示站長標籤
         if (isUserAdmin(user)) {
           adminBadge.style.display = "inline-block";
         } else {
           adminBadge.style.display = "none";
         }
 
-        publishSection.classList.remove("locked");
-        lockOverlay.style.display = "none";
+        loginGate.style.display = "none";
+        authenticatedArea.style.display = "block";
+
+        startListeningPosts();
       } else {
+        // 未登入：鎖定畫面，切斷讀取
         navLoginBtn.style.display = "inline-flex";
         userInfo.style.display = "none";
         adminBadge.style.display = "none";
 
-        publishSection.classList.add("locked");
-        lockOverlay.style.display = "flex";
+        loginGate.style.display = "block";
+        authenticatedArea.style.display = "none";
+
+        if (unsubscribePosts) {
+          unsubscribePosts();
+          unsubscribePosts = null;
+        }
+        postsFeed.innerHTML = "";
       }
     });
 
@@ -679,7 +681,7 @@
       }
       try {
         await signInWithPopup(auth, provider);
-        showToast("登入成功！");
+        showToast("登入成功！已解鎖藝廊");
       } catch (err) {
         console.error("登入錯誤：", err);
         if (err.code === "auth/unauthorized-domain") {
@@ -693,11 +695,11 @@
     }
 
     navLoginBtn.addEventListener("click", handleLogin);
-    overlayLoginBtn.addEventListener("click", handleLogin);
+    gateLoginBtn.addEventListener("click", handleLogin);
 
     // 登出
     logoutBtn.addEventListener("click", () => {
-      signOut(auth).then(() => showToast("已成功登出"));
+      signOut(auth).then(() => showToast("已安全登出"));
     });
 
     // 圖片選取與 5MB 上限防護
@@ -769,7 +771,6 @@
 
         publishBtn.textContent = "發布至藝廊中...";
 
-        // 存入 Firestore
         await addDoc(collection(db, "posts"), {
           title: title,
           imageUrl: imageUrl,
@@ -787,7 +788,7 @@
         fileInput.value = "";
         previewBox.style.display = "none";
         dropzone.style.display = "block";
-        showToast("🎉 作品已發布！");
+        showToast("🎉 作品發布成功！");
       } catch (err) {
         console.error("發布錯誤：", err);
         alert("發布失敗：" + err.message);
@@ -797,103 +798,108 @@
       }
     });
 
-    // 即時動態牆監聽（風格 B）
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-    onSnapshot(q, (snapshot) => {
-      if (snapshot.empty) {
-        postsFeed.innerHTML = `
-          <div style="text-align:center; padding:50px 20px; background:#fff; border-radius:16px; border:1px solid var(--border);">
-            <div style="font-size:36px; margin-bottom:10px;">🎨</div>
-            <h3 style="font-size:16px; margin-bottom:6px;">目前尚無作品展示</h3>
-            <p style="color:var(--text-muted); font-size:13px;">登入後發布第一張專屬作品吧！</p>
-          </div>
-        `;
-        return;
-      }
+    // ============================================================
+    // 只有在登入後才調用：即時監聽與合比例全圖渲染
+    // ============================================================
+    function startListeningPosts() {
+      if (unsubscribePosts) unsubscribePosts();
 
-      postsFeed.innerHTML = "";
-      const isAdmin = isUserAdmin(currentUser);
-
-      snapshot.forEach((docSnap) => {
-        const post = docSnap.data();
-        const postId = docSnap.id;
-        const isLiked = currentUser && post.likes && post.likes.includes(currentUser.uid);
-        const likesCount = post.likes ? post.likes.length : 0;
-        
-        // 判斷是否有權限刪除：創作者本人 OR 管理員
-        const isAuthor = currentUser && post.authorId === currentUser.uid;
-        const canDelete = isAuthor || isAdmin;
-
-        let dateStr = "剛剛";
-        if (post.createdAt) {
-          const d = post.createdAt.toDate ? post.createdAt.toDate() : new Date(post.createdAt);
-          dateStr = d.toLocaleDateString("zh-HK", { month: 'short', day: 'numeric' }) + " " + 
-                    d.toLocaleTimeString("zh-HK", { hour: '2-digit', minute: '2-digit' });
+      postsFeed.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding:40px;'>作品載入中...</p>";
+      const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+      
+      unsubscribePosts = onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+          postsFeed.innerHTML = `
+            <div style="text-align:center; padding:50px 20px; background:#fff; border-radius:16px; border:1px solid var(--border);">
+              <div style="font-size:36px; margin-bottom:10px;">🎨</div>
+              <h3 style="font-size:16px; margin-bottom:6px;">目前尚無作品展示</h3>
+              <p style="color:var(--text-muted); font-size:13px;">發布第一張作品吧！</p>
+            </div>
+          `;
+          return;
         }
 
-        const card = document.createElement("div");
-        card.className = "post-card";
-        card.innerHTML = `
-          <div class="post-header">
-            <div class="post-header-user">
-              <img class="post-avatar" src="${post.authorPhoto || 'https://www.gravatar.com/avatar/?d=mp'}" alt="Avatar">
-              <div>
-                <span class="post-meta-name">${post.authorName}</span>
-                <span class="post-meta-date">${dateStr}</span>
+        postsFeed.innerHTML = "";
+        const isAdmin = isUserAdmin(currentUser);
+
+        snapshot.forEach((docSnap) => {
+          const post = docSnap.data();
+          const postId = docSnap.id;
+          const isLiked = currentUser && post.likes && post.likes.includes(currentUser.uid);
+          const likesCount = post.likes ? post.likes.length : 0;
+          
+          const isAuthor = currentUser && post.authorId === currentUser.uid;
+          const canDelete = isAuthor || isAdmin;
+
+          let dateStr = "剛剛";
+          if (post.createdAt) {
+            const d = post.createdAt.toDate ? post.createdAt.toDate() : new Date(post.createdAt);
+            dateStr = d.toLocaleDateString("zh-HK", { month: 'short', day: 'numeric' }) + " " + 
+                      d.toLocaleTimeString("zh-HK", { hour: '2-digit', minute: '2-digit' });
+          }
+
+          const card = document.createElement("div");
+          card.className = "post-card";
+          card.innerHTML = `
+            <div class="post-header">
+              <div class="post-header-user">
+                <img class="post-avatar" src="${post.authorPhoto || 'https://www.gravatar.com/avatar/?d=mp'}" alt="Avatar">
+                <div>
+                  <span class="post-meta-name">${post.authorName}</span>
+                  <span class="post-meta-date">${dateStr}</span>
+                </div>
               </div>
+
+              ${canDelete ? `
+                <button class="delete-btn ${isAdmin && !isAuthor ? 'admin' : ''}" data-id="${postId}" data-author="${post.authorName}">
+                  🗑️ ${isAdmin && !isAuthor ? '管理員刪除' : '刪除'}
+                </button>
+              ` : ''}
             </div>
 
-            ${canDelete ? `
-              <button class="delete-btn ${isAdmin && !isAuthor ? 'admin' : ''}" data-id="${postId}" data-author="${post.authorName}">
-                🗑️ ${isAdmin && !isAuthor ? '管理員刪除' : '刪除'}
-              </button>
-            ` : ''}
-          </div>
-
-          <!-- 風格 B：統一高度 420px -->
-          <div class="post-image-wrap">
-            <img src="${post.imageUrl}" alt="${post.title}" loading="lazy">
-          </div>
-
-          <div class="post-body">
-            <div class="post-title">${post.title}</div>
-
-            <div class="post-actions">
-              <button class="like-btn ${isLiked ? 'active' : ''}" data-id="${postId}">
-                <span>${isLiked ? '❤️' : '🤍'}</span> 讚好 (${likesCount})
-              </button>
+            <!-- 核心：合比例全景縮放，最高限螢幕 75%，保證一眼完整看到整幅圖 -->
+            <div class="post-image-wrap">
+              <img src="${post.imageUrl}" alt="${post.title}" loading="lazy">
             </div>
-            
-            <div class="comments-wrapper">
-              <div id="comments-${postId}">
-                ${(post.comments || []).map(c => `
-                  <div class="comment-item">
-                    <span class="comment-user">${c.author}:</span>
-                    <span>${c.text}</span>
-                  </div>
-                `).join('')}
+
+            <div class="post-body">
+              <div class="post-title">${post.title}</div>
+
+              <div class="post-actions">
+                <button class="like-btn ${isLiked ? 'active' : ''}" data-id="${postId}">
+                  <span>${isLiked ? '❤️' : '🤍'}</span> 讚好 (${likesCount})
+                </button>
               </div>
-              ${currentUser ? `
+              
+              <div class="comments-wrapper">
+                <div id="comments-${postId}">
+                  ${(post.comments || []).map(c => `
+                    <div class="comment-item">
+                      <span class="comment-user">${c.author}:</span>
+                      <span>${c.text}</span>
+                    </div>
+                  `).join('')}
+                </div>
                 <div class="comment-input-form">
                   <input type="text" id="input-${postId}" placeholder="留下你的讚賞或交流...">
                   <button class="btn send-comment-btn" data-id="${postId}" style="padding:6px 14px; font-size:12px;">送出</button>
                 </div>
-              ` : '<p style="font-size:12px; color:var(--text-muted); margin-top:8px;">登入後即可留言與按讚</p>'}
+              </div>
             </div>
-          </div>
-        `;
-        postsFeed.appendChild(card);
+          `;
+          postsFeed.appendChild(card);
+        });
+
+        bindInteractions();
+      }, (err) => {
+        console.error("載入失敗：", err);
+        postsFeed.innerHTML = "<p style='text-align:center; color:#ef4444; padding:30px;'>載入作品失敗，請確認資料庫權限。</p>";
       });
+    }
 
-      bindInteractions();
-    }, (err) => {
-      console.error("載入失敗：", err);
-      postsFeed.innerHTML = "<p style='text-align:center; color:#ef4444; padding:30px;'>載入作品失敗，請確認資料庫規則。</p>";
-    });
-
-    // 綁定刪除、點讚、留言
+    // 綁定操作
     function bindInteractions() {
-      // 刪除作品（本人或管理員）
+      // 刪除作品
       document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.onclick = async () => {
           const postId = btn.dataset.id;
@@ -901,7 +907,7 @@
           const isAdminAction = btn.classList.contains("admin");
 
           const confirmMsg = isAdminAction
-            ? `【管理員審核操作】\n確定要強制刪除作者「${author}」的這部作品嗎？\n（此操作通常用於清理違規、不當或違法內容，無法復原）`
+            ? `【管理員審核操作】\n確定要強制刪除作者「${author}」的這部作品嗎？`
             : "確定要刪除你的這部作品嗎？此動作無法復原。";
 
           if (!confirm(confirmMsg)) return;
@@ -917,7 +923,7 @@
         };
       });
 
-      // 按讚 / 取消讚
+      // 點讚
       document.querySelectorAll(".like-btn").forEach(btn => {
         btn.onclick = async () => {
           if (!currentUser) return handleLogin();
@@ -934,7 +940,7 @@
         };
       });
 
-      // 留言送出
+      // 留言
       document.querySelectorAll(".send-comment-btn").forEach(btn => {
         btn.onclick = async () => {
           if (!currentUser) return handleLogin();
@@ -948,7 +954,7 @@
             btn.disabled = true;
             await updateDoc(postRef, {
               comments: arrayUnion({
-                author: currentUser.displayName || "訪客",
+                author: currentUser.displayName || "創作者",
                 text: val,
                 timestamp: Date.now()
               })
