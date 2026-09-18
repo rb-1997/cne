@@ -24,6 +24,7 @@
       --heart-bg: #fff1f2;
       --danger: #ef4444;
       --danger-bg: #fef2f2;
+      --admin-badge: #7c3aed;
     }
     * {
       box-sizing: border-box;
@@ -136,6 +137,14 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .admin-tag {
+      background: var(--admin-badge);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
 
     /* 主內容容器 */
     .main-container {
@@ -145,7 +154,7 @@
     }
 
     /* ============================================================
-       發布區域（含未登入半透明灰色鎖定狀態）
+       發布區域（未登入半透明灰色鎖定狀態）
     ============================================================ */
     .publish-section {
       position: relative;
@@ -208,7 +217,7 @@
     .dropzone {
       border: 2px dashed #cbd5e1;
       border-radius: 14px;
-      padding: 20px 16px;
+      padding: 24px 16px;
       text-align: center;
       cursor: pointer;
       background: #f8fafc;
@@ -220,7 +229,7 @@
       background: var(--primary-light);
     }
     .dropzone-icon {
-      font-size: 28px;
+      font-size: 30px;
       margin-bottom: 4px;
     }
     .dropzone-text {
@@ -269,7 +278,7 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       font-size: 14px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       outline: none;
       font-family: inherit;
     }
@@ -317,12 +326,13 @@
       font-size: 12px;
       color: var(--text-muted);
     }
-    /* 專屬刪除按鈕 */
-    .delete-post-btn {
+    
+    /* 刪除按鈕樣式 */
+    .delete-btn {
       background: var(--danger-bg);
       color: var(--danger);
       border: 1px solid #fecaca;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 600;
@@ -332,15 +342,24 @@
       gap: 4px;
       transition: all 0.2s;
     }
-    .delete-post-btn:hover {
+    .delete-btn:hover {
       background: var(--danger);
       color: #fff;
     }
+    .delete-btn.admin {
+      background: #faf5ff;
+      color: #7c3aed;
+      border-color: #e9d5ff;
+    }
+    .delete-btn.admin:hover {
+      background: #7c3aed;
+      color: #fff;
+    }
 
-    /* 風格 B 核心：固定統一高度 + cover 填滿 */
+    /* 風格 B：固定統一高度 420px */
     .post-image-wrap {
       width: 100%;
-      height: 420px; /* 統一高度 */
+      height: 420px;
       background: #090d16;
       display: flex;
       justify-content: center;
@@ -350,7 +369,7 @@
     .post-image-wrap img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* 統一裁切填滿，維持精緻藝廊風格 */
+      object-fit: cover;
       display: block;
       transition: transform 0.3s ease;
     }
@@ -362,48 +381,9 @@
       padding: 16px 20px 20px;
     }
     .post-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
-      margin-bottom: 8px;
-    }
-    /* Prompt 標籤框 */
-    .prompt-box {
-      background: #f8fafc;
-      border: 1px dashed var(--border);
-      border-radius: 10px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-      position: relative;
-    }
-    .prompt-tag {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .prompt-text {
-      font-size: 13px;
-      color: #334155;
-      word-break: break-word;
-      padding-right: 46px;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: all 0.2s;
-    }
-    .copy-btn:hover {
-      background: #f1f5f9;
+      margin-bottom: 12px;
       color: var(--text-main);
     }
 
@@ -497,7 +477,7 @@
 </head>
 <body>
 
-  <!-- 頂部導航 -->
+  <!-- 頂部導覽列 -->
   <header>
     <div class="header-inner">
       <a href="./" class="brand">
@@ -512,6 +492,7 @@
           <div class="user-pill">
             <img id="user-photo" src="" alt="Avatar">
             <span id="user-name"></span>
+            <span id="admin-badge" class="admin-tag" style="display: none;">站長</span>
           </div>
           <button id="logout-btn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">登出</button>
         </div>
@@ -521,17 +502,15 @@
 
   <main class="main-container">
     
-    <!-- ============================================================
-         發布區域（未登入時為半透明灰色 + 提示字眼）
-    ============================================================ -->
+    <!-- 發布區域（未登入半透明灰色） -->
     <div id="publish-section" class="publish-section locked">
-      <!-- 鎖定狀態遮罩 (未登入時出現) -->
+      <!-- 鎖定遮罩 -->
       <div id="lock-overlay" class="lock-overlay">
         <div class="lock-icon">🔒</div>
         <div class="lock-title">
           請先使用 Google 帳號登入，即可刊登及分享刪除您的專屬 AI 作品 ✨
         </div>
-        <div class="lock-sub">支援即時預覽、5MB 圖片上傳及作品管理</div>
+        <div class="lock-sub">支援即時預覽、5MB 圖片上傳及作品審核管理</div>
         <button id="overlay-login-btn" class="btn" style="padding: 10px 22px; font-size: 14px;">
           立即以 Google 登入
         </button>
@@ -539,31 +518,30 @@
 
       <!-- 發布表單本體 -->
       <div class="publish-header-title">
-        <span>🎨</span> 發布新作品
+        <span>🎨</span> 發布作品
       </div>
 
       <div id="dropzone" class="dropzone">
         <div class="dropzone-icon">🖼️</div>
-        <div class="dropzone-text"><strong>點擊選擇圖片</strong> 或將圖片拖曳至此</div>
-        <div class="dropzone-limit">檔案大小上限：5 MB</div>
+        <div class="dropzone-text"><strong>點擊選擇作品圖片</strong> 或將圖片拖曳至此</div>
+        <div class="dropzone-limit">單圖大小上限：5 MB</div>
         <input type="file" id="file-input" accept="image/*" style="display: none;">
       </div>
 
-      <!-- 圖片預覽 -->
+      <!-- 預覽圖 -->
       <div id="preview-box" class="preview-box">
         <img id="preview-img" src="" alt="預覽圖">
         <button id="preview-remove" class="preview-remove-btn" title="重新選擇">&times;</button>
       </div>
 
-      <input type="text" id="post-title" class="form-input" placeholder="作品名稱（例如：星空下的機械人）">
-      <textarea id="post-prompt" class="form-input" rows="2" placeholder="使用的 Prompt 咒語、模型或創作心得..."></textarea>
+      <input type="text" id="post-title" class="form-input" placeholder="作品標題或名稱（例如：午夜街景）">
       
       <button id="publish-btn" class="btn" style="width: 100%; padding: 12px; border-radius: 12px; font-size: 14px;">
         立即發布到藝廊
       </button>
     </div>
 
-    <!-- 動態貼文展示牆（風格 B：統一高度） -->
+    <!-- 作品動態展示牆 (風格 B) -->
     <div id="posts-feed">
       <p style="text-align: center; color: var(--text-muted); padding: 40px;">作品載入中...</p>
     </div>
@@ -598,14 +576,22 @@
       serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+    // ============================================================
+    // 【管理員名單設定】
+    // 已將站長 Email 寫入，並強制轉小寫以確保比對完全正確
+    // ============================================================
+    const ADMIN_EMAILS = [
+      "scrippsovermann@gmail.com" 
+    ];
+
     // 1. Cloudinary 參數
     const CLOUDINARY_CLOUD_NAME = "sgzzuutu";
     const CLOUDINARY_UPLOAD_PRESET = "ai_gallery_cne";
 
-    // 2. 5MB 大小限制 (5 * 1024 * 1024 Bytes)
+    // 2. 5MB 大小限制
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-    // 3. Firebase rb-1997 專屬金鑰設定
+    // 3. Firebase 專案設定 (rb-1997)
     const firebaseConfig = {
       apiKey: "AIzaSyDUcN7Is1mbl-pGdzOdTrsdoDfCbl0D3S0",
       authDomain: "rb-1997.firebaseapp.com",
@@ -631,6 +617,7 @@
     const userInfo = document.getElementById("user-info");
     const userPhoto = document.getElementById("user-photo");
     const userName = document.getElementById("user-name");
+    const adminBadge = document.getElementById("admin-badge");
     const postsFeed = document.getElementById("posts-feed");
     const toastEl = document.getElementById("toast");
 
@@ -643,7 +630,6 @@
     const previewImg = document.getElementById("preview-img");
     const previewRemove = document.getElementById("preview-remove");
     const postTitle = document.getElementById("post-title");
-    const postPrompt = document.getElementById("post-prompt");
     const publishBtn = document.getElementById("publish-btn");
 
     function showToast(text) {
@@ -652,43 +638,54 @@
       setTimeout(() => toastEl.classList.remove("show"), 3000);
     }
 
+    // 檢查目前使用者是否為管理員
+    function isUserAdmin(user) {
+      return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+    }
+
     // 監聽登入狀態改變
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
-        // 已登入：解鎖發布區域
         navLoginBtn.style.display = "none";
         userInfo.style.display = "flex";
         userName.textContent = user.displayName || "創作者";
         userPhoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
 
+        // 若為管理員顯示站長標籤
+        if (isUserAdmin(user)) {
+          adminBadge.style.display = "inline-block";
+        } else {
+          adminBadge.style.display = "none";
+        }
+
         publishSection.classList.remove("locked");
         lockOverlay.style.display = "none";
       } else {
-        // 未登入：鎖定發布區域呈現半透明灰色
         navLoginBtn.style.display = "inline-flex";
         userInfo.style.display = "none";
+        adminBadge.style.display = "none";
 
         publishSection.classList.add("locked");
         lockOverlay.style.display = "flex";
       }
     });
 
-    // 執行 Google 登入
+    // 登入
     async function handleLogin() {
       if (window.location.protocol === "file:") {
-        alert("【提示】請將此檔案上傳到 GitHub Pages (https://rb-1997.github.io/cne/) 開啟，Google 登入不支援直接雙擊本地檔案 (file:///)。");
+        alert("【提示】請將此檔案上傳到 GitHub Pages (https://rb-1997.github.io/cne/) 開啟，Google 登入不支援直接雙擊本地檔案。");
         return;
       }
       try {
         await signInWithPopup(auth, provider);
-        showToast("登入成功！已解鎖刊登功能");
+        showToast("登入成功！");
       } catch (err) {
         console.error("登入錯誤：", err);
         if (err.code === "auth/unauthorized-domain") {
-          alert("【網域未授權】請確認 Firebase Authentication -> 設定 -> 授權網域 中已加入 rb-1997.github.io。");
+          alert("【網域未授權】請確認 Firebase 授權網域中已加入 rb-1997.github.io。");
         } else if (err.code === "auth/popup-blocked") {
-          alert("瀏覽器攔截了登入視窗，請點擊網址列右方允許彈出視窗。");
+          alert("瀏覽器攔截了登入視窗，請允許彈出視窗。");
         } else {
           alert("登入遇到問題：" + err.message);
         }
@@ -703,7 +700,7 @@
       signOut(auth).then(() => showToast("已成功登出"));
     });
 
-    // 圖片選擇與 5M 上限防護
+    // 圖片選取與 5MB 上限防護
     dropzone.addEventListener("click", () => fileInput.click());
     dropzone.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -721,12 +718,11 @@
 
     function handleFileSelect(file) {
       if (!file.type.startsWith("image/")) {
-        return alert("請選擇圖片格式檔案（JPG、PNG、WebP 等）！");
+        return alert("請選擇圖片格式檔案！");
       }
-      // 5MB 限制檢驗
       if (file.size > MAX_FILE_SIZE) {
         const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
-        alert(`【圖片過大】目前檔案大小為 ${sizeInMB} MB，上限為 5 MB！請選擇較小的圖片或壓縮後再上傳。`);
+        alert(`【圖片過大】目前檔案為 ${sizeInMB} MB，上限為 5 MB！請壓縮後再上傳。`);
         fileInput.value = "";
         return;
       }
@@ -748,19 +744,17 @@
       dropzone.style.display = "block";
     });
 
-    // 發布作品至 Cloudinary + Firestore
+    // 發布作品
     publishBtn.addEventListener("click", async () => {
       if (!currentUser) return handleLogin();
-      if (!selectedFile) return alert("請先選擇一張 AI 作品圖片！");
+      if (!selectedFile) return alert("請先選擇一張作品圖片！");
 
-      const title = postTitle.value.trim() || "未命名創作";
-      const prompt = postPrompt.value.trim();
+      const title = postTitle.value.trim() || "未命名作品";
 
       try {
         publishBtn.disabled = true;
-        publishBtn.textContent = "上傳圖片至 Cloudinary (限 5M)...";
+        publishBtn.textContent = "上傳圖片至 Cloudinary...";
 
-        // 1. 直傳 Cloudinary
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
@@ -775,27 +769,25 @@
 
         publishBtn.textContent = "發布至藝廊中...";
 
-        // 2. 存入 Firestore
+        // 存入 Firestore
         await addDoc(collection(db, "posts"), {
           title: title,
-          prompt: prompt,
           imageUrl: imageUrl,
           authorId: currentUser.uid,
           authorName: currentUser.displayName || "創作者",
+          authorEmail: currentUser.email || "",
           authorPhoto: currentUser.photoURL || "",
           likes: [],
           comments: [],
           createdAt: serverTimestamp()
         });
 
-        // 重設表單
         postTitle.value = "";
-        postPrompt.value = "";
         selectedFile = null;
         fileInput.value = "";
         previewBox.style.display = "none";
         dropzone.style.display = "block";
-        showToast("🎉 作品發布成功！");
+        showToast("🎉 作品已發布！");
       } catch (err) {
         console.error("發布錯誤：", err);
         alert("發布失敗：" + err.message);
@@ -805,7 +797,7 @@
       }
     });
 
-    // 即時動態牆監聽（風格 B：統一高度）
+    // 即時動態牆監聽（風格 B）
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
       if (snapshot.empty) {
@@ -813,21 +805,24 @@
           <div style="text-align:center; padding:50px 20px; background:#fff; border-radius:16px; border:1px solid var(--border);">
             <div style="font-size:36px; margin-bottom:10px;">🎨</div>
             <h3 style="font-size:16px; margin-bottom:6px;">目前尚無作品展示</h3>
-            <p style="color:var(--text-muted); font-size:13px;">登入後發布第一張專屬 AI 作品吧！</p>
+            <p style="color:var(--text-muted); font-size:13px;">登入後發布第一張專屬作品吧！</p>
           </div>
         `;
         return;
       }
 
       postsFeed.innerHTML = "";
+      const isAdmin = isUserAdmin(currentUser);
+
       snapshot.forEach((docSnap) => {
         const post = docSnap.data();
         const postId = docSnap.id;
         const isLiked = currentUser && post.likes && post.likes.includes(currentUser.uid);
         const likesCount = post.likes ? post.likes.length : 0;
         
-        // 判斷是否為創作者本人（是本人才顯示刪除按鈕）
+        // 判斷是否有權限刪除：創作者本人 OR 管理員
         const isAuthor = currentUser && post.authorId === currentUser.uid;
+        const canDelete = isAuthor || isAdmin;
 
         let dateStr = "剛剛";
         if (post.createdAt) {
@@ -847,27 +842,22 @@
                 <span class="post-meta-date">${dateStr}</span>
               </div>
             </div>
-            ${isAuthor ? `
-              <button class="delete-post-btn" data-id="${postId}" title="刪除這部作品">
-                🗑️ 刪除
+
+            ${canDelete ? `
+              <button class="delete-btn ${isAdmin && !isAuthor ? 'admin' : ''}" data-id="${postId}" data-author="${post.authorName}">
+                🗑️ ${isAdmin && !isAuthor ? '管理員刪除' : '刪除'}
               </button>
             ` : ''}
           </div>
 
-          <!-- 風格 B：統一高度 420px 圖片展示區 -->
+          <!-- 風格 B：統一高度 420px -->
           <div class="post-image-wrap">
             <img src="${post.imageUrl}" alt="${post.title}" loading="lazy">
           </div>
 
           <div class="post-body">
             <div class="post-title">${post.title}</div>
-            ${post.prompt ? `
-              <div class="prompt-box">
-                <div class="prompt-tag">Prompt 咒語</div>
-                <div class="prompt-text">${post.prompt}</div>
-                <button class="copy-btn" data-copy="${encodeURIComponent(post.prompt)}">複製</button>
-              </div>
-            ` : ''}
+
             <div class="post-actions">
               <button class="like-btn ${isLiked ? 'active' : ''}" data-id="${postId}">
                 <span>${isLiked ? '❤️' : '🤍'}</span> 讚好 (${likesCount})
@@ -898,24 +888,23 @@
       bindInteractions();
     }, (err) => {
       console.error("載入失敗：", err);
-      postsFeed.innerHTML = "<p style='text-align:center; color:#ef4444; padding:30px;'>載入作品失敗，請確認 Firestore 安全規則是否已開啟。</p>";
+      postsFeed.innerHTML = "<p style='text-align:center; color:#ef4444; padding:30px;'>載入作品失敗，請確認資料庫規則。</p>";
     });
 
-    // 綁定點讚、複製 Prompt、留言與刪除作品
+    // 綁定刪除、點讚、留言
     function bindInteractions() {
-      // 複製 Prompt
-      document.querySelectorAll(".copy-btn").forEach(btn => {
-        btn.onclick = () => {
-          const text = decodeURIComponent(btn.dataset.copy);
-          navigator.clipboard.writeText(text).then(() => showToast("Prompt 已成功複製！"));
-        };
-      });
-
-      // 創作者刪除作品
-      document.querySelectorAll(".delete-post-btn").forEach(btn => {
+      // 刪除作品（本人或管理員）
+      document.querySelectorAll(".delete-btn").forEach(btn => {
         btn.onclick = async () => {
           const postId = btn.dataset.id;
-          if (!confirm("確定要刪除這部專屬作品嗎？此動作無法復原。")) return;
+          const author = btn.dataset.author;
+          const isAdminAction = btn.classList.contains("admin");
+
+          const confirmMsg = isAdminAction
+            ? `【管理員審核操作】\n確定要強制刪除作者「${author}」的這部作品嗎？\n（此操作通常用於清理違規、不當或違法內容，無法復原）`
+            : "確定要刪除你的這部作品嗎？此動作無法復原。";
+
+          if (!confirm(confirmMsg)) return;
 
           try {
             btn.disabled = true;
@@ -945,7 +934,7 @@
         };
       });
 
-      // 送出留言
+      // 留言送出
       document.querySelectorAll(".send-comment-btn").forEach(btn => {
         btn.onclick = async () => {
           if (!currentUser) return handleLogin();
