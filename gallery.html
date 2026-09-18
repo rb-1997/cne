@@ -22,6 +22,8 @@
       --border: #e2e8f0;
       --heart: #f43f5e;
       --heart-bg: #fff1f2;
+      --danger: #ef4444;
+      --danger-bg: #fef2f2;
     }
     * {
       box-sizing: border-box;
@@ -37,7 +39,7 @@
       padding-bottom: 80px;
     }
 
-    /* 頂部導航列 (毛玻璃效果) */
+    /* 頂部導覽列 (毛玻璃效果) */
     header {
       position: sticky;
       top: 0;
@@ -49,7 +51,7 @@
       padding: 12px 20px;
     }
     .header-inner {
-      max-width: 760px;
+      max-width: 720px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -81,7 +83,7 @@
       background: var(--primary);
       color: #ffffff;
       border: none;
-      padding: 8px 16px;
+      padding: 8px 18px;
       border-radius: 9999px;
       font-size: 13px;
       font-weight: 600;
@@ -117,7 +119,7 @@
       align-items: center;
       gap: 8px;
       background: #f1f5f9;
-      padding: 4px 10px 4px 4px;
+      padding: 4px 12px 4px 4px;
       border-radius: 9999px;
     }
     .user-pill img {
@@ -135,14 +137,147 @@
       white-space: nowrap;
     }
 
-    /* 主內容區 */
+    /* 主內容容器 */
     .main-container {
       max-width: 680px;
       margin: 24px auto 0;
       padding: 0 16px;
     }
 
-    /* 作品卡片 */
+    /* ============================================================
+       發布區域（含未登入半透明灰色鎖定狀態）
+    ============================================================ */
+    .publish-section {
+      position: relative;
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 22px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .publish-section.locked {
+      background: #f1f5f9;
+      filter: grayscale(15%);
+    }
+    /* 未登入遮罩 */
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(241, 245, 249, 0.88);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 24px;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+    .lock-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .lock-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 6px;
+      max-width: 440px;
+      line-height: 1.5;
+    }
+    .lock-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* 發布表單元素 */
+    .publish-header-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: all 0.2s;
+      margin-bottom: 12px;
+    }
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .dropzone-icon {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+    .dropzone-text {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .dropzone-limit {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    .preview-box {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      display: none;
+      background: #0f172a;
+    }
+    .preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .preview-remove-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      outline: none;
+      font-family: inherit;
+    }
+    .form-input:focus { border-color: var(--primary); }
+
+    /* ============================================================
+       貼文卡片：風格 B（統一高度 420px）
+    ============================================================ */
     .post-card {
       background: var(--surface);
       border-radius: 20px;
@@ -158,6 +293,11 @@
     .post-header {
       padding: 14px 18px;
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .post-header-user {
+      display: flex;
       align-items: center;
       gap: 12px;
     }
@@ -166,6 +306,7 @@
       height: 40px;
       border-radius: 50%;
       border: 2px solid #f1f5f9;
+      object-fit: cover;
     }
     .post-meta-name {
       font-weight: 700;
@@ -176,8 +317,30 @@
       font-size: 12px;
       color: var(--text-muted);
     }
+    /* 專屬刪除按鈕 */
+    .delete-post-btn {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .delete-post-btn:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    /* 風格 B 核心：固定統一高度 + cover 填滿 */
     .post-image-wrap {
       width: 100%;
+      height: 420px; /* 統一高度 */
       background: #090d16;
       display: flex;
       justify-content: center;
@@ -186,10 +349,15 @@
     }
     .post-image-wrap img {
       width: 100%;
-      max-height: 640px;
-      object-fit: contain;
+      height: 100%;
+      object-fit: cover; /* 統一裁切填滿，維持精緻藝廊風格 */
       display: block;
+      transition: transform 0.3s ease;
     }
+    .post-image-wrap:hover img {
+      transform: scale(1.02);
+    }
+
     .post-body {
       padding: 16px 20px 20px;
     }
@@ -198,7 +366,7 @@
       font-weight: 700;
       margin-bottom: 8px;
     }
-    /* Prompt 專用方塊 */
+    /* Prompt 標籤框 */
     .prompt-box {
       background: #f8fafc;
       border: 1px dashed var(--border);
@@ -219,6 +387,7 @@
       font-size: 13px;
       color: #334155;
       word-break: break-word;
+      padding-right: 46px;
     }
     .copy-btn {
       position: absolute;
@@ -303,101 +472,7 @@
       border-color: var(--primary);
     }
 
-    /* 發布 Modal 視窗 */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(6px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-      padding: 16px;
-    }
-    .modal-backdrop.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .modal-box {
-      background: var(--surface);
-      width: 100%;
-      max-width: 520px;
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-      transform: translateY(20px) scale(0.97);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .modal-backdrop.active .modal-box {
-      transform: translateY(0) scale(1);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .modal-header h3 {
-      font-size: 18px;
-      font-weight: 700;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--text-muted);
-    }
-
-    /* 圖片拖曳上傳區 */
-    .dropzone {
-      border: 2px dashed #cbd5e1;
-      border-radius: 16px;
-      padding: 24px 16px;
-      text-align: center;
-      cursor: pointer;
-      background: #f8fafc;
-      transition: all 0.2s;
-      margin-bottom: 14px;
-    }
-    .dropzone:hover, .dropzone.dragover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-    .dropzone-icon {
-      font-size: 32px;
-      margin-bottom: 6px;
-    }
-    .dropzone-text {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-    .modal-preview-img {
-      width: 100%;
-      max-height: 220px;
-      object-fit: contain;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      display: none;
-      background: #0f172a;
-    }
-    .form-input {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 14px;
-      margin-bottom: 12px;
-      outline: none;
-      font-family: inherit;
-    }
-    .form-input:focus { border-color: var(--primary); }
-
-    /* Toast 懸浮通知 */
+    /* Toast 懸浮提示 */
     .toast {
       position: fixed;
       bottom: 24px;
@@ -429,12 +504,11 @@
         <span>✨</span> AI Art Gallery
       </a>
       <div class="header-actions">
-        <!-- 未登入狀態 -->
-        <button id="login-btn" class="btn">使用 Google 登入</button>
+        <!-- 未登入 -->
+        <button id="nav-login-btn" class="btn">使用 Google 登入</button>
         
-        <!-- 已登入狀態 -->
+        <!-- 已登入 -->
         <div id="user-info" style="display: none; align-items: center; gap: 8px;">
-          <button id="open-upload-btn" class="btn">＋ 發布作品</button>
           <div class="user-pill">
             <img id="user-photo" src="" alt="Avatar">
             <span id="user-name"></span>
@@ -445,42 +519,61 @@
     </div>
   </header>
 
-  <!-- 作品動態展示牆 -->
   <main class="main-container">
-    <div id="posts-feed">
-      <p style="text-align: center; color: var(--text-muted); padding: 40px;">連線載入作品中...</p>
-    </div>
-  </main>
-
-  <!-- 發布作品彈窗 (Modal) -->
-  <div id="upload-modal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3>發布你的 AI 作品</h3>
-        <button id="close-modal-btn" class="modal-close">&times;</button>
+    
+    <!-- ============================================================
+         發布區域（未登入時為半透明灰色 + 提示字眼）
+    ============================================================ -->
+    <div id="publish-section" class="publish-section locked">
+      <!-- 鎖定狀態遮罩 (未登入時出現) -->
+      <div id="lock-overlay" class="lock-overlay">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-title">
+          請先使用 Google 帳號登入，即可刊登及分享刪除您的專屬 AI 作品 ✨
+        </div>
+        <div class="lock-sub">支援即時預覽、5MB 圖片上傳及作品管理</div>
+        <button id="overlay-login-btn" class="btn" style="padding: 10px 22px; font-size: 14px;">
+          立即以 Google 登入
+        </button>
       </div>
 
-      <!-- 拖曳或點選上傳區 -->
+      <!-- 發布表單本體 -->
+      <div class="publish-header-title">
+        <span>🎨</span> 發布新作品
+      </div>
+
       <div id="dropzone" class="dropzone">
         <div class="dropzone-icon">🖼️</div>
         <div class="dropzone-text"><strong>點擊選擇圖片</strong> 或將圖片拖曳至此</div>
-        <input type="file" id="modal-file" accept="image/*" style="display: none;">
+        <div class="dropzone-limit">檔案大小上限：5 MB</div>
+        <input type="file" id="file-input" accept="image/*" style="display: none;">
       </div>
-      <img id="preview-image" class="modal-preview-img" alt="預覽圖">
 
-      <input type="text" id="modal-title" class="form-input" placeholder="作品標題（例如：香港中環雨夜）">
-      <textarea id="modal-prompt" class="form-input" rows="3" placeholder="使用的 Prompt 咒語、模型或創作心得..."></textarea>
+      <!-- 圖片預覽 -->
+      <div id="preview-box" class="preview-box">
+        <img id="preview-img" src="" alt="預覽圖">
+        <button id="preview-remove" class="preview-remove-btn" title="重新選擇">&times;</button>
+      </div>
+
+      <input type="text" id="post-title" class="form-input" placeholder="作品名稱（例如：星空下的機械人）">
+      <textarea id="post-prompt" class="form-input" rows="2" placeholder="使用的 Prompt 咒語、模型或創作心得..."></textarea>
       
-      <button id="modal-submit-btn" class="btn" style="width: 100%; padding: 12px; border-radius: 12px; font-size: 14px;">
+      <button id="publish-btn" class="btn" style="width: 100%; padding: 12px; border-radius: 12px; font-size: 14px;">
         立即發布到藝廊
       </button>
     </div>
-  </div>
 
-  <!-- 提示 Toast -->
+    <!-- 動態貼文展示牆（風格 B：統一高度） -->
+    <div id="posts-feed">
+      <p style="text-align: center; color: var(--text-muted); padding: 40px;">作品載入中...</p>
+    </div>
+
+  </main>
+
+  <!-- 浮動提示 Toast -->
   <div id="toast" class="toast"></div>
 
-  <!-- 引入 Firebase SDK (CDN 模組版) -->
+  <!-- Firebase 模組 -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
@@ -494,6 +587,7 @@
       getFirestore, 
       collection, 
       addDoc, 
+      deleteDoc,
       onSnapshot, 
       doc, 
       updateDoc, 
@@ -504,11 +598,14 @@
       serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // 1. 你的 Cloudinary 免費圖床設定
+    // 1. Cloudinary 參數
     const CLOUDINARY_CLOUD_NAME = "sgzzuutu";
     const CLOUDINARY_UPLOAD_PRESET = "ai_gallery_cne";
 
-    // 2. 你的 Firebase rb-1997 專屬金鑰設定
+    // 2. 5MB 大小限制 (5 * 1024 * 1024 Bytes)
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+    // 3. Firebase rb-1997 專屬金鑰設定
     const firebaseConfig = {
       apiKey: "AIzaSyDUcN7Is1mbl-pGdzOdTrsdoDfCbl0D3S0",
       authDomain: "rb-1997.firebaseapp.com",
@@ -519,7 +616,6 @@
       measurementId: "G-MM9DE4R2C5"
     };
 
-    // 初始化服務
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -528,8 +624,9 @@
     let currentUser = null;
     let selectedFile = null;
 
-    // DOM 節點宣告
-    const loginBtn = document.getElementById("login-btn");
+    // DOM 元素
+    const navLoginBtn = document.getElementById("nav-login-btn");
+    const overlayLoginBtn = document.getElementById("overlay-login-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const userInfo = document.getElementById("user-info");
     const userPhoto = document.getElementById("user-photo");
@@ -537,16 +634,17 @@
     const postsFeed = document.getElementById("posts-feed");
     const toastEl = document.getElementById("toast");
 
-    // Modal 節點
-    const openUploadBtn = document.getElementById("open-upload-btn");
-    const closeModalBtn = document.getElementById("close-modal-btn");
-    const uploadModal = document.getElementById("upload-modal");
+    // 發布區域元素
+    const publishSection = document.getElementById("publish-section");
+    const lockOverlay = document.getElementById("lock-overlay");
     const dropzone = document.getElementById("dropzone");
-    const modalFile = document.getElementById("modal-file");
-    const previewImage = document.getElementById("preview-image");
-    const modalTitle = document.getElementById("modal-title");
-    const modalPrompt = document.getElementById("modal-prompt");
-    const modalSubmitBtn = document.getElementById("modal-submit-btn");
+    const fileInput = document.getElementById("file-input");
+    const previewBox = document.getElementById("preview-box");
+    const previewImg = document.getElementById("preview-img");
+    const previewRemove = document.getElementById("preview-remove");
+    const postTitle = document.getElementById("post-title");
+    const postPrompt = document.getElementById("post-prompt");
+    const publishBtn = document.getElementById("publish-btn");
 
     function showToast(text) {
       toastEl.textContent = text;
@@ -558,26 +656,33 @@
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       if (user) {
-        loginBtn.style.display = "none";
+        // 已登入：解鎖發布區域
+        navLoginBtn.style.display = "none";
         userInfo.style.display = "flex";
         userName.textContent = user.displayName || "創作者";
         userPhoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
+
+        publishSection.classList.remove("locked");
+        lockOverlay.style.display = "none";
       } else {
-        loginBtn.style.display = "inline-flex";
+        // 未登入：鎖定發布區域呈現半透明灰色
+        navLoginBtn.style.display = "inline-flex";
         userInfo.style.display = "none";
-        uploadModal.classList.remove("active");
+
+        publishSection.classList.add("locked");
+        lockOverlay.style.display = "flex";
       }
     });
 
-    // 登入事件處理
-    loginBtn.addEventListener("click", async () => {
+    // 執行 Google 登入
+    async function handleLogin() {
       if (window.location.protocol === "file:") {
         alert("【提示】請將此檔案上傳到 GitHub Pages (https://rb-1997.github.io/cne/) 開啟，Google 登入不支援直接雙擊本地檔案 (file:///)。");
         return;
       }
       try {
         await signInWithPopup(auth, provider);
-        showToast("登入成功！");
+        showToast("登入成功！已解鎖刊登功能");
       } catch (err) {
         console.error("登入錯誤：", err);
         if (err.code === "auth/unauthorized-domain") {
@@ -588,22 +693,18 @@
           alert("登入遇到問題：" + err.message);
         }
       }
-    });
+    }
 
-    // 登出事件
+    navLoginBtn.addEventListener("click", handleLogin);
+    overlayLoginBtn.addEventListener("click", handleLogin);
+
+    // 登出
     logoutBtn.addEventListener("click", () => {
-      signOut(auth).then(() => showToast("已登出"));
+      signOut(auth).then(() => showToast("已成功登出"));
     });
 
-    // Modal 彈窗控制
-    openUploadBtn.addEventListener("click", () => uploadModal.classList.add("active"));
-    closeModalBtn.addEventListener("click", () => uploadModal.classList.remove("active"));
-    uploadModal.addEventListener("click", (e) => {
-      if (e.target === uploadModal) uploadModal.classList.remove("active");
-    });
-
-    // 圖片拖曳與選取處理
-    dropzone.addEventListener("click", () => modalFile.click());
+    // 圖片選擇與 5M 上限防護
+    dropzone.addEventListener("click", () => fileInput.click());
     dropzone.addEventListener("dragover", (e) => {
       e.preventDefault();
       dropzone.classList.add("dragover");
@@ -612,37 +713,52 @@
     dropzone.addEventListener("drop", (e) => {
       e.preventDefault();
       dropzone.classList.remove("dragover");
-      if (e.dataTransfer.files[0]) handleSelectImage(e.dataTransfer.files[0]);
+      if (e.dataTransfer.files[0]) handleFileSelect(e.dataTransfer.files[0]);
     });
-    modalFile.addEventListener("change", (e) => {
-      if (e.target.files[0]) handleSelectImage(e.target.files[0]);
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files[0]) handleFileSelect(e.target.files[0]);
     });
 
-    function handleSelectImage(file) {
+    function handleFileSelect(file) {
       if (!file.type.startsWith("image/")) {
         return alert("請選擇圖片格式檔案（JPG、PNG、WebP 等）！");
       }
+      // 5MB 限制檢驗
+      if (file.size > MAX_FILE_SIZE) {
+        const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+        alert(`【圖片過大】目前檔案大小為 ${sizeInMB} MB，上限為 5 MB！請選擇較小的圖片或壓縮後再上傳。`);
+        fileInput.value = "";
+        return;
+      }
+
       selectedFile = file;
       const reader = new FileReader();
       reader.onload = (e) => {
-        previewImage.src = e.target.result;
-        previewImage.style.display = "block";
+        previewImg.src = e.target.result;
+        previewBox.style.display = "block";
         dropzone.style.display = "none";
       };
       reader.readAsDataURL(file);
     }
 
+    previewRemove.addEventListener("click", () => {
+      selectedFile = null;
+      fileInput.value = "";
+      previewBox.style.display = "none";
+      dropzone.style.display = "block";
+    });
+
     // 發布作品至 Cloudinary + Firestore
-    modalSubmitBtn.addEventListener("click", async () => {
-      if (!currentUser) return alert("請先登入！");
+    publishBtn.addEventListener("click", async () => {
+      if (!currentUser) return handleLogin();
       if (!selectedFile) return alert("請先選擇一張 AI 作品圖片！");
 
-      const title = modalTitle.value.trim() || "未命名創作";
-      const prompt = modalPrompt.value.trim();
+      const title = postTitle.value.trim() || "未命名創作";
+      const prompt = postPrompt.value.trim();
 
       try {
-        modalSubmitBtn.disabled = true;
-        modalSubmitBtn.textContent = "上傳圖片至 Cloudinary...";
+        publishBtn.disabled = true;
+        publishBtn.textContent = "上傳圖片至 Cloudinary (限 5M)...";
 
         // 1. 直傳 Cloudinary
         const formData = new FormData();
@@ -657,9 +773,9 @@
         const cloudData = await res.json();
         const imageUrl = cloudData.secure_url;
 
-        modalSubmitBtn.textContent = "寫入資料庫中...";
+        publishBtn.textContent = "發布至藝廊中...";
 
-        // 2. 存入 Firestore posts 集合
+        // 2. 存入 Firestore
         await addDoc(collection(db, "posts"), {
           title: title,
           prompt: prompt,
@@ -672,25 +788,24 @@
           createdAt: serverTimestamp()
         });
 
-        // 重設表單與狀態
-        modalTitle.value = "";
-        modalPrompt.value = "";
+        // 重設表單
+        postTitle.value = "";
+        postPrompt.value = "";
         selectedFile = null;
-        modalFile.value = "";
-        previewImage.style.display = "none";
+        fileInput.value = "";
+        previewBox.style.display = "none";
         dropzone.style.display = "block";
-        uploadModal.classList.remove("active");
         showToast("🎉 作品發布成功！");
       } catch (err) {
         console.error("發布錯誤：", err);
         alert("發布失敗：" + err.message);
       } finally {
-        modalSubmitBtn.disabled = false;
-        modalSubmitBtn.textContent = "立即發布到藝廊";
+        publishBtn.disabled = false;
+        publishBtn.textContent = "立即發布到藝廊";
       }
     });
 
-    // 即時監聽 Firestore 資料變化
+    // 即時動態牆監聽（風格 B：統一高度）
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     onSnapshot(q, (snapshot) => {
       if (snapshot.empty) {
@@ -698,7 +813,7 @@
           <div style="text-align:center; padding:50px 20px; background:#fff; border-radius:16px; border:1px solid var(--border);">
             <div style="font-size:36px; margin-bottom:10px;">🎨</div>
             <h3 style="font-size:16px; margin-bottom:6px;">目前尚無作品展示</h3>
-            <p style="color:var(--text-muted); font-size:13px;">點擊上方「使用 Google 登入」成為第一個貼圖的創作者吧！</p>
+            <p style="color:var(--text-muted); font-size:13px;">登入後發布第一張專屬 AI 作品吧！</p>
           </div>
         `;
         return;
@@ -710,6 +825,9 @@
         const postId = docSnap.id;
         const isLiked = currentUser && post.likes && post.likes.includes(currentUser.uid);
         const likesCount = post.likes ? post.likes.length : 0;
+        
+        // 判斷是否為創作者本人（是本人才顯示刪除按鈕）
+        const isAuthor = currentUser && post.authorId === currentUser.uid;
 
         let dateStr = "剛剛";
         if (post.createdAt) {
@@ -722,15 +840,25 @@
         card.className = "post-card";
         card.innerHTML = `
           <div class="post-header">
-            <img class="post-avatar" src="${post.authorPhoto || 'https://www.gravatar.com/avatar/?d=mp'}" alt="Avatar">
-            <div>
-              <span class="post-meta-name">${post.authorName}</span>
-              <span class="post-meta-date">${dateStr}</span>
+            <div class="post-header-user">
+              <img class="post-avatar" src="${post.authorPhoto || 'https://www.gravatar.com/avatar/?d=mp'}" alt="Avatar">
+              <div>
+                <span class="post-meta-name">${post.authorName}</span>
+                <span class="post-meta-date">${dateStr}</span>
+              </div>
             </div>
+            ${isAuthor ? `
+              <button class="delete-post-btn" data-id="${postId}" title="刪除這部作品">
+                🗑️ 刪除
+              </button>
+            ` : ''}
           </div>
+
+          <!-- 風格 B：統一高度 420px 圖片展示區 -->
           <div class="post-image-wrap">
             <img src="${post.imageUrl}" alt="${post.title}" loading="lazy">
           </div>
+
           <div class="post-body">
             <div class="post-title">${post.title}</div>
             ${post.prompt ? `
@@ -757,7 +885,7 @@
               </div>
               ${currentUser ? `
                 <div class="comment-input-form">
-                  <input type="text" id="input-${postId}" placeholder="留下你的留言或想法...">
+                  <input type="text" id="input-${postId}" placeholder="留下你的讚賞或交流...">
                   <button class="btn send-comment-btn" data-id="${postId}" style="padding:6px 14px; font-size:12px;">送出</button>
                 </div>
               ` : '<p style="font-size:12px; color:var(--text-muted); margin-top:8px;">登入後即可留言與按讚</p>'}
@@ -773,7 +901,7 @@
       postsFeed.innerHTML = "<p style='text-align:center; color:#ef4444; padding:30px;'>載入作品失敗，請確認 Firestore 安全規則是否已開啟。</p>";
     });
 
-    // 綁定點讚、複製 Prompt 與留言
+    // 綁定點讚、複製 Prompt、留言與刪除作品
     function bindInteractions() {
       // 複製 Prompt
       document.querySelectorAll(".copy-btn").forEach(btn => {
@@ -783,10 +911,27 @@
         };
       });
 
-      // 按讚 / 收回讚
+      // 創作者刪除作品
+      document.querySelectorAll(".delete-post-btn").forEach(btn => {
+        btn.onclick = async () => {
+          const postId = btn.dataset.id;
+          if (!confirm("確定要刪除這部專屬作品嗎？此動作無法復原。")) return;
+
+          try {
+            btn.disabled = true;
+            await deleteDoc(doc(db, "posts", postId));
+            showToast("作品已成功刪除！");
+          } catch (err) {
+            console.error("刪除失敗：", err);
+            alert("刪除失敗：" + err.message);
+          }
+        };
+      });
+
+      // 按讚 / 取消讚
       document.querySelectorAll(".like-btn").forEach(btn => {
         btn.onclick = async () => {
-          if (!currentUser) return showToast("請先使用 Google 登入！");
+          if (!currentUser) return handleLogin();
           const postId = btn.dataset.id;
           const postRef = doc(db, "posts", postId);
           const hasLiked = btn.classList.contains("active");
@@ -803,7 +948,7 @@
       // 送出留言
       document.querySelectorAll(".send-comment-btn").forEach(btn => {
         btn.onclick = async () => {
-          if (!currentUser) return showToast("請先使用 Google 登入！");
+          if (!currentUser) return handleLogin();
           const postId = btn.dataset.id;
           const input = document.getElementById(`input-${postId}`);
           const val = input.value.trim();
