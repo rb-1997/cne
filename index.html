@@ -172,17 +172,17 @@
                 <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
             </div>
 
-            <!-- Balanced 10-Card Grid (All Equal Size) -->
+            <!-- Balanced Grid (All Equal Size) -->
             <div>
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
                         <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
-                        核心項目選單 (10項實用工具)
+                        核心項目選單 (11項實用工具)
                     </h3>
                     <span class="text-xs font-bold text-slate-400 bg-slate-200/60 px-2.5 py-1 rounded-full">點選進入</span>
                 </div>
 
-                <!-- 10-Grid System: Mobile (2 cols), Desktop (5 cols) -->
+                <!-- Grid System: Mobile (2 cols), Desktop (5 cols) -->
                 <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 md:gap-4.5">
 
                     <!-- Card 1: 行水神器 -->
@@ -385,6 +385,26 @@
                         </div>
                     </div>
 
+                    <!-- Card 11: AI 圖片創作分享 (Latte 風格) -->
+                    <div onclick="switchView('gallery')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchView('gallery')}" class="h-full bg-gradient-to-br from-[#Fdf6e3] via-[#E6ccb2] to-[#B08960] rounded-2xl p-4 md:p-5 border border-[#d4a373] shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-[#5c4033]">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-[#7f5539] text-[#Fdf6e3] flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#5c4033]">
+                                    <i data-lucide="image-plus" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                </div>
+                                <span class="text-[10px] md:text-xs bg-[#Fdf6e3]/90 text-[#7f5539] font-bold px-2 py-0.5 rounded-full border border-[#d4a373] shadow-sm">AI創作</span>
+                            </div>
+                            <div>
+                                <h4 class="text-base md:text-lg font-black text-[#4a3020]">AI 圖片創作分享</h4>
+                                <p class="text-xs text-[#5c4033] mt-1 line-clamp-3 font-medium leading-relaxed">登入谷歌就可以發布 AI 圖文。歡迎各位創作力爆燈的同伴一起聯手。</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-[#7f5539]/30 flex items-center justify-between text-xs text-[#5c4033] font-extrabold">
+                            <span>進入分享</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -438,6 +458,35 @@
                 <iframe
                     src="https://waline-rb-1997.vercel.app"
                     style="width: 100%; height: 720px; border: 0;"
+                    allow="clipboard-write">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 11: AI 圖片創作分享 ================= -->
+        <section id="view-gallery" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center justify-between bg-gradient-to-r from-[#7f5539] via-[#936b4f] to-[#B08960] p-5 rounded-2xl border-2 border-[#d4a373] text-white shadow-md flex-wrap gap-3">
+                <div class="flex items-center space-x-4">
+                    <div class="p-3 bg-white/20 backdrop-blur-md rounded-xl shadow-md border border-white/30">
+                        <i data-lucide="image-plus" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-white">AI 圖片創作分享</h2>
+                        <p class="text-base text-[#fdf6e3] font-medium">Google 登入作品分享 • AI 圖文創作交流</p>
+                    </div>
+                </div>
+                <button onclick="switchView('home')" class="flex items-center space-x-1.5 text-sm bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition-all font-bold border border-white/40 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl border-2 border-[#d4a373] shadow-sm overflow-hidden min-h-[720px]">
+                <iframe
+                    src="https://rb-1997.github.io/cne/gallery.html"
+                    title="AI 圖片創作分享"
+                    style="width: 100%; height: 850px; border: 0; display: block;"
+                    loading="lazy"
                     allow="clipboard-write">
                 </iframe>
             </div>
