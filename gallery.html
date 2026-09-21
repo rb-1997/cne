@@ -24,7 +24,7 @@
       --heart-bg: #fff1f2;
       --danger: #ef4444;
       --danger-bg: #fef2f2;
-      --admin-badge: #7c3aed;
+      --admin: #7c3aed;
     }
     * {
       box-sizing: border-box;
@@ -114,7 +114,7 @@
       box-shadow: none;
     }
 
-    /* 個人資訊 */
+    /* 個人資訊膠囊 */
     .user-pill {
       display: flex;
       align-items: center;
@@ -137,13 +137,19 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .admin-tag {
-      background: var(--admin-badge);
-      color: #fff;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 700;
+    
+    /* 站長專屬顯著徽章 */
+    .admin-badge {
+      background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+      color: #ffffff !important;
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+      border-radius: 9999px !important;
+      font-weight: 800 !important;
+      display: inline-flex !important;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 2px 6px rgba(124, 58, 237, 0.35);
     }
 
     .main-container {
@@ -183,7 +189,7 @@
     }
 
     /* ============================================================
-       發布區域（登入後解鎖）
+       發布區域（登入後可見）
     ============================================================ */
     .publish-section {
       background: var(--surface);
@@ -274,7 +280,7 @@
     .form-input:focus { border-color: var(--primary); }
 
     /* ============================================================
-       貼文卡片：合比例全圖顯示（絕不裁切，個 Mon 睇曬）
+       貼文卡片：風格 B 合比例縮放
     ============================================================ */
     .post-card {
       background: var(--surface);
@@ -312,8 +318,8 @@
       color: var(--text-muted);
     }
     
-    /* 刪除按鈕 */
-    .delete-btn {
+    /* Post 作品刪除按鈕 */
+    .delete-post-btn {
       background: var(--danger-bg);
       color: var(--danger);
       border: 1px solid #fecaca;
@@ -327,21 +333,21 @@
       gap: 4px;
       transition: all 0.2s;
     }
-    .delete-btn:hover {
+    .delete-post-btn:hover {
       background: var(--danger);
       color: #fff;
     }
-    .delete-btn.admin {
+    .delete-post-btn.admin {
       background: #faf5ff;
       color: #7c3aed;
       border-color: #e9d5ff;
     }
-    .delete-btn.admin:hover {
+    .delete-post-btn.admin:hover {
       background: #7c3aed;
       color: #fff;
     }
 
-    /* 圖片合比例全景縮放，最高限 75vh */
+    /* 圖片容器：合比例全圖縮放，最高限 75vh */
     .post-image-wrap {
       width: 100%;
       background: #090d16;
@@ -398,26 +404,60 @@
       border-color: #fecdd3;
     }
 
-    /* 留言串 */
+    /* ============================================================
+       留言區塊（只有 Google 登入才可留言、站長可刪其他人的留言）
+    ============================================================ */
     .comments-wrapper {
       margin-top: 14px;
     }
     .comment-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
       background: #f8fafc;
       padding: 8px 12px;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 13px;
       margin-bottom: 6px;
+      gap: 8px;
+    }
+    .comment-content {
+      flex: 1;
+      word-break: break-word;
     }
     .comment-user {
       font-weight: 700;
       margin-right: 6px;
       color: #1e293b;
     }
+    /* 留言刪除小按鈕 */
+    .delete-comment-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .delete-comment-btn:hover {
+      color: var(--danger);
+      background: var(--danger-bg);
+    }
+    .delete-comment-btn.admin {
+      color: #a855f7;
+    }
+    .delete-comment-btn.admin:hover {
+      color: #fff;
+      background: #7c3aed;
+    }
+
     .comment-input-form {
       display: flex;
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
     .comment-input-form input {
       flex: 1;
@@ -474,7 +514,8 @@
           <div class="user-pill">
             <img id="user-photo" src="" alt="Avatar">
             <span id="user-name"></span>
-            <span id="admin-badge" class="admin-tag" style="display: none;">站長</span>
+            <!-- 站長字樣標籤 -->
+            <span id="admin-badge" class="admin-badge" style="display: none;">👑 站長</span>
           </div>
           <button id="logout-btn" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">登出</button>
         </div>
@@ -484,7 +525,7 @@
 
   <main class="main-container">
     
-    <!-- 1. 未登入防護門 -->
+    <!-- 1. 未登入防護門（未登入者不可瀏覽、發布或留言） -->
     <div id="login-gate" class="gate-container">
       <div class="gate-icon">🔒</div>
       <div class="gate-title">私人專屬 AI 藝廊</div>
@@ -559,17 +600,17 @@
       doc, 
       updateDoc, 
       arrayUnion, 
-      arrayRemove, 
       query, 
       orderBy, 
       serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     // ============================================================
-    // 【管理員名單】在此填入你的 Google 登入信箱
+    // 【站長名單設定】請在下方填入你的 Google 登入信箱
+    // 登入後頭像旁必定顯示「👑 站長」，並擁有刪除任何 Post 及留言的最高權限
     // ============================================================
     const ADMIN_EMAILS = [
-      "your_email@gmail.com" // ★ 請替換為你的站長 Gmail
+      "your_email@gmail.com" // ★ 請確認替換為你的站長 Gmail（大小寫自動相容）
     ];
 
     // 1. Cloudinary 參數
@@ -595,7 +636,7 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // 檢查是否有從 Redirect 登入跳轉回來的結果
+    // 接收 Redirect 登入跳轉結果
     getRedirectResult(auth).catch(err => {
       console.warn("Redirect 登入檢查：", err);
     });
@@ -603,7 +644,8 @@
     let currentUser = null;
     let selectedFile = null;
     let unsubscribePosts = null;
-    let isLoginProcessing = false; // 防重複點擊鎖
+    let isLoginProcessing = false;
+    let postsDataMap = {}; // 暫存目前貼文資料，方便精準刪除留言
 
     // DOM 元素
     const navLoginBtn = document.getElementById("nav-login-btn");
@@ -633,8 +675,10 @@
       setTimeout(() => toastEl.classList.remove("show"), 3500);
     }
 
+    // 檢查是否為站長
     function isUserAdmin(user) {
-      return user && user.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
+      if (!user || !user.email) return false;
+      return ADMIN_EMAILS.some(email => email.toLowerCase().trim() === user.email.toLowerCase().trim());
     }
 
     // 監聽登入狀態改變
@@ -649,8 +693,9 @@
         userName.textContent = user.displayName || "創作者";
         userPhoto.src = user.photoURL || "https://www.gravatar.com/avatar/?d=mp";
 
+        // 站長 login 之後必須有站長字樣
         if (isUserAdmin(user)) {
-          adminBadge.style.display = "inline-block";
+          adminBadge.style.display = "inline-flex";
         } else {
           adminBadge.style.display = "none";
         }
@@ -687,11 +732,9 @@
       }
     }
 
-    // ============================================================
-    // 核心修復：彈窗自動轉跳轉備援（100% 解決 popup-blocked 與 cancelled）
-    // ============================================================
+    // 登入功能（彈窗 + 重定向雙保險）
     async function handleLogin() {
-      if (isLoginProcessing) return; // 阻擋重複點擊
+      if (isLoginProcessing) return;
       isLoginProcessing = true;
       setLoginButtonsState(true);
 
@@ -703,20 +746,17 @@
       }
 
       try {
-        // 首先嘗試正常的彈窗登入
         await signInWithPopup(auth, provider);
         showToast("登入成功！已解鎖藝廊");
       } catch (err) {
-        console.warn("彈窗被攔截或取消，自動改用全頁面跳轉 (Redirect)...", err);
+        console.warn("彈窗登入受阻，切換重定向 (Redirect)...", err);
 
-        // 如果被瀏覽器攔截 (popup-blocked) 或請求取消 (cancelled-popup-request)，自動改為重定向跳轉
         if (
           err.code === "auth/popup-blocked" || 
           err.code === "auth/cancelled-popup-request" ||
           err.code === "auth/popup-closed-by-user"
         ) {
-          showToast("瀏覽器已啟動保護，正在為你跳轉至 Google 官方登入頁面...");
-          // 直接全頁面跳轉，任何瀏覽器都絕對不會攔截！
+          showToast("正在前往 Google 官方登入頁面...");
           await signInWithRedirect(auth, provider);
           return;
         }
@@ -835,7 +875,9 @@
       }
     });
 
-    // 即時監聽與合比例全圖渲染
+    // ============================================================
+    // 即時監聽與動態貼文/留言渲染
+    // ============================================================
     function startListeningPosts() {
       if (unsubscribePosts) unsubscribePosts();
 
@@ -855,16 +897,20 @@
         }
 
         postsFeed.innerHTML = "";
+        postsDataMap = {};
         const isAdmin = isUserAdmin(currentUser);
 
         snapshot.forEach((docSnap) => {
           const post = docSnap.data();
           const postId = docSnap.id;
+          postsDataMap[postId] = post;
+
           const isLiked = currentUser && post.likes && post.likes.includes(currentUser.uid);
           const likesCount = post.likes ? post.likes.length : 0;
           
-          const isAuthor = currentUser && post.authorId === currentUser.uid;
-          const canDelete = isAuthor || isAdmin;
+          // 作品刪除權限：如果是自己發布的作品，自己的 account 都可以 delete；站長可 delete 所有作品
+          const isPostAuthor = currentUser && post.authorId === currentUser.uid;
+          const canDeletePost = isPostAuthor || isAdmin;
 
           let dateStr = "剛剛";
           if (post.createdAt) {
@@ -872,6 +918,32 @@
             dateStr = d.toLocaleDateString("zh-HK", { month: 'short', day: 'numeric' }) + " " + 
                       d.toLocaleTimeString("zh-HK", { hour: '2-digit', minute: '2-digit' });
           }
+
+          // 留言列表 HTML（站長可刪除任何留言；普通使用者只能刪除自己的留言）
+          const commentsListHtml = (post.comments || []).map((c, idx) => {
+            const commentId = c.id || `c_${idx}`;
+            const isCommentAuthor = currentUser && (c.authorId === currentUser.uid);
+            // 關鍵限制：只有站長可以刪除其他人的留言；自己的留言自己可刪除
+            const canDeleteComment = isAdmin || isCommentAuthor;
+
+            return `
+              <div class="comment-item">
+                <div class="comment-content">
+                  <span class="comment-user">${c.author}:</span>
+                  <span>${c.text}</span>
+                </div>
+                ${canDeleteComment ? `
+                  <button class="delete-comment-btn ${isAdmin && !isCommentAuthor ? 'admin' : ''}" 
+                          data-postid="${postId}" 
+                          data-commentid="${commentId}" 
+                          data-author="${c.author}" 
+                          title="${isAdmin && !isCommentAuthor ? '站長刪除此留言' : '刪除我的留言'}">
+                    &times;
+                  </button>
+                ` : ''}
+              </div>
+            `;
+          }).join('');
 
           const card = document.createElement("div");
           card.className = "post-card";
@@ -885,14 +957,15 @@
                 </div>
               </div>
 
-              ${canDelete ? `
-                <button class="delete-btn ${isAdmin && !isAuthor ? 'admin' : ''}" data-id="${postId}" data-author="${post.authorName}">
-                  🗑️ ${isAdmin && !isAuthor ? '管理員刪除' : '刪除'}
+              <!-- 作品刪除按鈕（自己 post 的可以 delete，站長也可 delete） -->
+              ${canDeletePost ? `
+                <button class="delete-post-btn ${isAdmin && !isPostAuthor ? 'admin' : ''}" data-id="${postId}" data-author="${post.authorName}">
+                  🗑️ ${isAdmin && !isPostAuthor ? '站長刪除' : '刪除作品'}
                 </button>
               ` : ''}
             </div>
 
-            <!-- 合比例全景縮放，最高限 75vh -->
+            <!-- 圖片合比例縮放，最高限 75vh，一眼睇曬 -->
             <div class="post-image-wrap">
               <img src="${post.imageUrl}" alt="${post.title}" loading="lazy">
             </div>
@@ -908,15 +981,12 @@
               
               <div class="comments-wrapper">
                 <div id="comments-${postId}">
-                  ${(post.comments || []).map(c => `
-                    <div class="comment-item">
-                      <span class="comment-user">${c.author}:</span>
-                      <span>${c.text}</span>
-                    </div>
-                  `).join('')}
+                  ${commentsListHtml}
                 </div>
+
+                <!-- 必須用 Google 帳號登入才可以留言 -->
                 <div class="comment-input-form">
-                  <input type="text" id="input-${postId}" placeholder="留下你的讚賞或交流...">
+                  <input type="text" id="input-${postId}" placeholder="以 ${currentUser.displayName || '創作者'} 的身分留言...">
                   <button class="btn send-comment-btn" data-id="${postId}" style="padding:6px 14px; font-size:12px;">送出</button>
                 </div>
               </div>
@@ -932,18 +1002,22 @@
       });
     }
 
-    // 綁定操作
+    // ============================================================
+    // 事件綁定：Post 刪除、留言刪除、按讚、送出留言
+    // ============================================================
     function bindInteractions() {
-      // 刪除作品
-      document.querySelectorAll(".delete-btn").forEach(btn => {
+      const isAdmin = isUserAdmin(currentUser);
+
+      // 1. 刪除 Post 作品（自己 post 的可以 delete，站長可 delete 任何作品）
+      document.querySelectorAll(".delete-post-btn").forEach(btn => {
         btn.onclick = async () => {
           const postId = btn.dataset.id;
           const author = btn.dataset.author;
           const isAdminAction = btn.classList.contains("admin");
 
           const confirmMsg = isAdminAction
-            ? `【管理員審核操作】\n確定要強制刪除作者「${author}」的這部作品嗎？`
-            : "確定要刪除你的這部作品嗎？此動作無法復原。";
+            ? `【站長管理操作】\n確定要強制刪除作者「${author}」的作品嗎？`
+            : "確定要刪除這部由你發布的作品嗎？此動作無法復原。";
 
           if (!confirm(confirmMsg)) return;
 
@@ -952,13 +1026,48 @@
             await deleteDoc(doc(db, "posts", postId));
             showToast("作品已成功刪除！");
           } catch (err) {
-            console.error("刪除失敗：", err);
+            console.error("刪除作品失敗：", err);
             alert("刪除失敗：" + err.message);
           }
         };
       });
 
-      // 點讚
+      // 2. 刪除留言（站長可刪除其他 post 的留言；作者可刪除自己的留言）
+      document.querySelectorAll(".delete-comment-btn").forEach(btn => {
+        btn.onclick = async () => {
+          const postId = btn.dataset.postid;
+          const commentId = btn.dataset.commentid;
+          const commentAuthor = btn.dataset.author;
+          const isAdminAction = btn.classList.contains("admin");
+
+          const confirmMsg = isAdminAction
+            ? `【站長管理權限】\n確定要刪除「${commentAuthor}」的留言嗎？`
+            : "確定要刪除你的這條留言嗎？";
+
+          if (!confirm(confirmMsg)) return;
+
+          try {
+            btn.disabled = true;
+            const postRef = doc(db, "posts", postId);
+            const targetPost = postsDataMap[postId];
+            if (!targetPost) return;
+
+            // 過濾掉目標留言並更新
+            const updatedComments = (targetPost.comments || []).filter((c, idx) => {
+              const currentId = c.id || `c_${idx}`;
+              return currentId !== commentId;
+            });
+
+            await updateDoc(postRef, { comments: updatedComments });
+            showToast("留言已刪除！");
+          } catch (err) {
+            console.error("刪除留言失敗：", err);
+            alert("刪除留言失敗：" + err.message);
+          }
+        };
+      });
+
+      // 3. 按讚
       document.querySelectorAll(".like-btn").forEach(btn => {
         btn.onclick = async () => {
           if (!currentUser) return handleLogin();
@@ -975,7 +1084,7 @@
         };
       });
 
-      // 留言
+      // 4. 送出留言（必須 Google 登入）
       document.querySelectorAll(".send-comment-btn").forEach(btn => {
         btn.onclick = async () => {
           if (!currentUser) return handleLogin();
@@ -987,9 +1096,12 @@
           const postRef = doc(db, "posts", postId);
           try {
             btn.disabled = true;
+            // 寫入包含 authorId 與唯一 id 的完整結構
             await updateDoc(postRef, {
               comments: arrayUnion({
+                id: "c_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5),
                 author: currentUser.displayName || "創作者",
+                authorId: currentUser.uid,
                 text: val,
                 timestamp: Date.now()
               })
