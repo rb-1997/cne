@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>90s 經典香港廣東話收音機</title>
+  <title>90s 香港廣東話收音機 Walkman</title>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     :root {
       --case-base: #25282a;
-      --case-grad: linear-gradient(160deg, #3a3f44 0%, #1f2123 60%, #121314 100%);
+      --case-grad: linear-gradient(165deg, #383d42 0%, #202326 55%, #141517 100%);
       --lcd-bg: #8ba888;
       --lcd-text: #1a2e1b;
-      --lcd-glow: rgba(139, 168, 136, 0.4);
+      --lcd-glow: rgba(139, 168, 136, 0.45);
       --accent-yellow: #f1c40f;
       --accent-red: #e74c3c;
-      --btn-plastic: linear-gradient(to bottom, #4a4f54, #2c3033);
-      --chrome: linear-gradient(135deg, #e0e0e0 0%, #ffffff 50%, #999999 100%);
+      --btn-plastic: linear-gradient(to bottom, #44494e, #292c2f);
+      --chrome: linear-gradient(135deg, #e4e7ea 0%, #ffffff 50%, #9aa0a6 100%);
     }
 
     * {
@@ -27,8 +27,8 @@
     body {
       margin: 0;
       padding: 16px 8px 40px;
-      background: radial-gradient(circle at center, #2c3437 0%, #111315 100%);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at center, #2e3438 0%, #111315 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang HK", "Microsoft JhengHei", sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,14 +36,14 @@
       color: #fff;
     }
 
-    .boombox {
+    .walkman-container {
       width: 100%;
       max-width: 420px;
       background: var(--case-grad);
-      border-radius: 24px;
-      border: 4px solid #4f575e;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.25);
-      padding: 18px 16px;
+      border-radius: 26px;
+      border: 4px solid #4d545b;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.25);
+      padding: 18px 16px 22px;
       position: relative;
     }
 
@@ -52,7 +52,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 0 6px 12px;
-      border-bottom: 2px solid #1a1c1d;
+      border-bottom: 2px solid #181a1b;
     }
 
     .brand {
@@ -71,7 +71,7 @@
       color: var(--accent-red);
     }
 
-    .badge-x {
+    .badge-stereo {
       background: #000;
       color: var(--accent-yellow);
       font-size: 0.55rem;
@@ -83,14 +83,13 @@
     }
 
     .antenna {
-      width: 60px;
+      width: 55px;
       height: 6px;
       background: var(--chrome);
       border-radius: 3px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.6);
     }
 
-    /* 90年代綠色背光 LCD 螢幕 */
     .lcd-screen {
       background-color: var(--lcd-bg);
       color: var(--lcd-text);
@@ -98,7 +97,7 @@
       border: 3px solid #141617;
       box-shadow: inset 0 3px 8px rgba(0,0,0,0.6), 0 0 15px var(--lcd-glow);
       padding: 10px 14px;
-      margin: 14px 0;
+      margin: 14px 0 12px;
       font-family: "Courier New", Courier, monospace;
       position: relative;
     }
@@ -119,7 +118,7 @@
     }
 
     .lcd-freq {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 900;
       letter-spacing: 1px;
     }
@@ -130,12 +129,11 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    /* 音頻跳動頻譜 (Equalizer) */
     .eq-bar-container {
       display: flex;
       align-items: flex-end;
       gap: 3px;
-      height: 18px;
+      height: 16px;
       margin-top: 6px;
     }
 
@@ -158,10 +156,9 @@
 
     @keyframes jump {
       0% { height: 3px; }
-      100% { height: 18px; }
+      100% { height: 16px; }
     }
 
-    /* 卡式帶視窗 */
     .tape-window {
       background: #111213;
       border-radius: 10px;
@@ -186,19 +183,19 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      width: 75%;
-      background: #1c1e20;
+      width: 78%;
+      background: #1a1c1e;
       border-radius: 30px;
-      padding: 5px 12px;
-      border: 1px solid #333;
+      padding: 6px 14px;
+      border: 1px solid #303438;
     }
 
     .reel {
       width: 36px;
       height: 36px;
-      background: #e1e2e6;
+      background: #dcdee2;
       border-radius: 50%;
-      border: 3px solid #8e9398;
+      border: 3px solid #83888e;
       position: relative;
       box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
     }
@@ -209,7 +206,7 @@
       left: calc(50% - 1.5px);
       width: 3px;
       height: 100%;
-      background: #57606f;
+      background: #50565d;
     }
     .spoke-45 { transform: rotate(45deg); }
     .spoke-90 { transform: rotate(90deg); }
@@ -223,37 +220,37 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* 8 大電台按鈕佈局 */
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .station-key {
       background: var(--btn-plastic);
-      border: 1.5px solid #4f555a;
-      border-radius: 8px;
-      padding: 8px;
+      border: 1.5px solid #4a5055;
+      border-radius: 9px;
+      padding: 8px 10px;
       display: flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.15);
       transition: all 0.15s ease;
+      position: relative;
     }
 
     .station-key:active, .station-key.active {
-      background: #18191a;
+      background: #17181a;
       border-color: var(--accent-yellow);
       transform: translateY(2px);
       box-shadow: inset 0 2px 6px rgba(0,0,0,0.9);
     }
 
     .station-logo {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       object-fit: contain;
       background: #fff;
       border-radius: 4px;
@@ -279,32 +276,44 @@
 
     .key-freq {
       font-size: 0.65rem;
-      color: #a4b0be;
+      color: #9aa5b1;
     }
 
-    /* 機械操作主按鍵 */
+    .tag-drm {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 0.5rem;
+      padding: 1px 3px;
+      border-radius: 3px;
+      background: rgba(231, 76, 60, 0.25);
+      border: 1px solid var(--accent-red);
+      color: #ff7675;
+    }
+
     .controls {
       display: flex;
       gap: 12px;
+      margin-bottom: 12px;
     }
 
     .mech-btn {
       flex: 1;
       padding: 12px 10px;
       border-radius: 8px;
-      border: 2px solid #1a1c1d;
+      border: 2px solid #18191b;
       color: #fff;
       font-weight: bold;
       font-size: 0.85rem;
       letter-spacing: 1px;
       cursor: pointer;
-      box-shadow: 0 4px 0 #111213, 0 6px 8px rgba(0,0,0,0.6);
+      box-shadow: 0 4px 0 #101112, 0 6px 8px rgba(0,0,0,0.6);
       transition: all 0.1s ease;
     }
 
     .mech-btn:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 #111213, 0 2px 4px rgba(0,0,0,0.6);
+      box-shadow: 0 1px 0 #101112, 0 2px 4px rgba(0,0,0,0.6);
     }
 
     .btn-play {
@@ -314,27 +323,80 @@
     .btn-stop {
       background: linear-gradient(to bottom, #e74c3c, #c0392b);
     }
+
+    .crhk-drawer {
+      display: none;
+      background: #191b1d;
+      border: 1.5px dashed #e74c3c;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      color: #bdc3c7;
+      line-height: 1.4;
+      margin-top: 10px;
+    }
+
+    .crhk-drawer.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .crhk-header {
+      color: #f1c40f;
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .crhk-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .crhk-btn {
+      background: #2c3e50;
+      border: 1px solid #34495e;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .crhk-btn:hover {
+      background: #34495e;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
 
-  <div class="boombox">
-    <!-- 頂部品牌與裝飾天線 -->
+  <div class="walkman-container">
     <div class="top-bar">
-      <div class="brand">CNE <span>DIGITAL</span> RADIO</div>
-      <div class="badge-x">X-BASS</div>
+      <div class="brand">CNE <span>DIGITAL</span> FM/AM</div>
+      <div class="badge-stereo">STEREO RECEIVER</div>
       <div class="antenna"></div>
     </div>
 
-    <!-- 液晶螢幕 -->
-    <div class="lcd-screen" id="lcd">
+    <div class="lcd-screen">
       <div class="lcd-header">
-        <span id="lcd-mode">FM STEREO</span>
+        <span id="lcd-mode">AUTO TUNER</span>
         <span id="lcd-state">STANDBY</span>
       </div>
       <div class="lcd-main">
-        <div class="lcd-freq" id="lcd-freq">--.- <span style="font-size: 0.9rem;">MHz</span></div>
-        <div class="lcd-station" id="lcd-station">請按按鈕選擇電台</div>
+        <div class="lcd-freq" id="lcd-freq">--.- <span style="font-size: 0.85rem;">MHz</span></div>
+        <div class="lcd-station" id="lcd-station">請按按鈕選台</div>
       </div>
       <div class="eq-bar-container" id="eq-container">
         <div class="eq-bar"></div><div class="eq-bar"></div>
@@ -344,9 +406,8 @@
       </div>
     </div>
 
-    <!-- 卡式帶視窗 -->
     <div class="tape-window">
-      <div class="tape-track-label">CNE WALKMAN STEREO [AUTO-REVERSE]</div>
+      <div class="tape-track-label">CNE CASSETTE RECEIVER • HIGH FIDELITY</div>
       <div class="reels-container">
         <div class="reel" id="reel-l">
           <div class="reel-spoke"></div>
@@ -354,7 +415,7 @@
           <div class="reel-spoke spoke-90"></div>
           <div class="reel-spoke spoke-135"></div>
         </div>
-        <span style="font-size: 0.55rem; color: #57606f; font-weight: bold;">TAPE RUN</span>
+        <span style="font-size: 0.55rem; color: #5a626a; font-weight: bold; letter-spacing: 1px;">TAPE RUN</span>
         <div class="reel" id="reel-r">
           <div class="reel-spoke"></div>
           <div class="reel-spoke spoke-45"></div>
@@ -364,17 +425,28 @@
       </div>
     </div>
 
-    <!-- 8 大電台按鈕 -->
     <div class="grid" id="grid"></div>
 
-    <!-- 播放與停止按鈕 -->
     <div class="controls">
       <button class="mech-btn btn-play" onclick="resumePlay()">▶ 播放 PLAY</button>
       <button class="mech-btn btn-stop" onclick="stopPlay()">■ 停止 STOP</button>
     </div>
+
+    <div class="crhk-drawer" id="crhk-drawer">
+      <div class="crhk-header">📻 商業電台（881 / 903）專屬收聽提示</div>
+      <div>
+        商台官方實施了「動態 IP 加密 Token」技術，嚴格禁止第三方靜態網頁直接解取音訊流。<br>
+        如需收聽商台節目，可點擊下方安全音訊通道開啟獨立微型視窗，本頁 Walkman 介面將繼續維持運行：
+      </div>
+      <div class="crhk-actions">
+        <button class="crhk-btn" onclick="openCrhkBridge('903')">🎙️ 開啟 903 獨立音訊</button>
+        <button class="crhk-btn" onclick="openCrhkBridge('881')">🎙️ 開啟 881 獨立音訊</button>
+        <button class="crhk-btn" style="background:#4b6584;" onclick="closeCrhkDrawer()">✕ 收起</button>
+      </div>
+    </div>
   </div>
 
-  <audio id="player" playsinline preload="auto"></audio>
+  <audio id="player" playsinline webkit-playsinline preload="none"></audio>
 
   <script>
     const stations = [
@@ -383,8 +455,9 @@
         name: '港台第一台',
         freq: 'FM 92.6',
         numFreq: '92.6',
-        type: 'hls',
-        url: 'https://rthkradio1-live.akamaized.net/hls/live/2035313/radio1/master.m3u8',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://rthkradio1-live.akamaized.net/hls/live/2035313/radio1/index_64_a.m3u8',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/4/4b/RTHK_Logo.svg/512px-RTHK_Logo.svg.png'
       },
       {
@@ -392,8 +465,9 @@
         name: '港台第二台',
         freq: 'FM 94.8',
         numFreq: '94.8',
-        type: 'hls',
-        url: 'https://rthkradio2-live.akamaized.net/hls/live/2040078/radio2/master.m3u8',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://rthkradio2-live.akamaized.net/hls/live/2040078/radio2/index_64_a.m3u8',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/4/4b/RTHK_Logo.svg/512px-RTHK_Logo.svg.png'
       },
       {
@@ -401,8 +475,19 @@
         name: '港台第五台',
         freq: 'AM 783',
         numFreq: 'AM 783',
-        type: 'hls',
-        url: 'https://rthkradio5-live.akamaized.net/hls/live/2040081/radio5/master.m3u8',
+        band: 'kHz',
+        type: 'stream',
+        url: 'https://rthkradio5-live.akamaized.net/hls/live/2040081/radio5/index_64_a.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/4/4b/RTHK_Logo.svg/512px-RTHK_Logo.svg.png'
+      },
+      {
+        id: 'rthkgba',
+        name: '大灣區之聲',
+        freq: 'FM 101.2',
+        numFreq: '101.2',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://rthkradiocmgrgb-live.akamaized.net/hls/live/2046112/radiocmgrgb/master.m3u8',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/4/4b/RTHK_Logo.svg/512px-RTHK_Logo.svg.png'
       },
       {
@@ -410,7 +495,8 @@
         name: '新城知訊台',
         freq: 'FM 99.7',
         numFreq: '99.7',
-        type: 'hls',
+        band: 'MHz',
+        type: 'stream',
         url: 'https://metroradio-lh.akamaihd.net/i/997_h@349799/master.m3u8',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/2/23/Metro_Broadcast_Corporation_logo.svg/512px-Metro_Broadcast_Corporation_logo.svg.png'
       },
@@ -419,26 +505,19 @@
         name: '新城財經台',
         freq: 'FM 104.0',
         numFreq: '104.0',
-        type: 'hls',
+        band: 'MHz',
+        type: 'stream',
         url: 'https://metroradio-lh.akamaihd.net/i/104_h@349798/master.m3u8',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/2/23/Metro_Broadcast_Corporation_logo.svg/512px-Metro_Broadcast_Corporation_logo.svg.png'
-      },
-      {
-        id: 'rthkgba',
-        name: '大灣區之聲',
-        freq: 'FM 101.2',
-        numFreq: '101.2',
-        type: 'hls',
-        url: 'https://rthkradiocmgrgb-live.akamaized.net/hls/live/2046112/radiocmgrgb/master.m3u8',
-        logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/4/4b/RTHK_Logo.svg/512px-RTHK_Logo.svg.png'
       },
       {
         id: 'cr903',
         name: '叱咤 903',
         freq: 'FM 90.3',
         numFreq: '90.3',
-        type: 'protected',
-        embedUrl: 'https://www.881903.com/live/903',
+        band: 'MHz',
+        type: 'crhk',
+        channel: '903',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/d/d4/CRHK_903_logo.svg/512px-CRHK_903_logo.svg.png'
       },
       {
@@ -446,8 +525,9 @@
         name: '雷霆 881',
         freq: 'FM 88.1',
         numFreq: '88.1',
-        type: 'protected',
-        embedUrl: 'https://www.881903.com/live/881',
+        band: 'MHz',
+        type: 'crhk',
+        channel: '881',
         logo: 'https://upload.wikimedia.org/wikipedia/zh/thumb/e/eb/CRHK_881_logo.svg/512px-CRHK_881_logo.svg.png'
       }
     ];
@@ -460,11 +540,11 @@
     const reelL = document.getElementById('reel-l');
     const reelR = document.getElementById('reel-r');
     const grid = document.getElementById('grid');
+    const crhkDrawer = document.getElementById('crhk-drawer');
 
     let currentHls = null;
     let activeStation = null;
 
-    // 渲染電台按鍵
     stations.forEach(st => {
       const btn = document.createElement('div');
       btn.className = 'station-key';
@@ -476,89 +556,106 @@
           <span class="key-name">${st.name}</span>
           <span class="key-freq">${st.freq}</span>
         </div>
+        ${st.type === 'crhk' ? '<span class="tag-drm">DRM</span>' : ''}
       `;
       grid.appendChild(btn);
     });
 
-    function selectStation(st) {
+    async function selectStation(st) {
       activeStation = st;
 
-      // 1. 同步解鎖音頻播放通道（防止手機自動播放限制）
-      audio.play().catch(() => {});
-
-      // 2. 更新液晶螢幕
-      lcdFreq.innerHTML = `${st.numFreq} <span style="font-size: 0.85rem;">${st.freq.startsWith('AM') ? 'kHz' : 'MHz'}</span>`;
+      lcdFreq.innerHTML = `${st.numFreq} <span style="font-size: 0.85rem;">${st.band}</span>`;
       lcdStation.innerText = st.name;
-      lcdState.innerText = 'TUNING...';
 
       document.querySelectorAll('.station-key').forEach(k => k.classList.remove('active'));
-      document.getElementById(`btn-${st.id}`).classList.add('active');
+      const activeBtn = document.getElementById(`btn-${st.id}`);
+      if (activeBtn) activeBtn.classList.add('active');
 
-      if (currentHls) {
-        currentHls.destroy();
-        currentHls = null;
+      stopCurrentEngine(false);
+
+      if (st.type === 'crhk') {
+        lcdState.innerText = 'DRM LOCKED';
+        setVisual(false);
+        crhkDrawer.classList.add('show');
+        return;
       }
 
-      // 3. 商台（881 / 903）：在點擊事件中「立即同步打開」，絕不被瀏覽器當垃圾彈窗攔截！
-      if (st.type === 'protected') {
-        lcdState.innerText = 'POPUP AUDIO';
-        window.open(st.embedUrl, 'crhk_player', 'width=380,height=340,scrollbars=no');
-        setVisualPlay(true);
+      crhkDrawer.classList.remove('show');
+      lcdState.innerText = 'TUNING...';
+      setVisual(false);
+
+      if (audio.canPlayType('application/vnd.apple.mpegurl') ||
+          audio.canPlayType('audio/mpegurl') ||
+          /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        try {
+          audio.src = st.url;
+          audio.load();
+          await audio.play();
+          lcdState.innerText = 'PLAYING';
+          setVisual(true);
+          updateMediaSession(st);
+          return;
+        } catch (e) {
+          console.warn('Native playback error:', e);
+          lcdState.innerText = 'TAP PLAY';
+        }
+      }
+
+      if (window.Hls && Hls.isSupported()) {
+        currentHls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: false,
+          maxBufferLength: 20
+        });
+
+        const hls = currentHls;
+        hls.attachMedia(audio);
+
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+          if (currentHls !== hls) return;
+          hls.loadSource(st.url);
+        });
+
+        hls.on(Hls.Events.MANIFEST_PARSED, async () => {
+          if (currentHls !== hls) return;
+          try {
+            await audio.play();
+            lcdState.innerText = 'PLAYING';
+            setVisual(true);
+          } catch (e) {
+            lcdState.innerText = 'TAP PLAY';
+            setVisual(false);
+          }
+        });
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          if (!data.fatal || currentHls !== hls) return;
+          console.error('HLS error:', data);
+          lcdState.innerText = 'SIGNAL LOST';
+          setVisual(false);
+        });
+
         updateMediaSession(st);
         return;
       }
 
-      // 4. 港台與新城：智能雙軌解碼（直連 + 備用 CORS 管道）
-      loadStationAudio(st.url);
-      updateMediaSession(st);
+      lcdState.innerText = 'UNSUPPORTED';
+      setVisual(false);
     }
 
-    function loadStationAudio(streamUrl, useFallbackProxy = false) {
-      const finalUrl = useFallbackProxy ? `https://api.allorigins.win/raw?url=${encodeURIComponent(streamUrl)}` : streamUrl;
-
-      lcdState.innerText = useFallbackProxy ? 'PROXY BUFFER' : 'CONNECTING...';
-
-      if (audio.canPlayType('application/vnd.apple.mpegurl')) {
-        // iOS Safari 原生 HLS 解碼
-        audio.src = finalUrl;
-        audio.play().then(() => {
-          lcdState.innerText = 'PLAYING';
-          setVisualPlay(true);
-        }).catch(err => {
-          if (!useFallbackProxy) {
-            loadStationAudio(streamUrl, true);
-          } else {
-            lcdState.innerText = 'TAP PLAY';
-          }
-        });
-      } else if (Hls.isSupported()) {
-        // Android / 電腦瀏覽器使用 HLS.js
-        currentHls = new Hls({ enableWorker: true, lowLatencyMode: true });
-        currentHls.loadSource(finalUrl);
-        currentHls.attachMedia(audio);
-
-        currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-          audio.play().then(() => {
-            lcdState.innerText = 'PLAYING';
-            setVisualPlay(true);
-          }).catch(() => lcdState.innerText = 'TAP PLAY');
-        });
-
-        currentHls.on(Hls.Events.ERROR, (event, data) => {
-          // 若遇到跨域 CORS 失敗，自動切換至備用解碼管道
-          if (data.fatal && !useFallbackProxy) {
-            currentHls.destroy();
-            currentHls = null;
-            loadStationAudio(streamUrl, true);
-          } else if (data.fatal) {
-            lcdState.innerText = 'SIGNAL ERR';
-            setVisualPlay(false);
-          }
-        });
+    function stopCurrentEngine(clearSource = true) {
+      if (currentHls) {
+        try { currentHls.destroy(); } catch (e) {}
+        currentHls = null;
+      }
+      audio.pause();
+      if (clearSource) {
+        audio.removeAttribute('src');
+        audio.load();
       }
     }
 
-    function setVisualPlay(isPlaying) {
+    function setVisual(isPlaying) {
       if (isPlaying) {
         eqContainer.classList.add('eq-active');
         reelL.classList.add('spin');
@@ -572,29 +669,63 @@
 
     audio.onplaying = () => {
       lcdState.innerText = 'PLAYING';
-      setVisualPlay(true);
+      setVisual(true);
     };
 
     audio.onpause = () => {
-      lcdState.innerText = 'PAUSED';
-      setVisualPlay(false);
+      if (lcdState.innerText !== 'STOPPED') {
+        lcdState.innerText = 'PAUSED';
+      }
+      setVisual(false);
     };
 
-    function resumePlay() {
+    audio.onerror = () => {
+      lcdState.innerText = 'SIGNAL ERROR';
+      setVisual(false);
+    };
+
+    async function resumePlay() {
       if (!activeStation) {
-        selectStation(stations[0]);
-      } else {
-        audio.play().then(() => setVisualPlay(true)).catch(() => {});
+        await selectStation(stations[0]);
+        return;
+      }
+      if (activeStation.type === 'crhk') {
+        crhkDrawer.classList.add('show');
+        return;
+      }
+      try {
+        await audio.play();
+        lcdState.innerText = 'PLAYING';
+        setVisual(true);
+      } catch (e) {
+        if (activeStation && currentHls) {
+          await selectStation(activeStation);
+        } else {
+          lcdState.innerText = 'TAP PLAY';
+        }
       }
     }
 
     function stopPlay() {
-      audio.pause();
-      setVisualPlay(false);
+      stopCurrentEngine(true);
+      setVisual(false);
       lcdState.innerText = 'STOPPED';
     }
 
-    // 手機閉屏 / 鎖屏控制面板與封面圖
+    function closeCrhkDrawer() {
+      crhkDrawer.classList.remove('show');
+    }
+
+    function openCrhkBridge(channel) {
+      const url = `https://www.881903.com/live/${channel}`;
+      const win = window.open(url, `crhk_${channel}`, 'width=420,height=340,menubar=no,toolbar=no,location=no,status=no');
+      if (win) {
+        win.focus();
+        lcdState.innerText = `CR${channel} LIVE`;
+        setVisual(true);
+      }
+    }
+
     function updateMediaSession(st) {
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
@@ -607,8 +738,10 @@
           ]
         });
 
-        navigator.mediaSession.setActionHandler('play', () => resumePlay());
-        navigator.mediaSession.setActionHandler('pause', () => stopPlay());
+        try {
+          navigator.mediaSession.setActionHandler('play', () => resumePlay());
+          navigator.mediaSession.setActionHandler('pause', () => stopPlay());
+        } catch (e) {}
       }
     }
   </script>
