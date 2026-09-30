@@ -27,6 +27,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -109,15 +110,386 @@
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .animate-pulse-fast { animation: pulse 0.8s infinite; }
+        /* ===== Meta-style home: soft comfortable green, uniform 10 tiles ===== */
+        .meta-card {
+            height: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(13, 92, 66, 0.10);
+            border-radius: 1.25rem;
+            padding: 0.8rem;
+            box-shadow: 0 1px 2px rgba(9, 78, 56, 0.05), 0 2px 8px rgba(9, 78, 56, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .meta-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(12, 166, 120, 0.35);
+            box-shadow: 0 10px 24px -8px rgba(8, 127, 91, 0.22);
+        }
+        .meta-card:active { transform: scale(0.98); }
+        @media (min-width: 768px) {
+            .meta-card { padding: 1.1rem; border-radius: 1.4rem; }
+        }
+        .meta-icon {
+            width: 2.4rem; height: 2.4rem;
+            border-radius: 0.85rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 2px rgba(9, 78, 56, 0.08);
+            flex-shrink: 0;
+        }
+        @media (min-width: 768px) { .meta-icon { width: 2.75rem; height: 2.75rem; } }
+        .meta-tag {
+            font-size: 10px; font-weight: 700; line-height: 1;
+            padding: 5px 9px; border-radius: 9999px;
+            background: #F1F5F3; color: #5C6F65;
+            border: 1px solid #E3EAE6; white-space: nowrap;
+        }
+        .meta-title { font-size: 14.5px; font-weight: 800; color: #0F241B; line-height: 1.4; letter-spacing: 0.01em; }
+        @media (min-width: 768px) { .meta-title { font-size: 16px; } }
+        .meta-desc {
+            font-size: 11px; color: #6E7F75; font-weight: 500; line-height: 1.55; margin-top: 3px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        @media (max-width: 767px) { .meta-desc { -webkit-line-clamp: 1; } }
+        @media (min-width: 768px) { .meta-desc { font-size: 12px; } }
+        .meta-foot {
+            margin-top: 0.7rem; padding-top: 0.6rem;
+            border-top: 1px solid #EDF2EF;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 11.5px; font-weight: 800; color: #087F5B;
+        }
+        @media (min-width: 768px) { .meta-foot { font-size: 12.5px; } }
+            /* ===== Walkman 收音機 (view-radio 專用，全部已 scope) ===== */
+#view-radio {
+      --case-base: #25282a;
+      --case-grad: linear-gradient(165deg, #383d42 0%, #202326 55%, #141517 100%);
+      --lcd-bg: #8ba888;
+      --lcd-text: #1a2e1b;
+      --lcd-glow: rgba(139, 168, 136, 0.45);
+      --accent-yellow: #f1c40f;
+      --accent-red: #e74c3c;
+      --btn-plastic: linear-gradient(to bottom, #44494e, #292c2f);
+      --chrome: linear-gradient(135deg, #e4e7ea 0%, #ffffff 50%, #9aa0a6 100%);
+    }
+#view-radio * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+#view-radio .walkman-container {
+      width: 100%;
+      max-width: 420px; margin: 0 auto;
+      background: var(--case-grad);
+      border-radius: 26px;
+      border: 4px solid #4d545b;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.85), inset 0 2px 4px rgba(255,255,255,0.25);
+      padding: 18px 16px 22px;
+      position: relative;
+    }
+#view-radio .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 6px 12px;
+      border-bottom: 2px solid #181a1b;
+    }
+#view-radio .brand {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      font-style: italic;
+      color: #ecf0f1;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+#view-radio .brand span {
+      color: var(--accent-red);
+    }
+#view-radio .badge-stereo {
+      background: #000;
+      color: var(--accent-yellow);
+      font-size: 0.55rem;
+      font-weight: 900;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--accent-yellow);
+      letter-spacing: 1px;
+    }
+#view-radio .antenna {
+      width: 55px;
+      height: 6px;
+      background: var(--chrome);
+      border-radius: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+#view-radio .lcd-screen {
+      background-color: var(--lcd-bg);
+      color: var(--lcd-text);
+      border-radius: 8px;
+      border: 3px solid #141617;
+      box-shadow: inset 0 3px 8px rgba(0,0,0,0.6), 0 0 15px var(--lcd-glow);
+      padding: 10px 14px;
+      margin: 14px 0 12px;
+      font-family: "Courier New", Courier, monospace;
+      position: relative;
+    }
+#view-radio .lcd-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+#view-radio .lcd-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+#view-radio .lcd-freq {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+#view-radio .lcd-station {
+      font-size: 0.95rem;
+      font-weight: bold;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+#view-radio .eq-bar-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 16px;
+      margin-top: 6px;
+    }
+#view-radio .eq-bar {
+      flex: 1;
+      background: var(--lcd-text);
+      height: 3px;
+      border-radius: 1px;
+      transition: height 0.15s ease;
+    }
+#view-radio .eq-active .eq-bar:nth-child(1) { animation: jump 0.4s infinite alternate; }
+#view-radio .eq-active .eq-bar:nth-child(2) { animation: jump 0.6s infinite alternate 0.1s; }
+#view-radio .eq-active .eq-bar:nth-child(3) { animation: jump 0.3s infinite alternate 0.2s; }
+#view-radio .eq-active .eq-bar:nth-child(4) { animation: jump 0.5s infinite alternate 0.15s; }
+#view-radio .eq-active .eq-bar:nth-child(5) { animation: jump 0.7s infinite alternate 0.05s; }
+#view-radio .eq-active .eq-bar:nth-child(6) { animation: jump 0.45s infinite alternate 0.25s; }
+#view-radio .eq-active .eq-bar:nth-child(7) { animation: jump 0.55s infinite alternate 0.1s; }
+#view-radio .eq-active .eq-bar:nth-child(8) { animation: jump 0.35s infinite alternate 0.3s; }
+@keyframes jump {
+      0% { height: 3px; }
+      100% { height: 16px; }
+    }
+#view-radio .tape-window {
+      background: #111213;
+      border-radius: 10px;
+      border: 2px solid #2f3438;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+#view-radio .tape-track-label {
+      font-size: 0.65rem;
+      color: #95a5a6;
+      font-family: monospace;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+#view-radio .reels-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 78%;
+      background: #1a1c1e;
+      border-radius: 30px;
+      padding: 6px 14px;
+      border: 1px solid #303438;
+    }
+#view-radio .reel {
+      width: 36px;
+      height: 36px;
+      background: #dcdee2;
+      border-radius: 50%;
+      border: 3px solid #83888e;
+      position: relative;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+    }
+#view-radio .reel-spoke {
+      position: absolute;
+      top: 0;
+      left: calc(50% - 1.5px);
+      width: 3px;
+      height: 100%;
+      background: #50565d;
+    }
+#view-radio .spoke-45 { transform: rotate(45deg); }
+#view-radio .spoke-90 { transform: rotate(90deg); }
+#view-radio .spoke-135 { transform: rotate(135deg); }
+#view-radio .reel.spin {
+      animation: spin 2.5s linear infinite;
+    }
+@keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+#view-radio .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+#view-radio .station-key {
+      background: var(--btn-plastic);
+      border: 1.5px solid #4a5055;
+      border-radius: 9px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.15);
+      transition: all 0.15s ease;
+      position: relative;
+    }
+#view-radio .station-key:active, #view-radio .station-key.active {
+      background: #17181a;
+      border-color: var(--accent-yellow);
+      transform: translateY(2px);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.9);
+    }
+#view-radio .station-logo {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 4px;
+      padding: 2px;
+      flex-shrink: 0;
+    }
+#view-radio .key-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      text-align: left;
+    }
+#view-radio .key-name {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+#view-radio .key-freq {
+      font-size: 0.65rem;
+      color: #9aa5b1;
+    }
+#view-radio .tag-drm {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      font-size: 0.5rem;
+      padding: 1px 3px;
+      border-radius: 3px;
+      background: rgba(231, 76, 60, 0.25);
+      border: 1px solid var(--accent-red);
+      color: #ff7675;
+    }
+#view-radio .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+#view-radio .mech-btn {
+      flex: 1;
+      padding: 12px 10px;
+      border-radius: 8px;
+      border: 2px solid #18191b;
+      color: #fff;
+      font-weight: bold;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #101112, 0 6px 8px rgba(0,0,0,0.6);
+      transition: all 0.1s ease;
+    }
+#view-radio .mech-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #101112, 0 2px 4px rgba(0,0,0,0.6);
+    }
+#view-radio .btn-play {
+      background: linear-gradient(to bottom, #2ecc71, #27ae60);
+    }
+#view-radio .btn-stop {
+      background: linear-gradient(to bottom, #e74c3c, #c0392b);
+    }
+#view-radio .crhk-drawer {
+      display: none;
+      background: #191b1d;
+      border: 1.5px dashed #e74c3c;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      color: #bdc3c7;
+      line-height: 1.4;
+      margin-top: 10px;
+    }
+#view-radio .crhk-drawer.show {
+      display: block;
+      animation: radioFadeIn 0.3s ease;
+    }
+#view-radio .crhk-header {
+      color: #f1c40f;
+      font-weight: bold;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+#view-radio .crhk-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+#view-radio .crhk-btn {
+      background: #2c3e50;
+      border: 1px solid #34495e;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+#view-radio .crhk-btn:hover {
+      background: #34495e;
+    }
+@keyframes radioFadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col selection:bg-teal-100 selection:text-teal-900">
+<body class="bg-[#EDF2EF] text-slate-900 min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
 
     <!-- Header -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <header class="bg-gradient-to-b from-[#DDF1E5] to-[#EFFAF3] border-b border-[#BCE3CA] sticky top-0 z-30 shadow-[0_2px_12px_rgba(8,127,91,0.10)]">
         <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="switchView('home')">
-                <img src="https://rb-1997.github.io/cne/cne_daily180.png" alt="CNE日常 Logo" class="w-10 h-10 rounded-xl object-contain shadow-md shadow-teal-100/50">
+                <img src="https://rb-1997.github.io/cne/cne_daily180.png" alt="CNE日常 Logo" class="w-10 h-10 rounded-xl object-contain shadow-md shadow-emerald-200/60">
                 <div>
                     <h1 class="font-extrabold text-xl leading-tight text-slate-900">CNE日常</h1>
                     <p class="text-xs text-slate-500 font-medium">護理實用工具庫</p>
@@ -125,7 +497,7 @@
             </div>
             
             <div class="flex items-center space-x-2">
-                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-slate-200 hover:bg-slate-300 text-slate-800 px-3.5 py-1.5 rounded-xl transition-all font-bold border border-slate-300 active:scale-95">
+                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-3.5 py-1.5 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -137,251 +509,275 @@
     <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6">
 
         <!-- ================= PAGE 1: HOME DASHBOARD (10-CARD GRID BALANCED LAYOUT) ================= -->
-        <section id="view-home" class="view-panel active space-y-6">
-            <!-- Banner -->
-            <div class="bg-gradient-to-r from-teal-800 via-emerald-800 to-cyan-900 border border-teal-600/30 rounded-2xl p-5 md:p-6 text-white shadow-xl relative overflow-hidden space-y-3">
-                <div class="relative z-10 space-y-2">
-                    <div class="flex items-center justify-between gap-3 flex-wrap">
-                        <span class="inline-block bg-teal-400/20 border border-teal-300/30 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold text-teal-200 shadow-inner">每日更新 • 護理智慧</span>
-                        
+                <!-- ================= PAGE 1: HOME DASHBOARD (META-STYLE UNIFORM 11-CARD GRID) ================= -->
+        <section id="view-home" class="view-panel active space-y-4 md:space-y-5">
+            <!-- Banner: soft comfortable green, Meta clean card -->
+            <div class="bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-3xl p-4 md:p-6 shadow-[0_2px_14px_rgba(8,127,91,0.10)] relative overflow-hidden">
+                <div class="relative z-10 space-y-2 md:space-y-2.5">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <span class="inline-flex items-center gap-1.5 bg-white/80 border border-emerald-200/80 px-3 py-1 rounded-full text-[11px] md:text-xs font-bold text-[#087F5B] shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#0CA678] animate-pulse"></span>
+                            每日更新 • 護理智慧
+                        </span>
                         <div class="flex items-center gap-2">
-                            <button onclick="openQrModal()" title="分享/掃描 QR Code" class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 active:scale-95 text-teal-100 hover:text-white px-3 py-1.5 rounded-xl text-xs md:text-sm font-bold border border-teal-300/30 backdrop-blur-md transition-all shadow-sm">
-                                <i data-lucide="qr-code" class="w-4 h-4 text-teal-200"></i>
+                            <button onclick="openQrModal()" title="分享/掃描 QR Code" class="flex items-center gap-1.5 bg-white hover:bg-emerald-50/70 active:scale-95 text-[#087F5B] px-3 py-1.5 rounded-full text-xs md:text-sm font-bold border border-emerald-200/80 transition-all shadow-sm">
+                                <i data-lucide="qr-code" class="w-4 h-4"></i>
                                 <span>QR Code</span>
                             </button>
-
-                            <button onclick="openPwaModal()" title="加入手機桌面捷徑" class="flex items-center gap-1.5 bg-amber-400/20 hover:bg-amber-400/30 active:scale-95 text-amber-200 hover:text-amber-100 px-3 py-1.5 rounded-xl text-xs md:text-sm font-bold border border-amber-300/40 backdrop-blur-md transition-all shadow-sm">
-                                <i data-lucide="smartphone" class="w-4 h-4 text-amber-300"></i>
+                            <button onclick="openPwaModal()" title="加入手機桌面捷徑" class="flex items-center gap-1.5 bg-[#FFF8E8] hover:bg-[#FFF1D6] active:scale-95 text-[#92400E] px-3 py-1.5 rounded-full text-xs md:text-sm font-bold border border-amber-200/80 transition-all shadow-sm">
+                                <i data-lucide="smartphone" class="w-4 h-4"></i>
                                 <span>一鍵生成去桌面</span>
                             </button>
                         </div>
                     </div>
 
-                    <h2 class="text-2xl md:text-3xl font-black tracking-wide text-white drop-shadow-sm">歡迎來到 CNE日常 🛠️</h2>
-                    
-                    <div class="pt-1">
-                        <div class="bg-amber-400/20 backdrop-blur-md border border-amber-300/40 rounded-xl px-4 py-2.5 text-amber-200 font-extrabold text-sm md:text-base inline-flex items-center gap-2 shadow-inner flex-wrap">
-                            <i data-lucide="sparkles" class="w-4 h-4 text-amber-300 animate-pulse"></i>
-                            <span>每日金句：</span>
-                            <span id="daily-quote-text" class="text-white tracking-wide font-black">--</span>
+                    <h2 class="text-xl md:text-2xl font-black tracking-wide text-emerald-950">歡迎來到 CNE日常 🛠️</h2>
+
+                    <div>
+                        <div class="bg-white/75 border border-emerald-200/70 rounded-2xl px-3.5 py-2 font-extrabold text-xs md:text-sm inline-flex items-center gap-2 shadow-sm flex-wrap">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-[#0CA678] animate-pulse"></i>
+                            <span class="text-emerald-800">每日金句：</span>
+                            <span id="daily-quote-text" class="text-emerald-950 tracking-wide font-black">--</span>
                         </div>
                     </div>
 
-                    <p class="text-teal-100 text-xs md:text-sm max-w-xl leading-relaxed font-medium pt-1">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。</p>
+                    <p class="hidden md:block text-emerald-800/70 text-sm max-w-xl leading-relaxed font-medium">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。</p>
                 </div>
-                <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-36 h-36 text-white/10 pointer-events-none"></i>
+                <i data-lucide="stethoscope" class="absolute -right-4 -bottom-6 w-32 h-32 md:w-40 md:h-40 text-emerald-900/10 pointer-events-none"></i>
             </div>
 
-            <!-- Balanced 10-Card Grid (All Equal Size) -->
+            <!-- Uniform Meta 10-Card Grid (all tiles identical style) -->
             <div>
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-base font-extrabold text-slate-800 flex items-center gap-2">
-                        <i data-lucide="layout-grid" class="w-5 h-5 text-teal-600"></i>
-                        核心項目選單 (10項實用工具)
+                <div class="flex items-center justify-between mb-3 md:mb-4">
+                    <h3 class="text-sm md:text-base font-extrabold text-slate-800 flex items-center gap-2">
+                        <span class="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-[#0CA678]/15 text-[#087F5B] flex items-center justify-center">
+                            <i data-lucide="layout-grid" class="w-4 h-4 md:w-[18px] md:h-[18px]"></i>
+                        </span>
+                        核心項目選單 (11項實用工具)
                     </h3>
-                    <span class="text-xs font-bold text-slate-400 bg-slate-200/60 px-2.5 py-1 rounded-full">點選進入</span>
+                    <span class="text-[11px] md:text-xs font-bold text-[#087F5B] bg-[#0CA678]/10 border border-[#0CA678]/25 px-2.5 py-1 rounded-full">點選進入</span>
                 </div>
 
-                <!-- 10-Grid System: Mobile (2 cols), Desktop (5 cols) -->
-                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 md:gap-4.5">
+                <!-- 11-Grid System: Mobile (2 cols), Desktop (5 cols) -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 md:gap-4">
 
                     <!-- Card 1: 行水神器 -->
-                    <div onclick="switchView('drip')" class="h-full bg-gradient-to-br from-white via-slate-100 to-slate-300 rounded-2xl p-4 md:p-5 border border-slate-300 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-slate-900">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-800 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="droplets" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('drip')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#E8EEF5] text-[#475569]">
+                                    <i data-lucide="droplets" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-slate-200/80 text-slate-700 font-bold px-2 py-0.5 rounded-full border border-slate-300">時間分配</span>
+                                <span class="meta-tag">時間分配</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-slate-900">行水神器</h4>
-                                <p class="text-xs text-slate-600 mt-1 line-clamp-2 font-medium leading-relaxed">設定時間與 2-6 人數，直接試算人員裝備整理時段。</p>
+                                <h4 class="meta-title">行水神器</h4>
+                                <p class="meta-desc">設定時間與 2-6 人數，直接試算人員裝備整理時段。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-300/80 flex items-center justify-between text-xs text-slate-800 font-bold">
+                        <div class="meta-foot">
                             <span>進入功能</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 2: 煙棚計算 -->
-                    <div onclick="switchView('respiratory')" class="h-full bg-gradient-to-br from-sky-600 via-blue-600 to-blue-700 rounded-2xl p-4 md:p-5 border border-blue-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-sky-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="flame" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('respiratory')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#DBEAFE] text-[#2563EB]">
+                                    <i data-lucide="flame" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">罰款關稅</span>
+                                <span class="meta-tag">罰款關稅</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">煙棚計算</h4>
-                                <p class="text-xs text-sky-100 mt-1 line-clamp-2 font-medium leading-relaxed">未申報香煙/雪茄 Compounding 罰款及關稅評估工具。</p>
+                                <h4 class="meta-title">煙棚計算</h4>
+                                <p class="meta-desc">未申報香煙/雪茄 Compounding 罰款及關稅評估工具。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-blue-400/60 flex items-center justify-between text-xs text-sky-100 font-extrabold">
+                        <div class="meta-foot">
                             <span>進入計算</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 3: 抽籤模式 -->
-                    <div onclick="switchView('draw')" class="h-full bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 rounded-2xl p-4 md:p-5 border border-emerald-200 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-emerald-950">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
-                                    <i data-lucide="dices" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('draw')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#D3F0E2] text-[#0CA678]">
+                                    <i data-lucide="dices" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-emerald-200/80 text-emerald-900 font-bold px-2 py-0.5 rounded-full border border-emerald-300">假期排位</span>
+                                <span class="meta-tag">假期排位</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-emerald-950">抽籤模式</h4>
-                                <p class="text-xs text-emerald-800 mt-1 line-clamp-2 font-semibold leading-relaxed">長假期同事抽假、畫鬼腳視覺版、二選一幸運輪盤。</p>
+                                <h4 class="meta-title">抽籤模式</h4>
+                                <p class="meta-desc">長假期同事抽假、畫鬼腳視覺版、二選一幸運輪盤。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-emerald-200 flex items-center justify-between text-xs text-emerald-900 font-black">
+                        <div class="meta-foot">
                             <span>選擇模式</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
-                    <!-- Card 4: CR金句 -->
-                    <div onclick="switchView('quotes')" class="h-full bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 rounded-2xl p-4 md:p-5 border border-amber-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-amber-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="quote" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <!-- Card 4: CR 金句 100 -->
+                    <div onclick="switchView('quotes')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#FEF0C7] text-[#D97706]">
+                                    <i data-lucide="quote" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">評語 100</span>
+                                <span class="meta-tag">評語 100</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">CR 金句 100</h4>
-                                <p class="text-xs text-amber-100 mt-1 line-clamp-2 font-medium leading-relaxed">穩定型、求進型、健康型意向報告評語金句精選。</p>
+                                <h4 class="meta-title">CR 金句 100</h4>
+                                <p class="meta-desc">穩定型、求進型、健康型意向報告評語金句精選。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-amber-400/60 flex items-center justify-between text-xs text-amber-100 font-black">
+                        <div class="meta-foot">
                             <span>選擇意向</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 5: 輪班預約好幫手 -->
-                    <div onclick="switchView('shift')" class="h-full bg-gradient-to-br from-orange-600 via-rose-600 to-red-600 rounded-2xl p-4 md:p-5 border border-orange-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-orange-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="calendar-check" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('shift')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#FFE4D1] text-[#EA580C]">
+                                    <i data-lucide="calendar-check" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-white text-red-600 px-2 py-0.5 rounded-full font-black shadow-sm">約會好幫手</span>
+                                <span class="meta-tag">約會好幫手</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">輪班預約好幫手</h4>
-                                <p class="text-xs text-orange-100 mt-1 line-clamp-2 font-medium leading-relaxed">支援 5 大 Pattern 班別對照，自動分析黃金聚會日！</p>
+                                <h4 class="meta-title">輪班預約好幫手</h4>
+                                <p class="meta-desc">支援 5 大 Pattern 班別對照，自動分析黃金聚會日！</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-orange-400/60 flex items-center justify-between text-xs text-orange-100 font-extrabold">
+                        <div class="meta-foot">
                             <span>進入對照</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
-                    <!-- Card 6: CNE AI BOT (已更新描述) -->
-                    <div onclick="switchView('ai')" class="h-full bg-gradient-to-br from-purple-800 via-indigo-900 to-purple-900 rounded-2xl p-4 md:p-5 border border-purple-500/50 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-amber-300 flex items-center justify-center group-hover:rotate-6 group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="bot" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <!-- Card 6: CNE AI BOT -->
+                    <div onclick="switchView('ai')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#E9E2FB] text-[#7C3AED]">
+                                    <i data-lucide="bot" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-amber-400 text-slate-900 font-extrabold px-2 py-0.5 rounded-full shadow-sm">AI 專家</span>
+                                <span class="meta-tag">AI 專家</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black tracking-wide text-white">CNE AI BOT</h4>
-                                <p class="text-xs text-purple-100 mt-1 line-clamp-3 font-medium leading-relaxed">全新植入DS模式，執法情境、法例罪行、口岸程序、職涯疑惑，Draft Post Record 體驗， 即獲實時精準解答。</p>
+                                <h4 class="meta-title">CNE AI BOT</h4>
+                                <p class="meta-desc">全新植入DS模式，執法情境、法例罪行、口岸程序、職涯疑惑，Draft Post Record 體驗，即獲實時精準解答。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-purple-700/60 flex items-center justify-between text-xs text-amber-300 font-extrabold">
+                        <div class="meta-foot">
                             <span>開始對話</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
-                    <!-- Card 7: 宿舍分數計算器 -->
-                    <div onclick="switchView('quarters')" class="h-full bg-gradient-to-br from-amber-100 via-yellow-200 to-amber-300 rounded-2xl p-4 md:p-5 border border-amber-300 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-amber-950">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="building-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <!-- Card 7: 宿舍分數計算 -->
+                    <div onclick="switchView('quarters')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#FEF9C3] text-[#CA8A04]">
+                                    <i data-lucide="building-2" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-amber-100/90 text-amber-900 px-2 py-0.5 rounded-full font-black border border-amber-300 shadow-sm">附錄 VII</span>
+                                <span class="meta-tag">附錄 VII</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-amber-950">宿舍分數計算</h4>
-                                <p class="text-xs text-amber-900/80 mt-1 line-clamp-2 font-medium leading-relaxed">CNE 部門宿舍計分試算表，實時計算 Quartering Points。</p>
+                                <h4 class="meta-title">宿舍分數計算</h4>
+                                <p class="meta-desc">CNE 部門宿舍計分試算表，實時計算 Quartering Points。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-amber-300/80 flex items-center justify-between text-xs text-amber-900 font-extrabold">
+                        <div class="meta-foot">
                             <span>開始試算</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 8: 退休金計算器 -->
-                    <div onclick="switchView('pension')" class="h-full bg-gradient-to-br from-amber-700 via-amber-800 to-yellow-900 rounded-2xl p-4 md:p-5 border border-amber-500/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/15 backdrop-blur-md text-amber-200 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="coins" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('pension')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#F1E3CB] text-[#92400E]">
+                                    <i data-lucide="coins" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-amber-400 text-amber-950 px-2 py-0.5 rounded-full font-black shadow-sm">NPS 試算</span>
+                                <span class="meta-tag">NPS 試算</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">退休金計算器</h4>
-                                <p class="text-xs text-amber-100 mt-1 line-clamp-2 font-medium leading-relaxed">新舊退休金計劃試算，支援紀律部隊運作退休及折算。</p>
+                                <h4 class="meta-title">退休金計算器</h4>
+                                <p class="meta-desc">新舊退休金計劃試算，支援紀律部隊運作退休及折算。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-amber-600/60 flex items-center justify-between text-xs text-amber-200 font-extrabold">
+                        <div class="meta-foot">
                             <span>開始試算</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 9: 跳格加2小遊戲 -->
-                    <div onclick="switchView('game')" class="h-full bg-gradient-to-br from-pink-600 via-rose-600 to-pink-700 rounded-2xl p-4 md:p-5 border border-pink-400/60 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/20 backdrop-blur-md text-pink-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner">
-                                    <i data-lucide="gamepad-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('game')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#FCE7F3] text-[#DB2777]">
+                                    <i data-lucide="gamepad-2" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full border border-white/30">娛樂放鬆</span>
+                                <span class="meta-tag">娛樂放鬆</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">跳格加2小遊戲</h4>
-                                <p class="text-xs text-pink-100 mt-1 line-clamp-2 font-medium leading-relaxed">趣味跳格小遊戲，考驗節奏與反應力，工餘輕鬆減壓！</p>
+                                <h4 class="meta-title">跳格加2小遊戲</h4>
+                                <p class="meta-desc">趣味跳格小遊戲，考驗節奏與反應力，工餘輕鬆減壓！</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-pink-400/60 flex items-center justify-between text-xs text-pink-100 font-extrabold">
+                        <div class="meta-foot">
                             <span>開始遊戲</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
                     <!-- Card 10: CNE無人駕駛 -->
-                    <div onclick="switchView('board')" class="h-full bg-gradient-to-br from-slate-900 via-slate-800 to-zinc-900 rounded-2xl p-4 md:p-5 border border-slate-700 shadow-md hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all cursor-pointer group flex flex-col justify-between text-white">
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-700 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-slate-600">
-                                    <i data-lucide="message-square" class="w-5 h-5 md:w-6 md:h-6"></i>
+                    <div onclick="switchView('board')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#E3EDEA] text-[#0F766E]">
+                                    <i data-lucide="message-square" class="w-5 h-5"></i>
                                 </div>
-                                <span class="text-[10px] md:text-xs bg-amber-400/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-400/30">匿名討論</span>
+                                <span class="meta-tag">匿名討論</span>
                             </div>
                             <div>
-                                <h4 class="text-base md:text-lg font-black text-white">CNE無人駕駛</h4>
-                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 font-medium leading-relaxed">自由交流，可匿名留言，不可侵犯私隱及國安條例。</p>
+                                <h4 class="meta-title">CNE無人駕駛</h4>
+                                <p class="meta-desc">自由交流，可匿名留言，不可侵犯私隱及國安條例。</p>
                             </div>
                         </div>
-                        <div class="mt-4 pt-3 border-t border-slate-700 flex items-center justify-between text-xs text-amber-300 font-extrabold">
+                        <div class="meta-foot">
                             <span>進入留言</span>
-                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
+                        </div>
+                    </div>
+
+                    <!-- Card 11: 懷舊收音機 -->
+                    <div onclick="switchView('radio')" class="meta-card group">
+                        <div class="space-y-2 md:space-y-2.5">
+                            <div class="flex items-center justify-between gap-1.5">
+                                <div class="meta-icon bg-[#FFE4E6] text-[#E11D48]">
+                                    <i data-lucide="radio" class="w-5 h-5"></i>
+                                </div>
+                                <span class="meta-tag">懷舊電台</span>
+                            </div>
+                            <div>
+                                <h4 class="meta-title">無廣告 Walkman 收音機</h4>
+                                <p class="meta-desc">90s 廣東話電台，懷舊金曲零廣告任聽。</p>
+                            </div>
+                        </div>
+                        <div class="meta-foot">
+                            <span>開始收聽</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"></i>
                         </div>
                     </div>
 
@@ -391,17 +787,17 @@
 
         <!-- ================= PAGE 10: 跳格加2小遊戲 ================= -->
         <section id="view-game" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center justify-between bg-gradient-to-r from-pink-600 to-rose-600 p-5 rounded-2xl border-2 border-pink-400 text-white shadow-md flex-wrap gap-3">
-                <div class="flex items-center space-x-4">
-                    <div class="p-3 bg-white/20 backdrop-blur-md rounded-xl shadow-md border border-white/30">
-                        <i data-lucide="gamepad-2" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="gamepad-2" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-extrabold text-white">跳格加2小遊戲</h2>
-                        <p class="text-base text-pink-100 font-medium">工餘輕鬆減壓 • 考驗敏捷反應</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">跳格加2小遊戲</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">工餘輕鬆減壓 • 考驗敏捷反應</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center space-x-1.5 text-sm bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition-all font-bold border border-white/40 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -418,17 +814,17 @@
 
         <!-- ================= PAGE: CNE無人駕駛留言板 ================= -->
         <section id="view-board" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center justify-between bg-gradient-to-r from-slate-900 to-slate-800 p-5 rounded-2xl border-2 border-slate-700 text-white shadow-md flex-wrap gap-3">
-                <div class="flex items-center space-x-4">
-                    <div class="p-3 bg-slate-700 text-amber-400 rounded-xl shadow-md border border-slate-600">
-                        <i data-lucide="message-square" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="message-square" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-extrabold text-white">CNE無人駕駛留言板</h2>
-                        <p class="text-base text-slate-300 font-medium">同僚自由討論區 • 可匿名留言</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">CNE無人駕駛留言板</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">同僚自由討論區 • 可匿名留言</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center space-x-1.5 text-sm bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition-all font-bold border border-slate-600 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -445,14 +841,20 @@
 
         <!-- ================= PAGE 2: 行水神器 ================= -->
         <section id="view-drip" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-blue-100/70 p-5 rounded-2xl border-2 border-blue-200">
-                <div class="p-3 bg-blue-600 text-white rounded-xl">
-                    <i data-lucide="droplets" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="droplets" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">行水神器</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">整理裝備時間分配計算器</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">行水神器</h2>
-                    <p class="text-base text-slate-600 font-medium">整理裝備時間分配計算器</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
@@ -544,14 +946,20 @@
 
         <!-- ================= PAGE 3: 煙棚計算 ================= -->
         <section id="view-respiratory" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-emerald-100/70 p-5 rounded-2xl border-2 border-emerald-200">
-                <div class="p-3 bg-emerald-600 text-white rounded-xl">
-                    <i data-lucide="flame" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="flame" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">煙棚計算</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">檢獲香煙及雪茄 Compounding（複合罰款）與應繳關稅評估工具</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">煙棚計算</h2>
-                    <p class="text-base text-slate-600 font-medium">檢獲香煙及雪茄 Compounding（複合罰款）與應繳關稅評估工具</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
@@ -717,14 +1125,20 @@
 
         <!-- ================= PAGE 4: 抽籤模式 ================= -->
         <section id="view-draw" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-purple-100/70 p-5 rounded-2xl border-2 border-purple-200">
-                <div class="p-3 bg-purple-600 text-white rounded-xl">
-                    <i data-lucide="dices" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="dices" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">抽籤模式 (Random Picker)</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">包含多人抽籤（適合新年/長假排位）、畫鬼腳視覺版、二選一輪盤三大模式</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">抽籤模式 (Random Picker)</h2>
-                    <p class="text-base text-slate-600 font-medium">包含多人抽籤（適合新年/長假排位）、畫鬼腳視覺版、二選一輪盤三大模式</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="grid grid-cols-3 gap-2 bg-slate-200 p-1.5 rounded-2xl border border-slate-300 text-center font-extrabold text-sm md:text-base">
@@ -913,14 +1327,20 @@
 
         <!-- ================= PAGE 5: CR 金句 100 ================= -->
         <section id="view-quotes" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-amber-100/70 p-5 rounded-2xl border-2 border-amber-200">
-                <div class="p-3 bg-amber-600 text-white rounded-xl">
-                    <i data-lucide="quote" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="quote" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">C R 金句 100</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">請選擇一個意向，系統將自動為你生成專業評語金句</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">C R 金句 100</h2>
-                    <p class="text-base text-slate-600 font-medium">請選擇一個意向，系統將自動為你生成專業評語金句</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="flex flex-wrap justify-center gap-5 py-3">
@@ -966,18 +1386,24 @@
 
         <!-- ================= PAGE 6: CNE AI BOT 對話機械人 ================= -->
         <section id="view-ai" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-gradient-to-r from-blue-100 to-indigo-100 p-5 rounded-2xl border-2 border-indigo-200">
-                <div class="p-3 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-xl shadow-md">
-                    <i data-lucide="bot" class="w-8 h-8"></i>
+                                    <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#EDE9FE] via-[#F5F3FF] to-[#DDD0FB] border border-[#C9B8F5] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(124,58,237,0.14)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-purple-200/80 text-[#7C3AED] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="bot" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-purple-950">CNE AI BOT 對話機械人</h2>
+                        <p class="text-sm md:text-base text-purple-800/75 font-medium">資深 CNE 專家在線解答 • 支援法例查詢與清關計算</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">CNE AI BOT 對話機械人</h2>
-                    <p class="text-base text-slate-600 font-medium">資深 CNE 專家在線解答 • 支援法例查詢與清關計算</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#7C3AED] px-4 py-2 rounded-xl transition-all font-bold border border-purple-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <!-- Dify Chatbot Embedded iFrame Container -->
-            <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[680px]">
+            <div class="bg-white rounded-3xl border-2 border-purple-200 shadow-[0_2px_18px_rgba(124,58,237,0.12)] overflow-hidden min-h-[680px]">
                 <iframe
                     src="https://udify.app/chat/OnwMNyxa3hx6Wp7S"
                     style="width: 100%; height: 680px; border: 0;"
@@ -988,20 +1414,20 @@
 
         <!-- ================= PAGE 7: 輪班預約好幫手 ================= -->
         <section id="view-shift" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-gradient-to-r from-orange-100 to-red-100 p-5 rounded-2xl border-2 border-orange-200">
-                <div class="p-3 bg-gradient-to-tr from-orange-500 to-red-600 text-white rounded-xl shadow-md">
-                    <i data-lucide="calendar-check" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="calendar-check" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">輪班預約好幫手</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">支援多位同事選擇不同 Pattern 班別，交叉比對食晚飯/聚會黃金日子</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-slate-900">輪班預約好幫手</h2>
-                    <p class="text-base text-slate-600 font-medium">支援多位同事選擇不同 Pattern 班別，交叉比對食晚飯/聚會黃金日子</p>
-                </div>
-                <div class="ml-auto flex items-center gap-2">
-                    <button onclick="resetShiftView()" title="重置回預設名單" class="text-xs md:text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1 bg-white hover:bg-red-50 px-3 py-2 rounded-xl border border-slate-300 transition-colors shadow-sm">
-                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                        <span class="hidden sm:inline">重置</span>
-                    </button>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
@@ -1076,12 +1502,20 @@
 
         <!-- ================= PAGE 8: 宿舍分數計算器 ================= -->
         <section id="view-quarters" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-3 md:space-x-4 bg-slate-200/80 p-4 md:p-5 rounded-2xl border-2 border-slate-300">
-                <div class="p-2.5 md:p-3 bg-slate-800 text-white rounded-xl flex-shrink-0"><i data-lucide="building-2" class="w-6 h-6 md:w-8 md:h-8"></i></div>
-                <div>
-                    <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">宿舍分數計算器</h2>
-                    <p class="text-xs md:text-sm text-slate-600 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="building-2" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">宿舍分數計算器</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p>
+                    </div>
                 </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
             <div class="flex flex-wrap border-b border-slate-300 mb-2 bg-slate-200/80 rounded-t-xl p-1 shadow-sm">
                 <button onclick="switchQuartersTab('calculator')" id="qtab-calculator" class="quarters-tab-btn active px-4 md:px-5 py-2 md:py-2.5 font-bold text-xs md:text-sm rounded-lg transition-all duration-200 flex items-center space-x-2 text-slate-900 bg-white shadow-sm border border-slate-300"><i data-lucide="calculator" class="w-4 h-4 text-slate-700"></i><span>宿舍分數計算器</span></button>
@@ -1311,14 +1745,20 @@
 
         <!-- ================= PAGE 9: 退休金計算器 ================= -->
         <section id="view-pension" class="view-panel child-view-panel space-y-6">
-            <div class="flex items-center space-x-4 bg-amber-100/80 p-5 rounded-2xl border-2 border-amber-300">
-                <div class="p-3 bg-amber-900 text-white rounded-xl">
-                    <i data-lucide="coins" class="w-8 h-8"></i>
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="coins" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">退休金計算器</h2>
+                        <p class="text-sm md:text-base text-emerald-800/75 font-medium">新退休金計劃下公務員退休金計算（NPS）</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-2xl font-extrabold text-amber-950">退休金計算器</h2>
-                    <p class="text-base text-amber-800 font-medium">新退休金計劃下公務員退休金計算（NPS）</p>
-                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
             </div>
 
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-amber-200 shadow-sm space-y-6">
@@ -1571,6 +2011,93 @@
                 </div>
             </div>
         </section>
+
+                        <!-- ================= PAGE 11: 懷舊收音機 ================= -->
+                    <section id="view-radio" class="view-panel child-view-panel space-y-6">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#DDF1E5] via-[#EAF7EE] to-[#D2E9DA] border border-[#BCE3CA] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(8,127,91,0.10)] flex-wrap">
+                            <div class="flex items-center gap-3 md:gap-4">
+                                <div class="p-2.5 md:p-3 bg-white/85 border border-emerald-200/80 text-[#087F5B] rounded-xl shadow-sm flex-shrink-0">
+                                    <i data-lucide="radio" class="w-7 h-7 md:w-8 md:h-8"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-xl md:text-2xl font-extrabold text-emerald-950">無廣告 Walkman 收音機</h2>
+                                    <p class="text-sm md:text-base text-emerald-800/75 font-medium">90s 廣東話電台 • 懷舊金曲零廣告任聽</p>
+                                </div>
+                            </div>
+                            <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#087F5B] px-4 py-2 rounded-xl transition-all font-bold border border-emerald-200/80 active:scale-95 shadow-sm">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                                <span>返回首頁</span>
+                            </button>
+                        </div>
+
+                        <div id="view-radio-wrap">
+            <div class="walkman-container">
+                <div class="top-bar">
+                  <div class="brand">CNE <span>DIGITAL</span> FM/AM</div>
+                  <div class="badge-stereo">STEREO RECEIVER</div>
+                  <div class="antenna"></div>
+                </div>
+
+                <div class="lcd-screen">
+                  <div class="lcd-header">
+                    <span id="lcd-mode">AUTO TUNER</span>
+                    <span id="lcd-state">STANDBY</span>
+                  </div>
+                  <div class="lcd-main">
+                    <div class="lcd-freq" id="lcd-freq">--.- <span style="font-size: 0.85rem;">MHz</span></div>
+                    <div class="lcd-station" id="lcd-station">請按按鈕選台</div>
+                  </div>
+                  <div class="eq-bar-container" id="eq-container">
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                    <div class="eq-bar"></div><div class="eq-bar"></div>
+                  </div>
+                </div>
+
+                <div class="tape-window">
+                  <div class="tape-track-label">CNE CASSETTE RECEIVER • HIGH FIDELITY</div>
+                  <div class="reels-container">
+                    <div class="reel" id="reel-l">
+                      <div class="reel-spoke"></div>
+                      <div class="reel-spoke spoke-45"></div>
+                      <div class="reel-spoke spoke-90"></div>
+                      <div class="reel-spoke spoke-135"></div>
+                    </div>
+                    <span style="font-size: 0.55rem; color: #5a626a; font-weight: bold; letter-spacing: 1px;">TAPE RUN</span>
+                    <div class="reel" id="reel-r">
+                      <div class="reel-spoke"></div>
+                      <div class="reel-spoke spoke-45"></div>
+                      <div class="reel-spoke spoke-90"></div>
+                      <div class="reel-spoke spoke-135"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid" id="grid"></div>
+
+                <div class="controls">
+                  <button class="mech-btn btn-play" onclick="resumePlay()">▶ 播放 PLAY</button>
+                  <button class="mech-btn btn-stop" onclick="stopPlay()">■ 停止 STOP</button>
+                </div>
+
+                <div class="crhk-drawer" id="crhk-drawer">
+                  <div class="crhk-header">📻 商業電台（881 / 903）專屬收聽提示</div>
+                  <div>
+                    商台官方實施了「動態 IP 加密 Token」技術，嚴格禁止第三方靜態網頁直接解取音訊流。<br>
+                    如需收聽商台節目，可點擊下方安全音訊通道開啟獨立微型視窗，本頁 Walkman 介面將繼續維持運行：
+                  </div>
+                  <div class="crhk-actions">
+                    <button class="crhk-btn" onclick="openCrhkBridge('903')">🎙️ 開啟 903 獨立音訊</button>
+                    <button class="crhk-btn" onclick="openCrhkBridge('881')">🎙️ 開啟 881 獨立音訊</button>
+                    <button class="crhk-btn" style="background:#4b6584;" onclick="closeCrhkDrawer()">✕ 收起</button>
+                  </div>
+                </div>
+              </div>
+
+              <audio id="player" playsinline webkit-playsinline preload="none"></audio>
+                        </div>
+                    </section>
 
     </main>
 
@@ -3401,6 +3928,310 @@
             const multiDateElem = document.getElementById('multi-date');
             if (multiDateElem) multiDateElem.valueAsDate = new Date();
         });
+    
+
+        /* ===== Walkman 收音機邏輯 (view-radio) ===== */
+const stations = [
+      {
+        id: 'rthk1',
+        name: '港台第一台',
+        freq: 'FM 92.6',
+        numFreq: '92.6',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://rthkradio1-live.akamaized.net/hls/live/2035313/radio1/index_64_a.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/RTHK_logo.png'
+      },
+      {
+        id: 'rthk2',
+        name: '港台第二台',
+        freq: 'FM 94.8',
+        numFreq: '94.8',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://rthkradio2-live.akamaized.net/hls/live/2040078/radio2/index_64_a.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/RTHK_logo.png'
+      },
+      {
+        id: 'rthk5',
+        name: '港台第五台',
+        freq: 'AM 783',
+        numFreq: 'AM 783',
+        band: 'kHz',
+        type: 'stream',
+        url: 'https://rthkradio5-live.akamaized.net/hls/live/2040081/radio5/index_64_a.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/RTHK_logo.png'
+      },
+      {
+        id: 'rthkgba',
+        name: '大灣區之聲',
+        freq: 'FM 101.2',
+        numFreq: '101.2',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://rthkradiocmgrgb-live.akamaized.net/hls/live/2046112/radiocmgrgb/master.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/commons/e/e5/RTHK_logo.png'
+      },
+      {
+        id: 'metro997',
+        name: '新城知訊台',
+        freq: 'FM 99.7',
+        numFreq: '99.7',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://1603884249.rsc.cdn77.org/1603884249/index.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/en/c/c8/Metrobroadcastlogo.jpg'
+      },
+      {
+        id: 'metro104',
+        name: '新城財經台',
+        freq: 'FM 104.0',
+        numFreq: '104.0',
+        band: 'MHz',
+        type: 'stream',
+        url: 'https://1716664847.rsc.cdn77.org/1716664847/tracks-a1/mono.ts.m3u8',
+        logo: 'https://upload.wikimedia.org/wikipedia/en/c/c8/Metrobroadcastlogo.jpg'
+      },
+      {
+        id: 'cr903',
+        name: '叱咤 903',
+        freq: 'FM 90.3',
+        numFreq: '90.3',
+        band: 'MHz',
+        type: 'crhk',
+        channel: '903',
+        logo: 'https://upload.wikimedia.org/wikipedia/zh/3/31/CR2_Logo.svg'
+      },
+      {
+        id: 'cr881',
+        name: '雷霆 881',
+        freq: 'FM 88.1',
+        numFreq: '88.1',
+        band: 'MHz',
+        type: 'crhk',
+        channel: '881',
+        logo: 'https://upload.wikimedia.org/wikipedia/zh/5/52/CR1_Logo.svg'
+      }
+    ];
+
+    const audio = document.getElementById('player');
+    const lcdFreq = document.getElementById('lcd-freq');
+    const lcdStation = document.getElementById('lcd-station');
+    const lcdState = document.getElementById('lcd-state');
+    const eqContainer = document.getElementById('eq-container');
+    const reelL = document.getElementById('reel-l');
+    const reelR = document.getElementById('reel-r');
+    const grid = document.getElementById('grid');
+    const crhkDrawer = document.getElementById('crhk-drawer');
+
+    let currentHls = null;
+    let activeStation = null;
+
+    stations.forEach(st => {
+      const btn = document.createElement('div');
+      btn.className = 'station-key';
+      btn.id = `btn-${st.id}`;
+      btn.onclick = () => selectStation(st);
+      btn.innerHTML = `
+        <img src="${st.logo}" class="station-logo" alt="${st.name}">
+        <div class="key-info">
+          <span class="key-name">${st.name}</span>
+          <span class="key-freq">${st.freq}</span>
+        </div>
+        ${st.type === 'crhk' ? '<span class="tag-drm">DRM</span>' : ''}
+      `;
+      grid.appendChild(btn);
+    });
+
+    async function selectStation(st) {
+      activeStation = st;
+
+      lcdFreq.innerHTML = `${st.numFreq} <span style="font-size: 0.85rem;">${st.band}</span>`;
+      lcdStation.innerText = st.name;
+
+      document.querySelectorAll('.station-key').forEach(k => k.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-${st.id}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      stopCurrentEngine(true);
+
+      if (st.type === 'crhk') {
+        lcdState.innerText = 'DRM LOCKED';
+        setVisual(false);
+        crhkDrawer.classList.add('show');
+        return;
+      }
+
+      crhkDrawer.classList.remove('show');
+      lcdState.innerText = 'TUNING...';
+      setVisual(false);
+
+      if (audio.canPlayType('application/vnd.apple.mpegurl') ||
+          audio.canPlayType('audio/mpegurl') ||
+          /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+        try {
+          audio.src = st.url;
+          audio.load();
+          await audio.play();
+          lcdState.innerText = 'PLAYING';
+          setVisual(true);
+          updateMediaSession(st);
+          return;
+        } catch (e) {
+          console.warn('Native playback error:', e);
+          lcdState.innerText = 'TAP PLAY';
+          return;
+        }
+      }
+
+      if (window.Hls && Hls.isSupported()) {
+        currentHls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: false,
+          maxBufferLength: 20
+        });
+
+        const hls = currentHls;
+        hls.attachMedia(audio);
+
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+          if (currentHls !== hls) return;
+          hls.loadSource(st.url);
+        });
+
+        hls.on(Hls.Events.MANIFEST_PARSED, async () => {
+          if (currentHls !== hls) return;
+          try {
+            await audio.play();
+            lcdState.innerText = 'PLAYING';
+            setVisual(true);
+          } catch (e) {
+            lcdState.innerText = 'TAP PLAY';
+            setVisual(false);
+          }
+        });
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          if (!data.fatal || currentHls !== hls) return;
+          console.error('HLS error:', data);
+          lcdState.innerText = 'SIGNAL LOST';
+          setVisual(false);
+        });
+
+        updateMediaSession(st);
+        return;
+      }
+
+      lcdState.innerText = 'UNSUPPORTED';
+      setVisual(false);
+    }
+
+    function stopCurrentEngine(clearSource = true) {
+      if (currentHls) {
+        try { currentHls.destroy(); } catch (e) {}
+        currentHls = null;
+      }
+      audio.pause();
+      if (clearSource) {
+        audio.removeAttribute('src');
+        audio.load();
+      }
+    }
+
+    function setVisual(isPlaying) {
+      if (isPlaying) {
+        eqContainer.classList.add('eq-active');
+        reelL.classList.add('spin');
+        reelR.classList.add('spin');
+      } else {
+        eqContainer.classList.remove('spin');
+        reelL.classList.remove('spin');
+        reelR.classList.remove('spin');
+      }
+    }
+
+    audio.onplaying = () => {
+      lcdState.innerText = 'PLAYING';
+      setVisual(true);
+    };
+
+    audio.onpause = () => {
+      if (lcdState.innerText !== 'STOPPED') {
+        lcdState.innerText = 'PAUSED';
+      }
+      setVisual(false);
+    };
+
+    audio.onerror = () => {
+      lcdState.innerText = 'SIGNAL ERROR';
+      setVisual(false);
+    };
+
+    async function resumePlay() {
+      if (!activeStation) {
+        await selectStation(stations[0]);
+        return;
+      }
+      if (activeStation.type === 'crhk') {
+        crhkDrawer.classList.add('show');
+        return;
+      }
+      const hasSource = currentHls || audio.currentSrc || audio.getAttribute('src');
+      if (!hasSource) {
+        await selectStation(activeStation);
+        return;
+      }
+      try {
+        await audio.play();
+        lcdState.innerText = 'PLAYING';
+        setVisual(true);
+      } catch (e) {
+        if (activeStation && currentHls) {
+          await selectStation(activeStation);
+        } else {
+          lcdState.innerText = 'TAP PLAY';
+        }
+      }
+    }
+
+    function stopPlay() {
+      stopCurrentEngine(true);
+      setVisual(false);
+      lcdState.innerText = 'STOPPED';
+    }
+
+    function closeCrhkDrawer() {
+      crhkDrawer.classList.remove('show');
+    }
+
+    function openCrhkBridge(channel) {
+      const url = `https://www.881903.com/live/${channel}`;
+      const win = window.open(url, `crhk_${channel}`, 'width=420,height=340,menubar=no,toolbar=no,location=no,status=no');
+      if (win) {
+        win.focus();
+        lcdState.innerText = `CR${channel} LIVE`;
+        setVisual(true);
+      }
+    }
+
+    function updateMediaSession(st) {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: st.name,
+          artist: '90s 香港廣東話收音機',
+          album: st.freq,
+          artwork: [
+            { src: st.logo, sizes: '128x128', type: 'image/png' },
+            { src: st.logo, sizes: '512x512', type: 'image/png' }
+          ]
+        });
+
+        try {
+          navigator.mediaSession.setActionHandler('play', () => resumePlay());
+          navigator.mediaSession.setActionHandler('pause', () => stopPlay());
+        } catch (e) {}
+      }
+    }
     </script>
 </body>
 </html>
