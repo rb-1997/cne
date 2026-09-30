@@ -114,10 +114,12 @@
         .meta-card {
             height: 100%;
             background: #ffffff;
-            border: 1px solid rgba(13, 92, 66, 0.10);
+            border: 1.5px solid var(--bd, rgba(13, 92, 66, 0.10));
             border-radius: 1.25rem;
             padding: 0.8rem;
-            box-shadow: 0 1px 2px rgba(9, 78, 56, 0.05), 0 2px 8px rgba(9, 78, 56, 0.05);
+            box-shadow: 0 1px 2px rgba(9, 78, 56, 0.05), 0 2px 8px rgba(9, 78, 56, 0.05),
+                        inset 0 1px 0 rgba(255,255,255,0.95),
+                        inset 0 -3px 6px rgba(0,0,0,0.035);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -127,8 +129,10 @@
         }
         .meta-card:hover {
             transform: translateY(-3px);
-            border-color: rgba(12, 166, 120, 0.35);
-            box-shadow: 0 10px 24px -8px rgba(8, 127, 91, 0.22);
+            border-color: var(--bd, rgba(12, 166, 120, 0.35));
+            box-shadow: 0 10px 24px -8px var(--gl, rgba(8, 127, 91, 0.22)),
+                        inset 0 1px 0 rgba(255,255,255,0.95),
+                        inset 0 -3px 6px rgba(0,0,0,0.035);
         }
         .meta-card:active { transform: scale(0.98); }
         @media (min-width: 768px) {
@@ -562,7 +566,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2.5 md:gap-4">
 
                     <!-- Card 1: 行水神器 -->
-                    <div onclick="switchView('drip')" class="meta-card group">
+                    <div onclick="switchView('drip')" class="meta-card group" style="--bd:#A0A7B0; --gl:rgba(232,238,245,0.55)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#E8EEF5] text-[#475569]">
@@ -582,7 +586,7 @@
                     </div>
 
                     <!-- Card 2: 煙棚計算 -->
-                    <div onclick="switchView('respiratory')" class="meta-card group">
+                    <div onclick="switchView('respiratory')" class="meta-card group" style="--bd:#91ADEA; --gl:rgba(219,234,254,0.60)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#DBEAFE] text-[#2563EB]">
@@ -602,7 +606,7 @@
                     </div>
 
                     <!-- Card 3: 抽籤模式 -->
-                    <div onclick="switchView('draw')" class="meta-card group">
+                    <div onclick="switchView('draw')" class="meta-card group" style="--bd:#86CBB7; --gl:rgba(211,240,226,0.65)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#D3F0E2] text-[#0CA678]">
@@ -622,7 +626,7 @@
                     </div>
 
                     <!-- Card 4: CR 金句 100 -->
-                    <div onclick="switchView('quotes')" class="meta-card group">
+                    <div onclick="switchView('quotes')" class="meta-card group" style="--bd:#E2B683; --gl:rgba(254,240,199,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#FEF0C7] text-[#D97706]">
@@ -642,7 +646,7 @@
                     </div>
 
                     <!-- Card 5: 輪班預約好幫手 -->
-                    <div onclick="switchView('shift')" class="meta-card group">
+                    <div onclick="switchView('shift')" class="meta-card group" style="--bd:#EAA887; --gl:rgba(255,228,209,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#FFE4D1] text-[#EA580C]">
@@ -662,7 +666,7 @@
                     </div>
 
                     <!-- Card 6: CNE AI BOT -->
-                    <div onclick="switchView('ai')" class="meta-card group">
+                    <div onclick="switchView('ai')" class="meta-card group" style="--bd:#B89BEB; --gl:rgba(233,226,251,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#E9E2FB] text-[#7C3AED]">
@@ -682,7 +686,7 @@
                     </div>
 
                     <!-- Card 7: 宿舍分數計算 -->
-                    <div onclick="switchView('quarters')" class="meta-card group">
+                    <div onclick="switchView('quarters')" class="meta-card group" style="--bd:#DBBE83; --gl:rgba(254,249,195,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#FEF9C3] text-[#CA8A04]">
@@ -702,7 +706,7 @@
                     </div>
 
                     <!-- Card 8: 退休金計算器 -->
-                    <div onclick="switchView('pension')" class="meta-card group">
+                    <div onclick="switchView('pension')" class="meta-card group" style="--bd:#C29D88; --gl:rgba(241,227,203,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#F1E3CB] text-[#92400E]">
@@ -722,7 +726,7 @@
                     </div>
 
                     <!-- Card 9: 跳格加2小遊戲 -->
-                    <div onclick="switchView('game')" class="meta-card group">
+                    <div onclick="switchView('game')" class="meta-card group" style="--bd:#E392B6; --gl:rgba(252,231,243,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#FCE7F3] text-[#DB2777]">
@@ -742,7 +746,7 @@
                     </div>
 
                     <!-- Card 10: CNE無人駕駛 -->
-                    <div onclick="switchView('board')" class="meta-card group">
+                    <div onclick="switchView('board')" class="meta-card group" style="--bd:#87B5B2; --gl:rgba(227,237,234,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#E3EDEA] text-[#0F766E]">
@@ -762,7 +766,7 @@
                     </div>
 
                     <!-- Card 11: 懷舊收音機 -->
-                    <div onclick="switchView('radio')" class="meta-card group">
+                    <div onclick="switchView('radio')" class="meta-card group" style="--bd:#E68DA1; --gl:rgba(255,228,230,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#FFE4E6] text-[#E11D48]">
