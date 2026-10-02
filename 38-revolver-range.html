@@ -118,7 +118,8 @@ var S={
   warnT:0,   /* 開始警告「靶出現，開42槍！」倒數 */
   hint:'',hintT:0,endReason:'',stats:null,hasCalibrated:false,
   hold:'center',   /* 瞄準法：center / combat / six（部門標準圖） */
-  showHelp:false,menuSel:'start'
+  showHelp:false,menuSel:'start',
+  endPhase:null,endT:0   /* 結束序列：showclear(開輪瓜+SHOW CLEAR 2秒) → holster(槍消失 2秒) → results；timeout(開輪瓜 2秒) → results */
 };
 function holdDy(){return S.hold==='combat'?-0.3:(S.hold==='six'?-0.6:0);}   /* 每種 Hold 嘅理想準星垂直偏移 */
 var L={W:0,H:0,dpr:1,u:1,tw:0,th:0,tx:0,ty:0,mx:0,my:0,mr:0,
@@ -135,7 +136,7 @@ function resetState(){
   S.reloading=false;S.reloadT=0;S.puffs=[];S.popups=[];
   S.magA=0;S.blurA=0;S.gunUp=0;S.notchT=0;S.warnT=0;
   S.flip=0;S.flipping=false;S.flipT=0;
-  S.touched=false;S.ending=false;S.endT=0;   /* touched=掂槍嗰下先開始計時＋反靶紙；ending=完場反紙背3秒 */
+  S.touched=false;S.endPhase=null;S.endT=0;   /* touched=掂槍嗰下先開始計時＋反靶紙 */
   S.hint='';S.hintT=0;S.endReason='';S.stats=null;S.hasCalibrated=false;
 }
 
@@ -249,7 +250,6 @@ function fire(){
   if(S.ammo<=0){AU.click();showHint('冇子彈喇，㩒左上角換彈器');return;}
   var curDist0=curDist();   /* 開槍前嘅距離（轉階段提示用） */
   var ex=S.alignX+S.swaySX, ey=S.alignY+S.swaySY;
-  var ex=S.alignX+S.swaySX, ey=S.alignY+S.swaySY;
   var hdy=holdDy();   /* 瞄準法：理想準星位置偏移 */
   var bx=(S.lockX-TX())/TW(), by=(S.lockY-L.ty)/TH();
   /* 物理：同樣瞄準角度偏差，彈着點偏移 ∝ 距離（25米為基準） */
@@ -261,9 +261,9 @@ function fire(){
   S.fired++;
   S.holes.push({x:hx,y:hy,hit:hit,n:S.fired,off:!onPaper});
   if(hit)S.hits++;
-  /* 轉階段提示 */
+  /* 轉階段提示＋槍支自動指回靶心 */
   var nd=stageDist(S.fired);
-  if(nd!==curDist0){S.hint=nd+' 米！';S.hintT=2.5;}
+  if(nd!==curDist0){S.hint=nd+' 米！';S.hintT=2.5;aimAtTargetCenter();}
   S.ammo--;
   S.flash=1;S.recoil=1;
   AU.shoot8();   /* 80年代 8-bit 槍聲 */
@@ -304,7 +304,7 @@ canvas.addEventListener('pointerdown',function(e){
   /* 倒數下面兩個掣＋中央 RELOAD：優先處理 */
   if(inRect(x,y,L.stopBtn)){AU.click();endTest('手動停止');return;}
   if(inRect(x,y,L.againBtn)){AU.init();AU.resume();startGame();return;}
-  if(S.ending)return;   /* 完場反紙 3 秒內：唔俾射擊／換彈，掣照用 */
+  if(S.endPhase)return;   /* 結束序列中：唔俾射擊／換彈，掣照用 */
   if(L.reloadRect&&inRect(x,y,L.reloadRect)){tryReload();return;}
   if(S.reloading)return;
   for(i=0;i<L.loaderRects.length;i++){if(inRect(x,y,L.loaderRects[i])){tryReload();return;}}
@@ -367,13 +367,20 @@ function firstTouch(){
   S.flipping=true;S.flipT=0;
   addPopup('計時開始','#ff6b60');
 }
-function startGame(){resetState();S.screen='play';S.warnT=2.6;AU.fanfare();}
+/* 槍指靶心：遊戲開始＋每次轉距離，槍支目標自動指住靶紙中心 */
+function aimAtTargetCenter(){
+  var cx=TX()+TW()/2, cy=L.ty+TH()/2;
+  S.tipX=cx;S.tipY=cy;S.lockX=cx;S.lockY=cy;
+}
+function startGame(){resetState();aimAtTargetCenter();S.screen='play';S.warnT=2.6;AU.fanfare();}
 function endTest(reason){
   S.endReason=reason;S.timerOn=false;
   S.mode='idle';S.aimPid=null;S.reloading=false;
-  S.ending=true;S.endT=3.0;   /* 靶紙反回空白背面，3秒後先入 check target */
+  S.flip=1;   /* 確保靶紙係正面 */
   S.stats=computeStats();
-  if(reason==='時間到')AU.buzz();else AU.fanfare();
+  S.endT=2.0;
+  if(reason==='時間到'){AU.buzz();S.endPhase='timeout';}   /* 開輪瓜 2秒 → 直接 Check Target */
+  else{AU.fanfare();S.endPhase='showclear';}                 /* 開輪瓜＋SHOW CLEAR 2秒 → 槍消失 2秒 → Check Target */
 }
 function computeStats(){
   var holes=S.holes.filter(function(h){return !h.off;});
@@ -396,11 +403,13 @@ function update(dt,t){
   var i;
   /* 靶紙翻轉：掂槍嗰下，紙背 0.7 秒內翻向正面 */
   if(S.flipping){S.flipT+=dt;S.flip=Math.min(1,S.flipT/0.7);if(S.flip>=1){S.flipping=false;S.flip=1;}}
-  /* 完場：靶紙 0.7 秒內反回空白背面，3 秒後先入 check target */
-  if(S.ending){
+  /* 結束序列狀態機 */
+  if(S.endPhase){
     S.endT-=dt;
-    S.flip=clamp((S.endT-2.3)/0.7,0,1);
-    if(S.endT<=0){S.ending=false;S.flip=0;S.screen='results';}
+    if(S.endT<=0){
+      if(S.endPhase==='showclear'){S.endPhase='holster';S.endT=2.0;AU.click();}   /* 袋槍聲，槍支消失 */
+      else{S.endPhase=null;S.screen='results';}
+    }
   }
   if(S.warnT>0)S.warnT-=dt;
   if(S.screen==='play'&&S.timerOn){
@@ -1358,6 +1367,64 @@ function drawResultStats(x,y,w,h){
   ctx.fillText('平均彈着點偏 '+st.offCM.toFixed(1)+' cm・'+st.dir,x+w/2,y0+122);
 }
 /* 驗靶：直屏上下分區、橫屏左右分區，字同紙永不重疊 */
+/* ================= 結束序列：開輪瓜＋SHOW CLEAR 袋槍 → 槍消失 → Check Target ================= */
+function drawEndSequence(){
+  if(!S.endPhase)return;
+  var W=L.W,H=L.H;
+  var cx=W/2, cy=H*0.32;
+  ctx.fillStyle='rgba(2,4,8,0.62)';ctx.fillRect(0,0,W,H);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  if(S.endPhase==='holster'){
+    /* 槍支已消失 */
+    ctx.fillStyle='#7cfc98';ctx.font='900 28px '+NESF;
+    ctx.fillText('已袋槍',cx,H*0.38);
+    ctx.fillStyle='#9fb0c3';ctx.font='15px '+FONT;
+    ctx.fillText('準備驗靶…',cx,H*0.38+40);
+    return;
+  }
+  /* 彈巢打開圖：槍管向右，彈巢向左擺出（6 個空彈膛） */
+  var s=Math.min(W*0.40,190),a;
+  ctx.save();ctx.translate(cx,cy);
+  ctx.fillStyle='#1c2026';rr(-s*0.10,-s*0.09,s*0.70,s*0.18,8);ctx.fill();   /* 槍身 */
+  ctx.fillStyle='#3d444e';rr(s*0.42,-s*0.06,s*0.28,s*0.12,6);ctx.fill();     /* 槍管 */
+  ctx.fillStyle='rgba(255,255,255,0.12)';ctx.fillRect(-s*0.10,-s*0.09,s*0.70,3);
+  ctx.strokeStyle='#1c2026';ctx.lineWidth=Math.max(4,s*0.045);               /* 扳機護圈 */
+  ctx.beginPath();ctx.arc(-s*0.02,s*0.24,s*0.13,0,7);ctx.stroke();
+  ctx.fillStyle='#6e3c1d';rr(-s*0.16,s*0.30,s*0.22,s*0.30,10);ctx.fill();    /* 握把 */
+  ctx.save();ctx.translate(-s*0.42,0);ctx.rotate(-0.30);                    /* 彈巢擺出 */
+  var cg=ctx.createLinearGradient(0,-s*0.30,0,s*0.30);
+  cg.addColorStop(0,'#4a525c');cg.addColorStop(0.5,'#22272e');cg.addColorStop(1,'#101318');
+  ctx.fillStyle=cg;ctx.beginPath();ctx.arc(0,0,s*0.30,0,7);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.25)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(0,0,s*0.30,0,7);ctx.stroke();
+  for(a=0;a<6;a++){
+    var ang=a*Math.PI/3-Math.PI/2;
+    var hx=Math.cos(ang)*s*0.17,hy=Math.sin(ang)*s*0.17;
+    ctx.fillStyle='#05070a';ctx.beginPath();ctx.arc(hx,hy,s*0.075,0,7);ctx.fill();
+    ctx.strokeStyle='#c9a227';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(hx,hy,s*0.075,0,7);ctx.stroke();
+  }
+  ctx.fillStyle='#05070a';ctx.beginPath();ctx.arc(0,0,s*0.05,0,7);ctx.fill();
+  ctx.restore();
+  ctx.restore();
+  /* 警示字 */
+  var wy=cy+s*0.66;
+  if(S.endPhase==='showclear'){
+    var bw=Math.min(W*0.80,340),bh=96;
+    ctx.fillStyle='rgba(20,8,4,0.94)';rr(cx-bw/2,wy-bh/2,bw,bh,12);ctx.fill();
+    ctx.strokeStyle='#ff6b5e';ctx.lineWidth=3;rr(cx-bw/2,wy-bh/2,bw,bh,12);ctx.stroke();
+    ctx.fillStyle='#ffd34d';ctx.font='900 30px '+NESF;
+    ctx.fillText('SHOW CLEAR',cx,wy-17);
+    ctx.fillStyle='#ffffff';ctx.font='700 22px '+FONT;
+    ctx.fillText('袋槍！',cx,wy+23);
+  }else{   /* timeout */
+    ctx.fillStyle='#ffd34d';ctx.font='900 28px '+NESF;
+    ctx.fillText('時間到',cx,wy-12);
+    ctx.fillStyle='#cfd8e3';ctx.font='16px '+FONT;
+    ctx.fillText('打開輪瓜，準備驗靶…',cx,wy+26);
+  }
+}
+
 function drawResults(){
   var W=L.W,H=L.H;
   ctx.fillStyle='rgba(4,8,12,0.92)';ctx.fillRect(0,0,W,H);
@@ -1395,9 +1462,16 @@ function frame(ts){
     ctx.clearRect(0,0,L.W,L.H);
     if(S.screen==='play'){
       drawRange(t);drawHanger();drawTargetPaper();drawPuffs();
-      drawGun();drawNotchPrompt();drawReloadFinger(t);
-      drawSmoke();drawFlash();drawMagnifier();
-      drawHUD();drawPlayBtns();drawHintPopups();drawIdleHint(t);drawReloadMsg(t);drawWarn();
+      if(S.endPhase){
+        /* 結束序列：乾淨畫面，只留靶場＋槍（未袋前）＋HUD＋結束覆蓋層 */
+        if(S.endPhase!=='holster')drawGun();   /* 袋槍後槍支消失 */
+        drawSmoke();drawFlash();
+        drawHUD();drawEndSequence();
+      }else{
+        drawGun();drawNotchPrompt();drawReloadFinger(t);
+        drawSmoke();drawFlash();drawMagnifier();
+        drawHUD();drawPlayBtns();drawHintPopups();drawIdleHint(t);drawReloadMsg(t);drawWarn();
+      }
     }else if(S.screen==='results'){drawResults();}
     else{drawRange(t);drawHanger();drawTargetPaper();drawStart();}
   }catch(err){
