@@ -90,7 +90,54 @@ var AU={
     var f=c.createBiquadFilter();f.type='highpass';f.frequency.value=900;
     var g2=c.createGain();g2.gain.setValueAtTime(0.35,t);g2.gain.exponentialRampToValueAtTime(0.001,t+0.1);
     s.connect(f);f.connect(g2);g2.connect(this.master);s.start(t);s.stop(t+0.12);},
-  fanfare:function(){var self=this;[660,880,990].forEach(function(f,i){setTimeout(function(){self.blip(f,0.12,0.16);},i*130);});}
+  fanfare:function(){var self=this;[660,880,990].forEach(function(f,i){setTimeout(function(){self.blip(f,0.12,0.16);},i*130);});},
+  _mOn:false,_mTimer:null,_mStep:0,_mNext:0,
+  musicStart:function(){   /* 紅白機風 chiptune 循環（封面用） */
+    if(this._mOn)return; this.init(); if(!this.ctx)return; this.resume();
+    var self=this; this._mOn=true; this._mStep=0;
+    var lead=[329.63,392.00,523.25,493.88,440.00,392.00,329.63,293.66,
+              329.63,392.00,440.00,392.00,329.63,293.66,261.63,0];
+    var bass=[65.41,65.41,87.31,87.31,98.00,98.00,65.41,65.41];
+    var chords=[[110.00,130.81,164.81],[87.31,110.00,130.81],[130.81,164.81,196.00],[98.00,123.47,146.83]];   /* 背景電子 pad：Am F C G */
+    var loopN=0;
+    var stepDur=60/138/2;
+    this._mNext=this.ctx.currentTime+0.08;
+    this._mTimer=setInterval(function(){
+      if(!self._mOn||!self.ctx)return;
+      var now=self.ctx.currentTime;
+      if(self._mNext<now-0.6)self._mNext=now+0.05;   /* 防止背景分頁後追音 */
+      while(self._mNext<now+0.22){
+        (function(s,t){
+          var f=lead[s&15];
+          if(f>0){var o=self.ctx.createOscillator();o.type='square';o.frequency.value=f;
+            var g=self.ctx.createGain();g.gain.setValueAtTime(0.055,t);g.gain.exponentialRampToValueAtTime(0.001,t+stepDur*0.92);
+            o.connect(g);g.connect(self.master);o.start(t);o.stop(t+stepDur);}
+          if((s&1)===0){var b2=bass[(s>>1)&7];
+            var o2=self.ctx.createOscillator();o2.type='triangle';o2.frequency.value=b2;
+            var g2=self.ctx.createGain();g2.gain.setValueAtTime(0.085,t);g2.gain.exponentialRampToValueAtTime(0.001,t+stepDur*1.9);
+            o2.connect(g2);g2.connect(self.master);o2.start(t);o2.stop(t+stepDur*2);}
+          if((s&15)===0){   /* 每 16 步換一次背景 pad 和弦 */
+            var ch=chords[loopN&3];loopN++;
+            for(var k=0;k<ch.length;k++){
+              (function(f){
+                var op=self.ctx.createOscillator();op.type='sawtooth';op.frequency.value=f;
+                var fl=self.ctx.createBiquadFilter();fl.type='lowpass';fl.frequency.value=750;
+                var gp=self.ctx.createGain(),dur=stepDur*16;
+                gp.gain.setValueAtTime(0.0001,t);
+                gp.gain.exponentialRampToValueAtTime(0.028,t+1.2);
+                gp.gain.setValueAtTime(0.028,t+Math.max(1.3,dur-1.0));
+                gp.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+                op.connect(fl);fl.connect(gp);gp.connect(self.master);
+                op.start(t);op.stop(t+dur+0.05);
+              })(ch[k]);
+            }
+          }
+        })(self._mStep,self._mNext);
+        self._mNext+=stepDur; self._mStep=(self._mStep+1)&1023;
+      }
+    },40);
+  },
+  musicStop:function(){this._mOn=false;if(this._mTimer){clearInterval(this._mTimer);this._mTimer=null;}}
 };
 
 /* ================= 畫布 ================= */
@@ -117,9 +164,9 @@ var S={
   flip:0,flipping:false,flipT:0,   /* 靶紙翻轉：0=紙背，1=正面 */
   warnT:0,   /* 開始警告「靶出現，開42槍！」倒數 */
   hint:'',hintT:0,endReason:'',stats:null,hasCalibrated:false,
-  hold:'center',   /* 瞄準法：center / combat / six（部門標準圖） */
+  hold:'center',   /* 瞄準法：center / combat / six / shan（山字不出頭，部門標準圖） */
   showHelp:false,menuSel:'start',
-  endPhase:null,endT:0   /* 結束序列：showclear(開輪瓜+SHOW CLEAR 2秒) → holster(槍消失 2秒) → results；timeout(開輪瓜 2秒) → results */
+  endPhase:null,endT:0   /* 結束序列：showclear(開輪瓜+SHOW CLEAR 2秒) → downscan(靶紙轉反面+DOWN AND SCAN 2.5秒) → holster(槍消失 2秒) → results；timeout(開輪瓜 2秒) → results */
 };
 function holdDy(){return S.hold==='combat'?-0.3:(S.hold==='six'?-0.6:0);}   /* 每種 Hold 嘅理想準星垂直偏移 */
 var L={W:0,H:0,dpr:1,u:1,tw:0,th:0,tx:0,ty:0,mx:0,my:0,mr:0,
@@ -285,6 +332,7 @@ canvas.addEventListener('pointerdown',function(e){
   AU.resume();
   var x=e.clientX,y=e.clientY,i;
   if(S.screen==='start'){
+    AU.musicStart();   /* 封面 chiptune */
     var i,hr0;
     if(S.showHelp){
       if(inRect(x,y,L.helpBackBtn)){S.showHelp=false;AU.init();AU.click();}
@@ -299,11 +347,12 @@ canvas.addEventListener('pointerdown',function(e){
     for(i=0;i<L.holdRects.length;i++){hr0=L.holdRects[i];if(inRect(x,y,hr0)){S.hold=hr0.hold;AU.init();AU.click();return;}}
     return;
   }
-  if(S.screen==='results'){if(inRect(x,y,L.restartBtn)){AU.init();AU.resume();S.screen='start';}return;}
+  if(S.screen==='results'){if(inRect(x,y,L.restartBtn)){AU.init();AU.resume();AU.musicStart();S.screen='start';}return;}
   if(S.screen!=='play')return;
   /* 倒數下面兩個掣＋中央 RELOAD：優先處理 */
   if(inRect(x,y,L.stopBtn)){AU.click();endTest('手動停止');return;}
   if(inRect(x,y,L.againBtn)){AU.init();AU.resume();startGame();return;}
+  if(!S.touched){firstTouch();return;}   /* 第一觸：點擊畫面任何位置 → 靶紙轉向正面＋開始計時（唔會即刻開槍） */
   if(S.endPhase)return;   /* 結束序列中：唔俾射擊／換彈，掣照用 */
   if(L.reloadRect&&inRect(x,y,L.reloadRect)){tryReload();return;}
   if(S.reloading)return;
@@ -372,7 +421,7 @@ function aimAtTargetCenter(){
   var cx=TX()+TW()/2, cy=L.ty+TH()/2;
   S.tipX=cx;S.tipY=cy;S.lockX=cx;S.lockY=cy;
 }
-function startGame(){resetState();aimAtTargetCenter();S.screen='play';S.warnT=2.6;AU.fanfare();}
+function startGame(){resetState();aimAtTargetCenter();S.screen='play';S.warnT=2.6;AU.musicStop();AU.fanfare();}
 function endTest(reason){
   S.endReason=reason;S.timerOn=false;
   S.mode='idle';S.aimPid=null;S.reloading=false;
@@ -403,12 +452,15 @@ function update(dt,t){
   var i;
   /* 靶紙翻轉：掂槍嗰下，紙背 0.7 秒內翻向正面 */
   if(S.flipping){S.flipT+=dt;S.flip=Math.min(1,S.flipT/0.7);if(S.flip>=1){S.flipping=false;S.flip=1;}}
-  /* 結束序列狀態機 */
+  /* 結束序列狀態機：showclear → downscan → holster → results；timeout → results */
   if(S.endPhase){
     S.endT-=dt;
     if(S.endT<=0){
-      if(S.endPhase==='showclear'){S.endPhase='holster';S.endT=2.0;AU.click();}   /* 袋槍聲，槍支消失 */
+      if(S.endPhase==='showclear'){S.endPhase='downscan';S.endT=2.5;}
+      else if(S.endPhase==='downscan'){S.endPhase='holster';S.endT=2.0;AU.click();}   /* 袋槍聲，槍支消失 */
       else{S.endPhase=null;S.screen='results';}
+    }else if(S.endPhase==='downscan'){
+      S.flip=clamp((S.endT-1.8)/0.7,0,1);   /* 靶紙 0.7 秒內轉回反面 */
     }
   }
   if(S.warnT>0)S.warnT-=dt;
@@ -450,7 +502,7 @@ function update(dt,t){
   if(S.reloading){
     var rrt=(performance.now()-S.reloadT0)/S.reloadDur;   /* 真實時間計，慢機都唔會拉長 */
     S.reloadT=Math.min(rrt,1)*1.5;
-    if(rrt>=1||performance.now()-S.reloadT0>5000){S.reloading=false;S.ammo=CYL;showHint('入滿 6 粒');}
+    if(rrt>=1||performance.now()-S.reloadT0>5000){S.reloading=false;S.ammo=CYL;aimAtTargetCenter();showHint('入滿 6 粒・槍回靶心');}
   }
   if(S.hintT>0)S.hintT-=dt;
 }
@@ -1008,9 +1060,9 @@ function drawWarn(){
   ctx.font='900 34px '+FONT;
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.lineWidth=6;ctx.strokeStyle='rgba(10,12,15,0.85)';
-  ctx.strokeText('掂槍反靶紙開始計時！',W/2,H*0.32);
+  ctx.strokeText('點擊畫面任意位置開始！',W/2,H*0.32);
   ctx.fillStyle='#ffd34d';
-  ctx.fillText('掂槍反靶紙開始計時！',W/2,H*0.32);
+  ctx.fillText('點擊畫面任意位置開始！',W/2,H*0.32);
   ctx.restore();
 }
 
@@ -1062,12 +1114,13 @@ function drawIdleHint(t){
   var a=0.6+0.4*Math.sin(t*4);
   ctx.save();ctx.globalAlpha=a;
   ctx.font='700 17px '+FONT;ctx.textAlign='center';ctx.textBaseline='middle';
-  var tw=ctx.measureText('掂槍開始計時，拖動舉槍校準').width;
+  var msg=S.touched?'掂住槍拖動舉槍校準':'點擊畫面任意位置開始計時';
+  var tw=ctx.measureText(msg).width;
   var hx=L.W/2,hy=L.H*0.585;
   ctx.fillStyle='rgba(8,10,14,0.72)';
   rr(hx-tw/2-14,hy-17,tw+28,34,17);ctx.fill();
   ctx.fillStyle='#ffd34d';
-  ctx.fillText('掂槍開始計時，拖動舉槍校準',hx,hy+1);
+  ctx.fillText(msg,hx,hy+1);
   ctx.restore();
 }
 function drawButton(r,label,bg1,bg2,fs){
@@ -1087,194 +1140,152 @@ function drawPlayBtns(){
   drawButton(L.againBtn,'重新遊戲','#2f9e44','#1f7a33',fs);
 }
 
-var pixelCoverC=null;
-/* 瞄準法示意圖（封面用）：照門＋準星＋靶圈相對位置 */
+/* ============ 封面：32-bit 級順滑高清版 ============ */
 function drawSightPicture(g,hx,hy,hr,hold){
   g.save();g.translate(hx,hy);
-  var ty=hold==='center'?-hr*0.55:(hold==='combat'?-hr*0.95:-hr*1.3);
+  var ty=(hold==='center'||hold==='shan')?-hr*0.55:(hold==='combat'?-hr*0.95:-hr*1.3);
   g.strokeStyle='#c0392b';g.lineWidth=2;
   g.beginPath();g.arc(0,ty,hr*0.62,0,7);g.stroke();
   g.fillStyle='#c0392b';
   g.beginPath();g.arc(0,ty,2.5,0,7);g.fill();
-  g.fillStyle='#333';   /* 照門 */
+  g.fillStyle='#333';
   g.fillRect(-hr*0.75,hr*0.28,hr*0.55,hr*0.34);
   g.fillRect(hr*0.20,hr*0.28,hr*0.55,hr*0.34);
-  var fy=hold==='six'?hr*0.30:hr*0.06;   /* 準星 */
+  var fy=hold==='six'?hr*0.30:(hold==='shan'?hr*0.73:hr*0.06);
   g.fillStyle='#111';
   g.fillRect(-hr*0.12,fy-hr*0.45,hr*0.24,hr*0.78);
   g.restore();
 }
-function drawPixelCover(topH){
-  var W=L.W;
-  var ready=IMG.complete&&IMG.naturalWidth>0;   /* 靶紙圖 */
-  var key=W+'x'+Math.round(topH)+(ready?'1':'0');
-  if(!pixelCoverC||pixelCoverC._key!==key){
-    var pw=Math.max(48,Math.ceil(W/4)),ph=Math.max(36,Math.ceil(topH/4));
-    pixelCoverC=document.createElement('canvas');
-    pixelCoverC.width=pw;pixelCoverC.height=ph;pixelCoverC._key=key;
-    var g=pixelCoverC.getContext('2d'),i;
-    g.fillStyle='#f6f6f1';g.fillRect(0,0,pw,ph);   /* 白底封面（紅白機風） */
-    if(ready){
-      /* 靶紙做主題：80年代任天堂開機起格 mosaic */
-      var cells=44;
-      var th2=Math.max(8,Math.round(cells*IMG.naturalHeight/IMG.naturalWidth));
-      var tiny=document.createElement('canvas');tiny.width=cells;tiny.height=th2;
-      tiny.getContext('2d').drawImage(IMG,0,0,cells,th2);
-      var cw2=Math.ceil(pw/cells);
-      var tw=cells*cw2,th=th2*cw2;
-      var sc2=Math.min(1,(ph-8)/th);
-      tw=Math.round(tw*sc2);th=Math.round(th*sc2);
-      var dx=Math.round((pw-tw)/2),dy=Math.round((ph-th)/2);
-      g.imageSmoothingEnabled=false;
-      g.drawImage(tiny,dx,dy,tw,th);
-      g.imageSmoothingEnabled=true;
-      /* 紅白機式粗框 */
-      g.fillStyle='#e60012';
-      g.fillRect(dx-2,dy-2,tw+4,2);g.fillRect(dx-2,dy+th,tw+4,2);
-      g.fillRect(dx-2,dy,2,th+2);g.fillRect(dx+tw,dy,2,th+2);
-    }else{
-      /* 圖未 load：紅色速度線打底 */
-      var cols=['#e60012','#ff6b5e','#a00010','#ff9a8a','#c00020'];
-      for(i=0;i<70;i++){
-        g.fillStyle=cols[i%cols.length];
-        g.fillRect(Math.random()*pw,Math.random()*ph,3+Math.random()*12,1);
-      }
-    }
-  }
-  ctx.imageSmoothingEnabled=false;
-  ctx.drawImage(pixelCoverC,0,0,W,topH);
-  ctx.imageSmoothingEnabled=true;
+function glossPill(x,y,w,h){
+  ctx.save();ctx.shadowColor='rgba(0,0,0,0.25)';ctx.shadowBlur=8;ctx.shadowOffsetY=2;
+  var bgr=ctx.createLinearGradient(0,y,0,y+h);
+  bgr.addColorStop(0,'#ff4a5c');bgr.addColorStop(1,'#c00018');
+  ctx.fillStyle=bgr;rr(x,y,w,h,h/2);ctx.fill();ctx.restore();
+  ctx.fillStyle='rgba(255,255,255,0.35)';rr(x+4,y+3,w-8,Math.max(4,h*0.32),h/4);ctx.fill();
 }
 function drawStart(){
   var W=L.W,H=L.H,i;
-  ctx.fillStyle='#f6f6f1';ctx.fillRect(0,0,W,H);   /* 白底：紅白機開機感 */
   ctx.textAlign='center';ctx.textBaseline='middle';
-  var compact=H<560;   /* 橫屏手機／矮屏：緊湊版面 */
-  /* 像素槍區 */
-  var topH=compact?H*0.22:H*0.30;
-  drawPixelCover(topH);
-  if(compact){
-    var ty=topH+22;
-    ctx.font='900 38px '+NESF;
-    ctx.fillStyle='#7a2015';ctx.fillText('.38',W/2+3,ty+3);
-    ctx.fillStyle='#e60012';ctx.fillText('.38',W/2,ty);
-    ctx.font='900 26px '+NESF;
-    var yy=ty+32;
-    ctx.fillStyle='#999';ctx.fillText('REVOLVER',W/2+3,yy+3);
-    ctx.fillStyle='#222';ctx.fillText('REVOLVER',W/2,yy);
-    ctx.fillStyle='#0b6e35';ctx.font='700 12px '+NESF;
-    ctx.fillText('\u2605 TARGET PRACTICE \u2605',W/2,yy+24);
-    ctx.textAlign='left';ctx.fillStyle='#e60012';ctx.font='900 14px '+NESF;
-    ctx.fillText('64 BIT',14,22);
-    ctx.fillStyle='#777';ctx.font='700 10px '+NESF;
-    ctx.fillText('\u00a9 CNE 1987',14,38);
-    ctx.textAlign='center';
-    var my0=H*0.53;
-    var blinkOn=Math.sin(t0*6)>0;   /* 紅白機式眨吓眨吓 START */
-    L.menuRects=[];
-    var sy=my0;
-    ctx.fillStyle=blinkOn?'#e60012':'#f0d0d4';
-    rr(W/2-110,sy-24,220,48,8);ctx.fill();
-    ctx.strokeStyle=blinkOn?'#a00010':'#d9a7ad';ctx.lineWidth=3;
-    rr(W/2-110,sy-24,220,48,8);ctx.stroke();
-    ctx.font='900 20px '+NESF;
-    ctx.fillStyle=blinkOn?'#fff':'#c98a92';
-    ctx.fillText('\u25b6 START',W/2,sy+1);
-    L.menuRects.push({x:W/2-110,y:sy-24,w:220,h:48,act:'start'});
-    var hy2=sy+48;
-    ctx.font='900 16px '+NESF;
+  var compact=H<560, cx=W/2;
+  var holds=[['center','Center Hold'],['combat','Combat Hold'],['six',"6 o'clock"],['shan','\u5c71\u5b57']];
+  var ready=IMG.complete&&IMG.naturalWidth>0;
+  var bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#ffffff');bg.addColorStop(1,'#e8edea');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#e60012';ctx.fillRect(0,0,W,6);ctx.fillRect(0,H-6,W,6);
+  L.menuRects=[];L.holdRects=[];
+  var blink=Math.sin(t0*6)>0;
+  if(!compact){
+    var mw=Math.min(W*0.78,300), mh=mw*IMG_H/IMG_W, mx=(W-mw)/2, my=30;
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.28)';ctx.shadowBlur=18;ctx.shadowOffsetY=6;
+    ctx.fillStyle='#fff';ctx.fillRect(mx-8,my-8,mw+16,mh+16);
+    ctx.restore();
+    if(ready)ctx.drawImage(IMG,mx,my,mw,mh);
+    else{ctx.fillStyle='#e60012';ctx.fillRect(mx,my,mw,mh);}
+    ctx.strokeStyle='#e60012';ctx.lineWidth=4;ctx.strokeRect(mx-8,my-8,mw+16,mh+16);
+    var ty=my+mh+48;
+    ctx.save();
+    ctx.shadowColor='rgba(122,20,21,0.35)';ctx.shadowBlur=10;ctx.shadowOffsetY=3;
+    var tg=ctx.createLinearGradient(0,ty-24,0,ty+24);
+    tg.addColorStop(0,'#ff6b7a');tg.addColorStop(0.45,'#e60012');tg.addColorStop(1,'#9e0010');
+    ctx.fillStyle=tg;
+    ctx.font='900 46px '+NESF;ctx.fillText('.38',cx,ty);
+    ctx.font='900 30px '+NESF;ctx.fillText('REVOLVER',cx,ty+40);
+    ctx.restore();
+    ctx.fillStyle='#0b6e35';ctx.font='700 13px '+NESF;
+    ctx.fillText('\u2605 TARGET PRACTICE \u2605',cx,ty+68);
+    var sy=ty+104, sw=240, sh=56;
+    ctx.save();
+    ctx.shadowColor=blink?'rgba(230,0,18,0.55)':'rgba(0,0,0,0.22)';
+    ctx.shadowBlur=blink?18:8;ctx.shadowOffsetY=3;
+    var sg=ctx.createLinearGradient(0,sy,0,sy+sh);
+    if(blink){sg.addColorStop(0,'#ff5a6c');sg.addColorStop(1,'#cf001f');}
+    else{sg.addColorStop(0,'#f2b6bc');sg.addColorStop(1,'#d78e96');}
+    ctx.fillStyle=sg;rr(cx-sw/2,sy,sw,sh,14);ctx.fill();ctx.restore();
+    ctx.fillStyle='rgba(255,255,255,0.42)';rr(cx-sw/2+6,sy+4,sw-12,16,8);ctx.fill();
+    ctx.fillStyle=blink?'#fff':'#c98a92';ctx.font='900 22px '+NESF;
+    ctx.fillText('\u25b6 START',cx,sy+sh/2+1);
+    L.menuRects.push({x:cx-sw/2,y:sy,w:sw,h:sh,act:'start'});
+    var hy2=sy+sh+30;
+    ctx.font='900 17px '+NESF;
     ctx.fillStyle=S.menuSel==='help'?'#0b6e35':'#555';
-    ctx.fillText('HOW TO PLAY',W/2,hy2);
-    L.menuRects.push({x:W/2-100,y:hy2-20,w:200,h:40,act:'help'});
-    var hy0=hy2+32;
+    ctx.fillText('HOW TO PLAY',cx,hy2);
+    L.menuRects.push({x:cx-110,y:hy2-22,w:220,h:44,act:'help'});
+    var hy0=hy2+34;
+    ctx.fillStyle='#0b6e35';ctx.font='700 13px '+NESF;
+    ctx.fillText('- \u77aa\u6e96\u6cd5 SIGHT PICTURE -',cx,hy0);
+    var hr=24, hyy=hy0+52;
+    for(i=0;i<4;i++){
+      var hx=W*(0.125+0.25*i);
+      ctx.save();ctx.shadowColor='rgba(0,0,0,0.18)';ctx.shadowBlur=10;ctx.shadowOffsetY=3;
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(hx,hyy,hr+8,0,7);ctx.fill();ctx.restore();
+      ctx.lineWidth=2.5;ctx.strokeStyle=S.hold===holds[i][0]?'#0b6e35':'#bbb';
+      ctx.beginPath();ctx.arc(hx,hyy,hr+8,0,7);ctx.stroke();
+      drawSightPicture(ctx,hx,hyy,hr,holds[i][0]);
+      ctx.fillStyle=S.hold===holds[i][0]?'#0b6e35':'#777';ctx.font='700 11px '+NESF;
+      ctx.fillText(holds[i][1],hx,hyy+hr+22);
+      L.holdRects.push({x:hx-hr-16,y:hyy-hr-16,w:(hr+16)*2,h:(hr+16)*2+34,hold:holds[i][0]});
+    }
+  }else{
+    var mh2=Math.min(300,H-90), mw2=mh2*IMG_W/IMG_H, mx2=30, my2=(H-mh2)/2;
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.28)';ctx.shadowBlur=16;ctx.shadowOffsetY=5;
+    ctx.fillStyle='#fff';ctx.fillRect(mx2-7,my2-7,mw2+14,mh2+14);
+    ctx.restore();
+    if(ready)ctx.drawImage(IMG,mx2,my2,mw2,mh2);
+    else{ctx.fillStyle='#e60012';ctx.fillRect(mx2,my2,mw2,mh2);}
+    ctx.strokeStyle='#e60012';ctx.lineWidth=3;ctx.strokeRect(mx2-7,my2-7,mw2+14,mh2+14);
+    var ccx=mx2+mw2+14+(W-mx2-mw2-14)/2;
+    ctx.save();
+    ctx.shadowColor='rgba(122,20,21,0.35)';ctx.shadowBlur=8;ctx.shadowOffsetY=2;
+    var tg2=ctx.createLinearGradient(0,52,0,92);
+    tg2.addColorStop(0,'#ff6b7a');tg2.addColorStop(0.45,'#e60012');tg2.addColorStop(1,'#9e0010');
+    ctx.fillStyle=tg2;ctx.font='900 30px '+NESF;
+    ctx.fillText('.38 REVOLVER',ccx,66);
+    ctx.restore();
     ctx.fillStyle='#0b6e35';ctx.font='700 12px '+NESF;
-    ctx.fillText('- 瞄準法 SIGHT PICTURE -',W/2,hy0);
-    var holds=[['center','Center Hold'],['combat','Combat Hold'],['six',"6 o'clock"]];
-    var hr=20,hy=hy0+34;
-    L.holdRects=[];
-    for(i=0;i<3;i++){
-      var hx=W*(0.20+0.30*i);
-      ctx.fillStyle='#fff';
-      ctx.beginPath();ctx.arc(hx,hy,hr+8,0,7);ctx.fill();
-      ctx.strokeStyle='#bbb';ctx.lineWidth=2;
-      ctx.beginPath();ctx.arc(hx,hy,hr+8,0,7);ctx.stroke();
-      drawSightPicture(ctx,hx,hy,hr,holds[i][0]);
-      ctx.fillStyle=S.hold===holds[i][0]?'#0b6e35':'#777';
-      ctx.font='700 9px '+NESF;
-      ctx.fillText(holds[i][1],hx,hy+hr+20);
-      if(S.hold===holds[i][0]){
-        ctx.strokeStyle='#0b6e35';ctx.lineWidth=3;
-        ctx.beginPath();ctx.arc(hx,hy,hr+8,0,7);ctx.stroke();
-      }
-      L.holdRects.push({x:hx-hr-12,y:hy-hr-12,w:(hr+12)*2,h:(hr+12)*2+28,hold:holds[i][0]});
+    ctx.fillText('\u2605 TARGET PRACTICE \u2605',ccx,94);
+    var sy3=118, sw3=200, sh3=48;
+    ctx.save();
+    ctx.shadowColor=blink?'rgba(230,0,18,0.55)':'rgba(0,0,0,0.22)';
+    ctx.shadowBlur=blink?16:8;ctx.shadowOffsetY=3;
+    var sg3=ctx.createLinearGradient(0,sy3,0,sy3+sh3);
+    if(blink){sg3.addColorStop(0,'#ff5a6c');sg3.addColorStop(1,'#cf001f');}
+    else{sg3.addColorStop(0,'#f2b6bc');sg3.addColorStop(1,'#d78e96');}
+    ctx.fillStyle=sg3;rr(ccx-sw3/2,sy3,sw3,sh3,12);ctx.fill();ctx.restore();
+    ctx.fillStyle='rgba(255,255,255,0.42)';rr(ccx-sw3/2+5,sy3+4,sw3-10,13,6);ctx.fill();
+    ctx.fillStyle=blink?'#fff':'#c98a92';ctx.font='900 19px '+NESF;
+    ctx.fillText('\u25b6 START',ccx,sy3+sh3/2+1);
+    L.menuRects.push({x:ccx-sw3/2,y:sy3,w:sw3,h:sh3,act:'start'});
+    var hy3=sy3+sh3+24;
+    ctx.font='900 15px '+NESF;
+    ctx.fillStyle=S.menuSel==='help'?'#0b6e35':'#555';
+    ctx.fillText('HOW TO PLAY',ccx,hy3);
+    L.menuRects.push({x:ccx-100,y:hy3-20,w:200,h:40,act:'help'});
+    var hy4=hy3+28;
+    ctx.fillStyle='#0b6e35';ctx.font='700 12px '+NESF;
+    ctx.fillText('- \u77aa\u6e96\u6cd5 SIGHT PICTURE -',ccx,hy4);
+    var hr2=18, hyy2=hy4+40, rx0b=mx2+mw2+14;
+    for(i=0;i<4;i++){
+      var hx2=rx0b+(W-rx0b)*(0.125+0.25*i);
+      ctx.save();ctx.shadowColor='rgba(0,0,0,0.16)';ctx.shadowBlur=8;ctx.shadowOffsetY=2;
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(hx2,hyy2,hr2+7,0,7);ctx.fill();ctx.restore();
+      ctx.lineWidth=2;ctx.strokeStyle=S.hold===holds[i][0]?'#0b6e35':'#bbb';
+      ctx.beginPath();ctx.arc(hx2,hyy2,hr2+7,0,7);ctx.stroke();
+      drawSightPicture(ctx,hx2,hyy2,hr2,holds[i][0]);
+      ctx.fillStyle=S.hold===holds[i][0]?'#0b6e35':'#777';ctx.font='700 10px '+NESF;
+      ctx.fillText(holds[i][1],hx2,hyy2+hr2+18);
+      L.holdRects.push({x:hx2-hr2-13,y:hyy2-hr2-13,w:(hr2+13)*2,h:(hr2+13)*2+28,hold:holds[i][0]});
     }
-    if(S.showHelp)drawHelp();
-    return;
   }
-  /* 像素風標題 */
-  var ty=topH+34;
-  ctx.font='900 40px '+NESF;
-  /* .38 紅色 */
-  ctx.fillStyle='#7a2015';ctx.fillText('.38',W/2+3,ty+3);
-  ctx.fillStyle='#e60012';ctx.fillText('.38',W/2,ty);
-  /* REVOLVER 深灰 */
-  ctx.font='900 28px '+NESF;
-  var yy=ty+36;
-  ctx.fillStyle='#999';ctx.fillText('REVOLVER',W/2+3,yy+3);
-  ctx.fillStyle='#222';ctx.fillText('REVOLVER',W/2,yy);
-  ctx.fillStyle='#0b6e35';ctx.font='700 12px '+NESF;
-  ctx.fillText('\u2605 TARGET PRACTICE \u2605',W/2,yy+28);
-  /* 64 BIT / CNE */
-  ctx.textAlign='left';ctx.fillStyle='#e60012';ctx.font='900 16px '+NESF;
-  ctx.fillText('64 BIT',14,yy+52);
-  ctx.fillStyle='#777';ctx.font='700 11px '+NESF;
-  ctx.fillText('\u00a9 CNE 1987',14,yy+70);
-  /* 主選單 */
-  ctx.textAlign='center';
-  var my0=yy+112;
-  var blinkOn=Math.sin(t0*6)>0;   /* 紅白機式眨吓眨吓 START */
-  L.menuRects=[];
-  /* START：紅掣，眨吓眨吓 */
-  var sy=my0;
-  ctx.fillStyle=blinkOn?'#e60012':'#f0d0d4';
-  rr(W/2-120,sy-26,240,52,8);ctx.fill();
-  ctx.strokeStyle=blinkOn?'#a00010':'#d9a7ad';ctx.lineWidth=3;
-  rr(W/2-120,sy-26,240,52,8);ctx.stroke();
-  ctx.font='900 22px '+NESF;
-  ctx.fillStyle=blinkOn?'#fff':'#c98a92';
-  ctx.fillText('\u25b6 START',W/2,sy+1);
-  L.menuRects.push({x:W/2-120,y:sy-26,w:240,h:52,act:'start'});
-  /* HOW TO PLAY */
-  var hy2=sy+54;
-  ctx.font='900 18px '+NESF;
-  ctx.fillStyle=S.menuSel==='help'?'#0b6e35':'#555';
-  ctx.fillText('HOW TO PLAY',W/2,hy2);
-  L.menuRects.push({x:W/2-110,y:hy2-22,w:220,h:44,act:'help'});
-  /* 瞄準法選擇 */
-  var hy0=my0+118;
-  ctx.fillStyle='#0b6e35';ctx.font='700 14px '+NESF;
-  ctx.fillText('- 瞄準法 SIGHT PICTURE -',W/2,hy0);
-  var holds=[['center','Center Hold'],['combat','Combat Hold'],['six',"6 o'clock"]];
-  var hr=H*0.036,hy=hy0+54;
-  L.holdRects=[];
-  for(i=0;i<3;i++){
-    var hx=W*(0.20+0.30*i);
-    ctx.fillStyle='#fff';
-    ctx.beginPath();ctx.arc(hx,hy,hr+10,0,7);ctx.fill();
-    ctx.strokeStyle='#bbb';ctx.lineWidth=2;
-    ctx.beginPath();ctx.arc(hx,hy,hr+10,0,7);ctx.stroke();
-    drawSightPicture(ctx,hx,hy,hr,holds[i][0]);
-    ctx.fillStyle=S.hold===holds[i][0]?'#0b6e35':'#777';
-    ctx.font='700 10px '+NESF;
-    ctx.fillText(holds[i][1],hx,hy+hr+24);
-    if(S.hold===holds[i][0]){
-      ctx.strokeStyle='#0b6e35';ctx.lineWidth=3;
-      ctx.beginPath();ctx.arc(hx,hy,hr+10,0,7);ctx.stroke();
-    }
-    L.holdRects.push({x:hx-hr-14,y:hy-hr-14,w:(hr+14)*2,h:(hr+14)*2+34,hold:holds[i][0]});
-  }
+  /* 32-BIT 徽章（最上層） */
+  glossPill(W-92,16,76,30);
+  ctx.fillStyle='#fff';ctx.font='900 15px '+NESF;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('32-BIT',W-54,32);
   if(S.showHelp)drawHelp();
 }
+
 /* HOW TO PLAY 玩法說明層 */
 function drawHelp(){
   var W=L.W,H=L.H,i;
@@ -1295,7 +1306,8 @@ function drawHelp(){
     '   綠色狀態燈 = 瞄正可射',
     '5. 放開手指即開槍！',
     '6. 42發＋120秒，中人物先計分',
-    '7. 撳左上換彈器入子彈'
+    '7. 撳左上換彈器入子彈',
+    '8. 山字不出頭：準星頂同照門頂齊平，唔凸出'
   ];
   for(i=0;i<lines.length;i++)ctx.fillText(lines[i],W*0.08+24,H*0.30+i*30);
   drawButton(L.helpBackBtn,'返回','#2f9e44','#1f7a33');
@@ -1380,6 +1392,14 @@ function drawEndSequence(){
     ctx.fillText('已袋槍',cx,H*0.38);
     ctx.fillStyle='#9fb0c3';ctx.font='15px '+FONT;
     ctx.fillText('準備驗靶…',cx,H*0.38+40);
+    return;
+  }
+  if(S.endPhase==='downscan'){
+    /* 靶紙轉向反面＋DOWN AND SCAN */
+    ctx.fillStyle='#ffd34d';ctx.font='900 32px '+NESF;
+    ctx.fillText('DOWN AND SCAN',cx,H*0.40);
+    ctx.fillStyle='#ffffff';ctx.font='700 26px '+FONT;
+    ctx.fillText('袋槍！',cx,H*0.40+50);
     return;
   }
   /* 彈巢打開圖：槍管向右，彈巢向左擺出（6 個空彈膛） */
