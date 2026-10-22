@@ -1030,6 +1030,142 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ================= 多人行水大作戰 ================= -->
+            <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-orange-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b-2 border-orange-100 pb-4">
+                    <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
+                        <i data-lucide="users-round" class="w-6 h-6 text-orange-600"></i>
+                        多人行水大作戰 🎃
+                    </h3>
+                    <button onclick="resetMultiRoster()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>重置</span>
+                    </button>
+                </div>
+
+                <p class="text-sm md:text-base text-slate-600 font-medium">全程啱啱保持「必須當值」人數唔多唔少，休息時間全員平均攤分。首先揀模式：</p>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="mp-mode-wm" onclick="setMpMode('wm')" class="w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-white border-slate-300 text-slate-600">
+                        一水一飯
+                        <span class="block text-xs font-bold opacity-80 mt-1">每人 行水一次 ＋ 食飯一次</span>
+                    </button>
+                    <button id="mp-mode-wmw" onclick="setMpMode('wmw')" class="w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-white border-slate-300 text-slate-600">
+                        水飯水
+                        <span class="block text-xs font-bold opacity-80 mt-1">每人 休息 → 食飯 → 休息 三段</span>
+                    </button>
+                </div>
+                <p id="mp-mode-desc" class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3"></p>
+
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-5 h-5 text-orange-600"></i>
+                            開始時間
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
+                                <select id="mp-start-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
+                                <select id="mp-start-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="clock-4" class="w-5 h-5 text-orange-600"></i>
+                            結束時間
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
+                                <select id="mp-end-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
+                                <select id="mp-end-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="users" class="w-5 h-5 text-orange-600"></i>
+                            總人數（全部返工人員）
+                        </label>
+                        <select id="mp-total" onchange="buildMpNames()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                            <i data-lucide="shield" class="w-5 h-5 text-orange-600"></i>
+                            必須當值人數（任何時刻）
+                        </label>
+                        <select id="mp-duty" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="id-card" class="w-5 h-5 text-orange-600"></i>
+                        人員名稱（可留空，自動用「人員 A、B、C…」）
+                    </label>
+                    <div id="mp-names" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="notebook-pen" class="w-5 h-5 text-orange-600"></i>
+                        備註
+                    </label>
+                    <textarea id="mp-remarks" rows="2" placeholder="有咩要特別交代可以寫低，會顯示喺編排結果最尾。" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-medium text-slate-900"></textarea>
+                </div>
+
+                <div id="mp-error" class="hidden p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-bold text-sm md:text-base space-y-1"></div>
+
+                <div class="pt-2">
+                    <button onclick="calculateMultiRoster()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-orange-200 text-lg flex items-center justify-center gap-2">
+                        <i data-lucide="swords" class="w-6 h-6"></i>
+                        <span>開始編排</span>
+                    </button>
+                </div>
+
+                <div id="mp-result" class="hidden p-5 md:p-6 bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-3xl space-y-6">
+                    <div id="mp-summary" class="grid gap-3 sm:grid-cols-2 text-base text-slate-700"></div>
+                    <div id="mp-warn" class="hidden p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-900 font-bold text-sm md:text-base space-y-1"></div>
+
+                    <div class="space-y-3">
+                        <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="list-checks" class="w-5 h-5 text-orange-600"></i>
+                            每人時間表（工 / 水 / 飯）：
+                        </p>
+                        <div id="mp-person-list" class="grid gap-3"></div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="layout-grid" class="w-5 h-5 text-orange-600"></i>
+                            分段總表（每段邊個休息、邊個工作）：
+                        </p>
+                        <div id="mp-segment-list" class="space-y-2"></div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="repeat" class="w-5 h-5 text-orange-600"></i>
+                            接替鏈（邊個休息完，接替邊個）：
+                        </p>
+                        <div id="mp-relief-list" class="space-y-3"></div>
+                    </div>
+
+                    <div id="mp-remarks-out" class="hidden p-4 bg-white border-2 border-orange-200 rounded-2xl text-slate-800 text-sm md:text-base font-medium"></div>
+                </div>
+            </div>
         </section>
 
         <!-- ================= PAGE 3: 煙棚計算 ================= -->
@@ -2492,6 +2628,444 @@
             document.getElementById('res-per-time').innerText = perPersonText;
             document.getElementById('drip-calc-result').classList.remove('hidden');
             updateLucideIcons();
+        }
+
+
+        /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
+        let mpMode = 'wmw';
+
+        function mpRng(seed) {
+            let a = seed >>> 0;
+            return function () {
+                a |= 0; a = a + 0x6D2B79F5 | 0;
+                let t = Math.imul(a ^ a >>> 15, 1 | a);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+
+        function mpEsc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        function initMultiRoster() {
+            const sh = document.getElementById('mp-start-hour');
+            if (!sh) return;
+            const eh = document.getElementById('mp-end-hour');
+            const sm = document.getElementById('mp-start-min');
+            const em = document.getElementById('mp-end-min');
+            for (let i = 0; i < 24; i++) {
+                const v = String(i).padStart(2, '0');
+                sh.add(new Option(v + ' 時', v));
+                eh.add(new Option(v + ' 時', v));
+            }
+            for (let i = 0; i < 60; i += 5) {
+                const v = String(i).padStart(2, '0');
+                sm.add(new Option(v + ' 分', v));
+                em.add(new Option(v + ' 分', v));
+            }
+            sh.value = '15'; sm.value = '15'; eh.value = '22'; em.value = '35';
+            const total = document.getElementById('mp-total');
+            for (let n = 2; n <= 20; n++) total.add(new Option(n + ' 人', n));
+            total.value = '9';
+            const duty = document.getElementById('mp-duty');
+            for (let n = 1; n <= 19; n++) duty.add(new Option(n + ' 人', n));
+            duty.value = '4';
+            buildMpNames();
+            setMpMode('wmw');
+        }
+
+        function buildMpNames() {
+            const totalEl = document.getElementById('mp-total');
+            const box = document.getElementById('mp-names');
+            if (!totalEl || !box) return;
+            const n = parseInt(totalEl.value, 10) || 0;
+            const old = [];
+            box.querySelectorAll('input').forEach(inp => old.push(inp.value));
+            box.innerHTML = '';
+            for (let i = 0; i < n; i++) {
+                const letter = String.fromCharCode(65 + i);
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.maxLength = 12;
+                inp.placeholder = '人員 ' + letter;
+                inp.value = old[i] || '';
+                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
+                box.appendChild(inp);
+            }
+        }
+
+        function setMpMode(mode) {
+            mpMode = mode;
+            const wm = document.getElementById('mp-mode-wm');
+            const wmw = document.getElementById('mp-mode-wmw');
+            if (!wm || !wmw) return;
+            const on = 'w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-200';
+            const off = 'w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-white border-slate-300 text-slate-600 hover:border-orange-400';
+            wm.className = mode === 'wm' ? on : off;
+            wmw.className = mode === 'wmw' ? on : off;
+            document.getElementById('mp-mode-desc').innerText = mode === 'wm'
+                ? '一水一飯：全程啱啱保持當值人數，每人一次行水＋一次食飯；總休息時間由全員平均攤分（大家除），行水同食飯各佔一半。'
+                : '水飯水：全程啱啱保持當值人數，每人「休息 → 食飯 → 休息」三段完整時段；食飯一整段唔劏開，最少 60 分鐘；每人總休息時間完全相同。';
+        }
+
+        function resetMultiRoster() {
+            document.getElementById('mp-start-hour').value = '15';
+            document.getElementById('mp-start-min').value = '15';
+            document.getElementById('mp-end-hour').value = '22';
+            document.getElementById('mp-end-min').value = '35';
+            document.getElementById('mp-total').value = '9';
+            document.getElementById('mp-duty').value = '4';
+            document.getElementById('mp-remarks').value = '';
+            buildMpNames();
+            document.getElementById('mp-names').querySelectorAll('input').forEach(inp => inp.value = '');
+            setMpMode('wmw');
+            document.getElementById('mp-error').classList.add('hidden');
+            document.getElementById('mp-result').classList.add('hidden');
+        }
+
+        function mpGetNames() {
+            const inputs = document.getElementById('mp-names').querySelectorAll('input');
+            const names = [];
+            inputs.forEach((inp, i) => {
+                const v = inp.value.trim();
+                names.push(v || ('人員 ' + String.fromCharCode(65 + i)));
+            });
+            return names;
+        }
+
+        /* 一水一飯：N 等份輪換，每人休息 R 份；休息前半 = 水，後半 = 飯。回傳 blocks（12N 格座標） */
+        function mpSolveWM(N, M) {
+            const R = N - M;
+            const blocks = [];
+            for (let p = 0; p < N; p++) {
+                let waterLeft = 6 * R; // 每人總休息 12R 格，水佔一半
+                for (let k = 0; k < N; k++) {
+                    const rel = ((k - p) % N + N) % N;
+                    if (rel >= R) continue;
+                    const s = 12 * k, e = 12 * k + 12;
+                    const w = Math.min(12, waterLeft);
+                    if (w > 0) { blocks.push({ p: p, label: '水', s: s, e: s + w }); waterLeft -= w; }
+                    if (w < 12) blocks.push({ p: p, label: '飯', s: s + w, e: e });
+                }
+            }
+            // 合併同人同名相連時段
+            blocks.sort((a, b) => a.p - b.p || a.s - b.s);
+            const merged = [];
+            for (const b of blocks) {
+                const last = merged[merged.length - 1];
+                if (last && last.p === b.p && last.label === b.label && last.e === b.s) last.e = b.e;
+                else merged.push({ p: b.p, label: b.label, s: b.s, e: b.e });
+            }
+            return merged;
+        }
+
+        /* 水飯水：R 條休息線砌 3N 嚿完整時段（6N 格座標），再用回溯法派俾每人 水1→飯→水2 */
+    // ===== 最終版 水飯水 solver:每人時間線 + 模擬退火 =====
+        // ===== 水飯水 solver:每人時間線 + 模擬退火 =====
+        // 接受準則只睇覆蓋誤差(證明可靠);長度平均靠「提議分佈」:多數長度調整專門拉平均
+        function mpSolveWMWOnce(N, M, T, seed, budgetMs, polishMs) {
+            const R = N - M, U = 6 * N, P = 6 * R, W = U - P;
+            const unitMin = T / U;
+            const mealMinU = Math.ceil(60 / unitMin + 0.5); // 顯示四捨五入後仍 >= 60 分鐘
+            if (P < mealMinU + 2) return null; // 點分都唔夠:一段飯+兩段最短休息都超過每人總休息
+            const rng = mpRng(seed);
+            const deadline = performance.now() + budgetMs;
+            function blocksOf(p) {
+                const s1 = p.h0, e1 = s1 + p.a;
+                const s2 = e1 + p.g1, e2 = s2 + p.b;
+                const s3 = e2 + p.g2, e3 = s3 + p.c;
+                return [[s1, e1], [s2, e2], [s3, e3]];
+            }
+            function initPerson(idx) {
+                let a = 2 * R, b = 2 * R, c = 2 * R;
+                if (b < mealMinU) { const need = mealMinU - b; b = mealMinU; a -= Math.ceil(need / 2); c -= Math.floor(need / 2); }
+                if (a < 1) { c -= (1 - a); a = 1; }
+                if (c < 1) { a -= (1 - c); c = 1; }
+                const base = Math.floor(W / 4); let rem = W - base * 4;
+                const gaps = [base, base, base, base];
+                for (let i = 0; i < rem; i++) gaps[i % 4]++;
+                const shift = Math.floor(idx * W / Math.max(1, N));
+                let h0 = Math.min(gaps[0] + shift, Math.max(0, W - 2));
+                let left = W - h0;
+                const g1 = Math.min(gaps[1], left); left -= g1;
+                const g2 = Math.min(gaps[2], left); left -= g2;
+                return { a: a, b: b, c: c, h0: h0, g1: g1, g2: g2, h1: left };
+            }
+            const persons = [];
+            for (let i = 0; i < N; i++) persons.push(initPerson(i));
+            const depth = new Array(U).fill(0);
+            function addToDepth(p, sign) { const bs = blocksOf(p); for (let q = 0; q < 3; q++) for (let t = bs[q][0]; t < bs[q][1]; t++) depth[t] += sign; }
+            persons.forEach(p => addToDepth(p, 1));
+            function hardCost() {
+                let cst = 0;
+                for (let t = 0; t < U; t++) { const d = depth[t] - R; cst += d * d * 10 + (d > 0 ? d * 40 : 0); }
+                return cst;
+            }
+            function softCost() {
+                let cst = 0;
+                const target = 2 * R, mealTarget = Math.max(2 * R, mealMinU);
+                for (const p of persons) {
+                    cst += (p.a - target) * (p.a - target) * 0.6 + (p.c - target) * (p.c - target) * 0.6 + (p.b - mealTarget) * (p.b - mealTarget) * 0.6;
+                    if (p.g1 === 0) cst += 2;
+                    if (p.g2 === 0) cst += 2;
+                    const bs = blocksOf(p);
+                    if (bs[0][1] > 0.62 * U) cst += (bs[0][1] - 0.62 * U) * 0.8;
+                    if (bs[2][0] < 0.38 * U) cst += (0.38 * U - bs[2][0]) * 0.8;
+                    if (bs[1][1] > 0.97 * U) cst += (bs[1][1] - 0.97 * U) * 0.8;
+                }
+                return cst;
+            }
+            let hard = hardCost();
+            let best = null, bestSoft = Infinity;
+            function snapshot() {
+                const out = [];
+                const labels = ['水1', '飯', '水2'];
+                persons.forEach((p, pi) => { blocksOf(p).forEach((bs, k) => out.push({ p: pi, label: labels[k], s: bs[0] * 2, e: bs[1] * 2 })); });
+                return out;
+            }
+            if (hard === 0) { best = snapshot(); bestSoft = softCost(); }
+            let temp = 60, moves = 0;
+            const keys = ['a', 'b', 'c'];
+            let polishUntil = null;
+            while (performance.now() < deadline) {
+                if (hard === 0) {
+                    if (polishUntil === null) polishUntil = performance.now() + polishMs;
+                    if (performance.now() > polishUntil) break;
+                }
+                moves++;
+                temp = Math.max(0.4, temp * 0.9997);
+                if (moves % 25000 === 0 && hard > 0) temp = 60;
+                const pi = Math.floor(rng() * N);
+                const p = persons[pi];
+                const old = { a: p.a, b: p.b, c: p.c, h0: p.h0, g1: p.g1, g2: p.g2, h1: p.h1 };
+                const softBefore = (hard === 0) ? softCost() : 0;
+                const moveType = rng();
+                if (moveType < 0.45) {
+                    const which = Math.floor(rng() * 3);
+                    const delta = rng() < 0.5 ? 1 : -1;
+                    if (which === 0) { p.h0 += delta; p.g1 -= delta; }
+                    else if (which === 1) { p.g1 += delta; p.g2 -= delta; }
+                    else { p.g2 += delta; p.h1 -= delta; }
+                    if (p.h0 < 0 || p.g1 < 0 || p.g2 < 0 || p.h1 < 0) { Object.assign(p, old); continue; }
+                } else if (moveType < 0.8) {
+                    let i, j;
+                    if (rng() < 0.7) {
+                        // 拉平均提議:最長段減1,最短段加1
+                        const lens = [p.a, p.b, p.c];
+                        i = lens.indexOf(Math.max(p.a, p.b, p.c));
+                        j = lens.indexOf(Math.min(p.a, p.b, p.c));
+                        if (i === j) continue;
+                        p[keys[i]] -= 1; p[keys[j]] += 1;
+                    } else {
+                        i = Math.floor(rng() * 3); j = Math.floor(rng() * 3);
+                        if (i === j) continue;
+                        const delta = rng() < 0.5 ? 1 : -1;
+                        p[keys[i]] += delta; p[keys[j]] -= delta;
+                    }
+                    if (p.a < 1 || p.b < mealMinU || p.c < 1) { Object.assign(p, old); continue; }
+                } else {
+                    const delta = rng() < 0.5 ? 1 : -1;
+                    p.h0 += delta; p.h1 -= delta;
+                    if (p.h0 < 0 || p.h1 < 0) { Object.assign(p, old); continue; }
+                }
+                addToDepth(old, -1); addToDepth(p, 1);
+                const newHard = hardCost();
+                let accept;
+                if (hard === 0) {
+                    if (newHard > 0) accept = false;
+                    else { const dS = softCost() - softBefore; accept = dS <= 0 || rng() < Math.exp(-dS / Math.max(0.4, temp * 0.2)); }
+                } else {
+                    const dC = newHard - hard;
+                    accept = dC <= 0 || rng() < Math.exp(-dC / temp);
+                }
+                if (accept) {
+                    hard = newHard;
+                    if (hard === 0) { const s = softCost(); if (s < bestSoft) { bestSoft = s; best = snapshot(); } }
+                } else {
+                    addToDepth(p, -1); Object.assign(p, old); addToDepth(p, 1);
+                }
+            }
+            return best ? { blocks: best, soft: bestSoft } : null;
+        }
+
+        function mpSolveWMW(N, M, T, seed) {
+            let best = null;
+            const totalDeadline = performance.now() + 2600;
+            for (let k = 0; k < 4; k++) {
+                const remain = totalDeadline - performance.now();
+                if (k > 0 && remain < 400) break;
+                const r = mpSolveWMWOnce(N, M, T, seed + k * 104729, Math.min(1500, Math.max(400, remain)), 260);
+                if (!r) continue;
+                if (!best || r.soft < best.soft) best = r;
+                if (best.soft <= N * 1.5) break; // 夠平均就收貨
+            }
+            return best ? best.blocks : null;
+        }
+
+        function calculateMultiRoster() {
+            const errBox = document.getElementById('mp-error');
+            const resBox = document.getElementById('mp-result');
+            errBox.classList.add('hidden');
+            errBox.innerHTML = '';
+            resBox.classList.add('hidden');
+
+            const sh = parseInt(document.getElementById('mp-start-hour').value, 10);
+            const sm = parseInt(document.getElementById('mp-start-min').value, 10);
+            const eh = parseInt(document.getElementById('mp-end-hour').value, 10);
+            const em = parseInt(document.getElementById('mp-end-min').value, 10);
+            const N = parseInt(document.getElementById('mp-total').value, 10);
+            const M = parseInt(document.getElementById('mp-duty').value, 10);
+            const names = mpGetNames();
+            const remarks = document.getElementById('mp-remarks').value.trim();
+
+            const startMins = sh * 60 + sm;
+            let T = (eh * 60 + em) - startMins;
+            if (T <= 0) T += 24 * 60;
+
+            const errors = [];
+            if (M >= N) errors.push('必須當值人數（' + M + ' 人）要少過總人數（' + N + ' 人），至少要留 1 個休息位。');
+            if (T < 60) errors.push('總時段得 ' + T + ' 分鐘，太短，排唔到輪換編排。');
+            const restPer = T * (N - M) / N;
+            if (mpMode === 'wmw' && T >= 60 && M < N && restPer < Math.max(100, 60 + 2 * T / (3 * N))) {
+                errors.push('每人平均只可休息約 ' + Math.round(restPer) + ' 分鐘，唔夠分三段（食飯至少 60 分鐘，另加兩段休息）。請加長時段、減少必須當值人數，或改用「一水一飯」。');
+            }
+            if (mpMode === 'wm' && T >= 60 && M < N && restPer < 20) {
+                errors.push('每人平均只可休息約 ' + Math.round(restPer) + ' 分鐘，太少，排唔到。請加長時段或減少必須當值人數。');
+            }
+            if (errors.length) {
+                errBox.innerHTML = errors.map(e => '<p>⚠️ ' + mpEsc(e) + '</p>').join('');
+                errBox.classList.remove('hidden');
+                errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            let blocks = null;
+            try {
+                if (mpMode === 'wm') blocks = mpSolveWM(N, M);
+                else blocks = mpSolveWMW(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
+            } catch (e) { blocks = null; }
+
+            if (!blocks) {
+                errBox.innerHTML = '<p>⚠️ 呢組數字暫時排唔到一個完全公平嘅「水飯水」編排。可以試下：加長總時段、減少必須當值人數，或者改用「一水一飯」模式。</p>';
+                errBox.classList.remove('hidden');
+                errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const G2 = 12 * N;
+            const disp = u => Math.round(u * T / G2);
+            const clock = u => formatMinutesToTime(startMins + disp(u));
+            const segMins = (a, b) => disp(b) - disp(a);
+
+            // 警告（唔阻計算）
+            const warnings = [];
+            const seen = {};
+            names.forEach(nm => { if (seen[nm]) warnings.push('有重複名稱「' + nm + '」，結果會照樣顯示，核對時請留意。'); seen[nm] = true; });
+            if (mpMode === 'wm' && restPer / 2 < 60) {
+                warnings.push('提示：一水一飯模式下每人食飯約 ' + Math.round(restPer / 2) + ' 分鐘（總休息大家除），少過 60 分鐘。如果食飯一定要足 1 小時，請改用「水飯水」模式。');
+            }
+
+            // 每人時間表
+            const per = [];
+            for (let i = 0; i < N; i++) per.push([]);
+            blocks.forEach(b => per[b.p].push(b));
+            const chipCls = lab => lab === '工'
+                ? 'bg-slate-100 text-slate-600 border-slate-300'
+                : (lab === '飯' ? 'bg-orange-100 text-orange-900 border-orange-300' : 'bg-sky-100 text-sky-900 border-sky-300');
+            let personHtml = '';
+            per.forEach((bs, pi) => {
+                bs.sort((a, b) => a.s - b.s);
+                const segs = [];
+                let prev = 0;
+                bs.forEach(b => {
+                    if (b.s > prev) segs.push({ label: '工', s: prev, e: b.s });
+                    segs.push({ label: b.label, s: b.s, e: b.e });
+                    prev = b.e;
+                });
+                if (prev < G2) segs.push({ label: '工', s: prev, e: G2 });
+                const restTotal = bs.reduce((acc, b) => acc + segMins(b.s, b.e), 0);
+                const chips = segs.map(sg =>
+                    '<span class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-sm font-extrabold ' + chipCls(sg.label) + '">' +
+                    sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）</span>'
+                ).join(' ');
+                personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm space-y-2">' +
+                    '<div class="flex items-center justify-between flex-wrap gap-2">' +
+                    '<span class="font-extrabold text-slate-900 text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">' + String.fromCharCode(65 + pi) + '</span>' + mpEsc(names[pi]) + '</span>' +
+                    '<span class="text-sm font-extrabold text-orange-900 bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-200">總休息 ' + restTotal + ' 分鐘</span></div>' +
+                    '<div class="flex flex-wrap gap-1.5">' + chips + '</div></div>';
+            });
+            document.getElementById('mp-person-list').innerHTML = personHtml;
+
+            // 分段總表
+            const boundSet = new Set([0, G2]);
+            blocks.forEach(b => { boundSet.add(b.s); boundSet.add(b.e); });
+            const bounds = Array.from(boundSet).sort((a, b) => a - b);
+            let segHtml = '';
+            for (let i = 0; i + 1 < bounds.length; i++) {
+                const a = bounds[i], b = bounds[i + 1];
+                const resting = blocks.filter(x => x.s <= a && x.e >= b);
+                const rNames = new Set(resting.map(x => x.p));
+                const working = [];
+                for (let pi = 0; pi < N; pi++) if (!rNames.has(pi)) working.push(names[pi]);
+                const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => mpEsc(names[x.p]) + '（' + x.label + '）').join('、');
+                segHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm">' +
+                    '<span class="font-extrabold text-slate-900">' + clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分）</span>' +
+                    '<span class="font-bold text-sky-900"> 休息：' + restTxt + '</span>' +
+                    '<span class="font-bold text-slate-600"> ｜ 工作：' + working.map(mpEsc).join('、') + '</span></div>';
+            }
+            document.getElementById('mp-segment-list').innerHTML = segHtml;
+
+            // 接替鏈：將休息時段砌成 R 條休息線
+            const sortedBlocks = blocks.slice().sort((a, b) => a.s - b.s || a.p - b.p);
+            const lanes = [];
+            sortedBlocks.forEach(b => {
+                let lane = null;
+                for (const ln of lanes) { if (ln[ln.length - 1].e === b.s) { lane = ln; break; } }
+                if (!lane) { lane = []; lanes.push(lane); }
+                lane.push(b);
+            });
+            let reliefHtml = '';
+            lanes.forEach((lane, li) => {
+                let line = '<span class="font-extrabold text-orange-900">休息位 ' + (li + 1) + '：</span> ';
+                lane.forEach((b, bi) => {
+                    const seg = mpEsc(names[b.p]) + ' ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
+                    if (bi === 0) line += seg;
+                    else line += ' → ' + clock(b.s) + ' ' + mpEsc(names[lane[bi - 1].p]) + ' 返工接替 ' + seg;
+                });
+                reliefHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm leading-relaxed">' + line + '</div>';
+            });
+            document.getElementById('mp-relief-list').innerHTML = reliefHtml;
+
+            // 摘要
+            let mealInfo = '';
+            if (mpMode === 'wmw') {
+                const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
+                mealInfo = '每人食飯一整段：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全部 ≥ 60 分鐘 ✓）';
+            } else {
+                mealInfo = '每人行水約 ' + Math.round(restPer / 2) + ' 分鐘、食飯約 ' + Math.round(restPer / 2) + ' 分鐘';
+            }
+            document.getElementById('mp-summary').innerHTML =
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">總時段：<span class="font-extrabold text-slate-900">' + T + ' 分鐘</span>（' + clock(0) + ' - ' + clock(G2) + '）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（全員相同）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">當值人數：全程保持 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息 ' + (N - M) + ' 人）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
+
+            const warnBox = document.getElementById('mp-warn');
+            if (warnings.length) {
+                warnBox.innerHTML = warnings.map(w => '<p>⚠️ ' + mpEsc(w) + '</p>').join('');
+                warnBox.classList.remove('hidden');
+            } else warnBox.classList.add('hidden');
+
+            const remOut = document.getElementById('mp-remarks-out');
+            if (remarks) {
+                remOut.innerHTML = '<span class="font-extrabold">備註：</span>' + mpEsc(remarks).replace(/\n/g, '<br>');
+                remOut.classList.remove('hidden');
+            } else remOut.classList.add('hidden');
+
+            resBox.classList.remove('hidden');
+            updateLucideIcons();
+            resBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function resetCigCalc() {
@@ -4056,6 +4630,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             initTimeDropdowns();
+            initMultiRoster();
             initDailyQuote();
             initQuartersDaysDropdown();
             updateLucideIcons();
