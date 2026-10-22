@@ -2794,6 +2794,36 @@
             }
             const persons = [];
             for (let i = 0; i < N; i++) persons.push(initPerson(i));
+            if (M <= 2) {
+                // 細當值人數係「返工空位砌滿全段」嘅死局:貪心逐人填最缺人嘅時段做初始化
+                const placedWork = new Array(U).fill(0);
+                function workSegs(p) {
+                    const bs = blocksOf(p), segs = [];
+                    let prev = 0;
+                    for (const [s, e] of bs) { if (s > prev) segs.push([prev, s]); prev = e; }
+                    if (prev < U) segs.push([prev, U]);
+                    return segs;
+                }
+                for (let idx = 0; idx < N; idx++) {
+                    let bestP = null, bestScore = Infinity;
+                    for (let sTry = 0; sTry < 1200; sTry++) {
+                        const cand = initPerson(idx);
+                        cand.a = Math.max(1, cand.a + Math.floor(rng() * 5) - 2);
+                        cand.c = P - cand.b - cand.a;
+                        if (cand.c < 1) continue;
+                        // random gap composition summing to W
+                        let cuts = [0, 0, 0, 0], left = W;
+                        for (let g = 0; g < 3; g++) { const take = Math.floor(rng() * (left + 1)); cuts[g] = take; left -= take; }
+                        cuts[3] = left;
+                        cand.h0 = cuts[0]; cand.g1 = cuts[1]; cand.g2 = cuts[2]; cand.h1 = cuts[3];
+                        let score = 0;
+                        for (const [s, e] of workSegs(cand)) for (let t = s; t < e; t++) score += placedWork[t] * 12 + (placedWork[t] >= M ? 60 : 0);
+                        if (score < bestScore) { bestScore = score; bestP = cand; }
+                    }
+                    persons[idx] = bestP;
+                    for (const [s, e] of workSegs(bestP)) for (let t = s; t < e; t++) placedWork[t]++;
+                }
+            }
             const depth = new Array(U).fill(0);
             function addToDepth(p, sign) { const bs = blocksOf(p); for (let q = 0; q < 3; q++) for (let t = bs[q][0]; t < bs[q][1]; t++) depth[t] += sign; }
             persons.forEach(p => addToDepth(p, 1));
@@ -2850,7 +2880,7 @@
                     if (p.h0 < 0 || p.g1 < 0 || p.g2 < 0 || p.h1 < 0) { Object.assign(p, old); continue; }
                 } else if (moveType < 0.8) {
                     let i, j;
-                    if (rng() < 0.7) {
+                    if (rng() < 0.75 * 300 / (hard + 300)) {
                         // 拉平均提議:最長段減1,最短段加1
                         const lens = [p.a, p.b, p.c];
                         i = lens.indexOf(Math.max(p.a, p.b, p.c));
@@ -2899,6 +2929,11 @@
                 if (!r) continue;
                 if (!best || r.soft < best.soft) best = r;
                 if (best.soft <= N * 1.5) break; // 夠平均就收貨
+            }
+            if (!best) {
+                // 極端組合(例如好多人但只得一兩個當值)要更長搜尋時間,最後長試一次
+                const r = mpSolveWMWOnce(N, M, T, seed + 987654, 6000, 900);
+                if (r) best = r;
             }
             return best ? best.blocks : null;
         }
