@@ -2331,6 +2331,35 @@
             if (modal) modal.classList.add('hidden');
         }
 
+        /* ===== GA 虛擬 pageview：每個工具記成獨立「頁面」，喺 GA 報表睇到邊頁最受歡迎 ===== */
+        const VIEW_PAGE_TITLES = {
+            home: 'CNE日常首頁',
+            drip: '行水神器',
+            respiratory: '煙棚計算',
+            draw: '抽籤模式',
+            quotes: 'CR 金句 100',
+            shift: '輪班預約好幫手',
+            ai: 'CNE AI BOT',
+            quarters: '宿舍分數計算',
+            pension: '退休金計算器',
+            game: '射擊訓練',
+            board: 'CNE無人駕駛',
+            radio: '無廣告 Walkman 收音機'
+        };
+
+        function trackViewPageview(viewId) {
+            if (typeof gtag !== 'function') return;
+            const origin = (window.location.origin && window.location.origin !== 'null')
+                ? window.location.origin : 'https://rb-1997.github.io';
+            const basePath = window.location.pathname.replace(/[^\/]*$/, '');
+            const pagePath = viewId === 'home' ? basePath : basePath + viewId;
+            gtag('event', 'page_view', {
+                page_title: (VIEW_PAGE_TITLES[viewId] || viewId) + ' | CNE日常',
+                page_location: origin + pagePath,
+                page_path: pagePath
+            });
+        }
+
         function switchView(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
                 panel.classList.remove('active');
@@ -2351,6 +2380,8 @@
                     initQuartersDaysDropdown();
                     calculateQuartersPoints();
                 }
+
+                trackViewPageview(viewId);
             }
 
             const backBtn = document.getElementById('back-home-btn');
