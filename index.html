@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.12</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.13</span>
             </div>
         </section>
 
@@ -3604,6 +3604,8 @@
             const bounds = Array.from(boundSet).sort((a, b) => a - b);
             let segHtml = '';
             const segTxtLines = [];
+            segTxtLines.push('時間｜' + postNames.join('｜') + '｜休息');
+            let segRowsHtml = '';
             for (let i = 0; i + 1 < bounds.length; i++) {
                 const a = bounds[i], b = bounds[i + 1];
                 const resting = blocks.filter(x => x.s <= a && x.e >= b);
@@ -3621,12 +3623,17 @@
                 const workTxt = postNames.map((pn, j) => pn + '：' + names[assign[j]]).join('、');
                 const workHtml = postNames.map((pn, j) => mpEsc(pn) + '：' + mpEsc(names[assign[j]])).join('、');
                 const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => mpEsc(names[x.p]) + '（' + x.label + '）').join('、');
-                segTxtLines.push(clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分） 休息：' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、') + ' ｜ 工作：' + workTxt);
-                segHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm">' +
-                    '<span class="font-extrabold text-slate-900">' + clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分）</span>' +
-                    '<span class="font-bold text-sky-900"> 休息：' + restTxt + '</span>' +
-                    '<span class="font-bold text-slate-600"> ｜ 工作：' + workHtml + '</span></div>';
+                segTxtLines.push(clock(a) + '-' + clock(b) + '｜' + postNames.map((pn, j) => names[assign[j]]).join('｜') + '｜' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、'));
+                segRowsHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-orange-100 whitespace-nowrap font-extrabold text-slate-900">' + clock(a) + '-' + clock(b) + '</td>'
+                    + postNames.map((pn, j) => '<td class="px-3 py-2.5 border border-orange-100">' + mpEsc(names[assign[j]]) + '</td>').join('')
+                    + '<td class="px-3 py-2.5 border border-orange-100 text-sky-900">' + restTxt + '</td></tr>';
             }
+            segHtml = '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm overflow-x-auto">'
+                + '<table class="w-full text-sm md:text-base font-bold text-slate-700 border-collapse">'
+                + '<thead><tr class="bg-orange-50 text-orange-950"><th class="px-3 py-2.5 text-left border border-orange-100">時間</th>'
+                + postNames.map(pn => '<th class="px-3 py-2.5 text-left border border-orange-100">' + mpEsc(pn) + '</th>').join('')
+                + '<th class="px-3 py-2.5 text-left border border-orange-100">休息</th></tr></thead><tbody>'
+                + segRowsHtml + '</tbody></table></div>';
             document.getElementById('mp-segment-list').innerHTML = segHtml;
 
             // 接替鏈：將休息時段砌成 R 條休息線
