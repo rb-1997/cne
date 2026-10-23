@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.1</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.2</span>
             </div>
         </section>
 
@@ -1074,11 +1074,20 @@
                         <i data-lucide="zap" class="w-5 h-5 text-orange-600"></i>
                         時段快速選擇
                     </label>
-                    <select id="mp-time-preset" onchange="setMpTimePreset(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                        <option value="p1">08:20 – 15:15</option>
-                        <option value="p2" selected>15:15 – 22:35</option>
-                        <option value="manual">人手輸入（自己揀開始／結束時間）</option>
-                    </select>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-time-preset" value="p1" onchange="setMpTimePreset('p1')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">08:20 – 15:15</span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-time-preset" value="p2" checked onchange="setMpTimePreset('p2')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">15:15 – 22:35</span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-time-preset" value="manual" onchange="setMpTimePreset('manual')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">手動輸入（自己揀開始／結束時間）</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div id="mp-time-inputs" class="grid md:grid-cols-2 gap-5">
@@ -1120,7 +1129,7 @@
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                             <i data-lucide="users" class="w-5 h-5 text-orange-600"></i>
-                            總人數（全部返工人員）
+                            總當值人數
                         </label>
                         <select id="mp-total" onchange="buildMpNames()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
                     </div>
@@ -2655,7 +2664,7 @@
 
 
         /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
-        let mpMode = 'wmw';
+        let mpMode = 'wm';
 
         function mpRng(seed) {
             let a = seed >>> 0;
@@ -2691,12 +2700,12 @@
             setMpTimePreset('p2');
             const total = document.getElementById('mp-total');
             for (let n = 2; n <= 20; n++) total.add(new Option(n + ' 人', n));
-            total.value = '9';
+            total.value = '5';
             const duty = document.getElementById('mp-duty');
             for (let n = 1; n <= 19; n++) duty.add(new Option(n + ' 人', n));
             duty.value = '4';
             buildMpNames();
-            setMpMode('wmw');
+            setMpMode('wm');
         }
 
         function buildMpNames() {
@@ -2749,8 +2758,7 @@
             [sh, sm, eh, em].forEach(el => { el.disabled = !manual; });
             const box = document.getElementById('mp-time-inputs');
             if (box) box.classList.toggle('opacity-40', !manual);
-            const sel = document.getElementById('mp-time-preset');
-            if (sel && sel.value !== p) sel.value = p;
+            document.querySelectorAll('input[name="mp-time-preset"]').forEach(r => { r.checked = (r.value === p); });
         }
 
         function resetMultiRoster() {
@@ -2759,12 +2767,12 @@
             document.getElementById('mp-start-min').value = '15';
             document.getElementById('mp-end-hour').value = '22';
             document.getElementById('mp-end-min').value = '35';
-            document.getElementById('mp-total').value = '9';
+            document.getElementById('mp-total').value = '5';
             document.getElementById('mp-duty').value = '4';
             document.getElementById('mp-remarks').value = '';
             buildMpNames();
             document.getElementById('mp-names').querySelectorAll('input').forEach(inp => inp.value = '');
-            setMpMode('wmw');
+            setMpMode('wm');
             document.getElementById('mp-error').classList.add('hidden');
             document.getElementById('mp-result').classList.add('hidden');
         }
