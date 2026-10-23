@@ -1004,6 +1004,9 @@
                                 <option value="4">4 人 (人員 A, B, C, D)</option>
                                 <option value="5">5 人 (人員 A, B, C, D, E)</option>
                                 <option value="6">6 人 (人員 A, B, C, D, E, F)</option>
+                                <option value="7">7 人 (人員 A, B, C, D, E, F, G)</option>
+                                <option value="8">8 人 (人員 A, B, C, D, E, F, G, H)</option>
+                                <option value="9">9 人 (人員 A, B, C, D, E, F, G, H, I)</option>
                             </select>
                         </div>
                     </div>
@@ -1046,19 +1049,35 @@
 
                 <p class="text-sm md:text-base text-slate-600 font-medium">全程啱啱保持「必須當值」人數唔多唔少，休息時間全員平均攤分。首先揀模式：</p>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <button id="mp-mode-wm" onclick="setMpMode('wm')" class="w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-white border-slate-300 text-slate-600">
+                <div class="grid grid-cols-3 gap-2">
+                    <button id="mp-mode-wm" onclick="setMpMode('wm')" class="w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600">
                         一水一飯
                         <span class="block text-xs font-bold opacity-80 mt-1">每人 行水一次 ＋ 食飯一次</span>
                     </button>
-                    <button id="mp-mode-wmw" onclick="setMpMode('wmw')" class="w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-white border-slate-300 text-slate-600">
+                    <button id="mp-mode-wmw" onclick="setMpMode('wmw')" class="w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600">
                         水飯水
                         <span class="block text-xs font-bold opacity-80 mt-1">每人 休息 → 食飯 → 休息 三段</span>
+                    </button>
+                    <button id="mp-mode-meal" onclick="setMpMode('meal')" class="w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600">
+                        一飯
+                        <span class="block text-xs font-bold opacity-80 mt-1">每人 只食飯一次・冇行水</span>
                     </button>
                 </div>
                 <p id="mp-mode-desc" class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3"></p>
 
-                <div class="grid md:grid-cols-2 gap-5">
+                <div class="space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="zap" class="w-5 h-5 text-orange-600"></i>
+                        時段快速選擇
+                    </label>
+                    <select id="mp-time-preset" onchange="setMpTimePreset(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                        <option value="p1">08:20 – 15:15</option>
+                        <option value="p2" selected>15:15 – 22:35</option>
+                        <option value="manual">人手輸入（自己揀開始／結束時間）</option>
+                    </select>
+                </div>
+
+                <div id="mp-time-inputs" class="grid md:grid-cols-2 gap-5">
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                             <i data-lucide="clock" class="w-5 h-5 text-orange-600"></i>
@@ -2665,6 +2684,7 @@
                 em.add(new Option(v + ' 分', v));
             }
             sh.value = '15'; sm.value = '15'; eh.value = '22'; em.value = '35';
+            setMpTimePreset('p2');
             const total = document.getElementById('mp-total');
             for (let n = 2; n <= 20; n++) total.add(new Option(n + ' 人', n));
             total.value = '9';
@@ -2699,17 +2719,38 @@
             mpMode = mode;
             const wm = document.getElementById('mp-mode-wm');
             const wmw = document.getElementById('mp-mode-wmw');
-            if (!wm || !wmw) return;
-            const on = 'w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-200';
-            const off = 'w-full py-3.5 rounded-2xl border-2 font-extrabold text-lg transition-all bg-white border-slate-300 text-slate-600 hover:border-orange-400';
+            const meal = document.getElementById('mp-mode-meal');
+            if (!wm || !wmw || !meal) return;
+            const on = 'w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-200';
+            const off = 'w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600 hover:border-orange-400';
             wm.className = mode === 'wm' ? on : off;
             wmw.className = mode === 'wmw' ? on : off;
+            meal.className = mode === 'meal' ? on : off;
             document.getElementById('mp-mode-desc').innerText = mode === 'wm'
                 ? '一水一飯：全程啱啱保持當值人數，每人一次行水＋一次食飯；總休息時間由全員平均攤分（大家除），行水同食飯各佔一半。'
-                : '水飯水：全程啱啱保持當值人數，每人「休息 → 食飯 → 休息」三段完整時段；食飯一整段唔劏開，最少 60 分鐘；每人總休息時間完全相同。';
+                : (mode === 'meal'
+                    ? '一飯：全程啱啱保持當值人數，每人成段時間只休息一次，就係食飯，冇行水。適合人手最緊張、只做到最有限度服務嗰陣。食飯時長全員平均分配，有幾多食幾多，唔使夠 60 分鐘。'
+                    : '水飯水：全程啱啱保持當值人數，每人「休息 → 食飯 → 休息」三段完整時段；食飯一整段唔劏開，最少 60 分鐘；每人總休息時間完全相同。');
+        }
+
+        function setMpTimePreset(p) {
+            const sh = document.getElementById('mp-start-hour');
+            const sm = document.getElementById('mp-start-min');
+            const eh = document.getElementById('mp-end-hour');
+            const em = document.getElementById('mp-end-min');
+            if (!sh) return;
+            if (p === 'p1') { sh.value = '08'; sm.value = '20'; eh.value = '15'; em.value = '15'; }
+            if (p === 'p2') { sh.value = '15'; sm.value = '15'; eh.value = '22'; em.value = '35'; }
+            const manual = (p === 'manual');
+            [sh, sm, eh, em].forEach(el => { el.disabled = !manual; });
+            const box = document.getElementById('mp-time-inputs');
+            if (box) box.classList.toggle('opacity-40', !manual);
+            const sel = document.getElementById('mp-time-preset');
+            if (sel && sel.value !== p) sel.value = p;
         }
 
         function resetMultiRoster() {
+            setMpTimePreset('p2');
             document.getElementById('mp-start-hour').value = '15';
             document.getElementById('mp-start-min').value = '15';
             document.getElementById('mp-end-hour').value = '22';
@@ -2938,6 +2979,29 @@
             return best ? best.blocks : null;
         }
 
+        /* 一飯:每人一嚿(食飯),全程休息人數 = R。
+           數學結構:啲食飯時段必然砌成 R 條接龍鏈(每條鏈由頭到尾冚滿成段時間)。
+           每條鏈分到 floor/ceil(N/R) 個人,鏈內每人長度做到最平均(差 <= 1 格)。
+           當 R > N/2,必然有鏈得 1 個人 = 嗰個人成段時間休息(數學上冇得避免,結果會提示)。 */
+        function mpSolveMeal(N, M, T, seed) {
+            const R = N - M, U = 6 * N;
+            const base = Math.floor(N / R), rem = N - base * R;
+            const blocks = [];
+            let p = 0;
+            for (let c = 0; c < R; c++) {
+                const k = base + (c < rem ? 1 : 0); // 呢條鏈有幾多個人
+                const q = Math.floor(U / k), r = U - q * k;
+                let cur = 0;
+                for (let i = 0; i < k; i++) {
+                    const len = q + (i < r ? 1 : 0);
+                    blocks.push({ p: p, label: '飯', s: cur * 2, e: (cur + len) * 2 });
+                    cur += len;
+                    p++;
+                }
+            }
+            return blocks;
+        }
+
         function calculateMultiRoster() {
             const errBox = document.getElementById('mp-error');
             const resBox = document.getElementById('mp-result');
@@ -2978,11 +3042,13 @@
             let blocks = null;
             try {
                 if (mpMode === 'wm') blocks = mpSolveWM(N, M);
+                else if (mpMode === 'meal') blocks = mpSolveMeal(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
                 else blocks = mpSolveWMW(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
             } catch (e) { blocks = null; }
 
             if (!blocks) {
-                errBox.innerHTML = '<p>⚠️ 呢組數字暫時排唔到一個完全公平嘅「水飯水」編排。可以試下：加長總時段、減少必須當值人數，或者改用「一水一飯」模式。</p>';
+                const modeName = mpMode === 'meal' ? '一飯' : '水飯水';
+                errBox.innerHTML = '<p>⚠️ 呢組數字暫時排唔到一個完全公平嘅「' + modeName + '」編排。可以試下：加長總時段、減少必須當值人數，或者改用其他模式。</p>';
                 errBox.classList.remove('hidden');
                 errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
@@ -2997,6 +3063,10 @@
             const warnings = [];
             const seen = {};
             names.forEach(nm => { if (seen[nm]) warnings.push('有重複名稱「' + nm + '」，結果會照樣顯示，核對時請留意。'); seen[nm] = true; });
+            if (mpMode === 'meal') {
+                const full = blocks.filter(b => segMins(b.s, b.e) >= T - 2).length;
+                if (full > 0) warnings.push('提示：呢組人數下（休息人數多過一半），數學上有 ' + full + ' 人要成段時間休息（食飯）先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數，或者改用其他模式。');
+            }
             if (mpMode === 'wm' && restPer / 2 < 60) {
                 warnings.push('提示：一水一飯模式下每人食飯約 ' + Math.round(restPer / 2) + ' 分鐘（總休息大家除），少過 60 分鐘。如果食飯一定要足 1 小時，請改用「水飯水」模式。');
             }
@@ -3077,12 +3147,15 @@
             if (mpMode === 'wmw') {
                 const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
                 mealInfo = '每人食飯一整段：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全部 ≥ 60 分鐘 ✓）';
+            } else if (mpMode === 'meal') {
+                const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
+                mealInfo = '每人只食飯一次：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全員平均分配）';
             } else {
                 mealInfo = '每人行水約 ' + Math.round(restPer / 2) + ' 分鐘、食飯約 ' + Math.round(restPer / 2) + ' 分鐘';
             }
             document.getElementById('mp-summary').innerHTML =
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">總時段：<span class="font-extrabold text-slate-900">' + T + ' 分鐘</span>（' + clock(0) + ' - ' + clock(G2) + '）</div>' +
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（全員相同）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（' + (mpMode === 'meal' ? '平均分配' : '全員相同') + '）</div>' +
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">當值人數：全程保持 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息 ' + (N - M) + ' 人）</div>' +
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
 
