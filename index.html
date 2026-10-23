@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.3</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.4</span>
             </div>
         </section>
 
@@ -1035,6 +1035,12 @@
                         </p>
                         <div id="staff-breakdown-container" class="grid gap-3 sm:grid-cols-2"></div>
                     </div>
+                    <div class="pt-1">
+                        <button onclick="copyDripResult(this)" class="w-full bg-white hover:bg-blue-50 text-blue-800 font-extrabold py-3 rounded-2xl border-2 border-blue-300 transition-all flex items-center justify-center gap-2 text-base">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                            <span>一鍵 Copy（複製成份報告）</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1199,6 +1205,13 @@
                     </div>
 
                     <div id="mp-remarks-out" class="hidden p-4 bg-white border-2 border-orange-200 rounded-2xl text-slate-800 text-sm md:text-base font-medium"></div>
+
+                    <div class="pt-1">
+                        <button onclick="copyMpResult(this)" class="w-full bg-white hover:bg-orange-50 text-orange-800 font-extrabold py-3 rounded-2xl border-2 border-orange-300 transition-all flex items-center justify-center gap-2 text-base">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                            <span>一鍵 Copy（複製成份報告）</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -2600,6 +2613,46 @@
             document.getElementById('staff-count-select').value = "3";
             document.getElementById('drip-calc-result').classList.add('hidden');
             document.getElementById('staff-breakdown-container').innerHTML = '';
+            dripResultText = '';
+        }
+
+        let dripResultText = '';
+
+        async function copyTextWithFeedback(text, btn) {
+            let ok = false;
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    ok = true;
+                }
+            } catch (e) { ok = false; }
+            if (!ok) {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (e) { ok = false; }
+            }
+            if (btn) {
+                const span = btn.querySelector('span');
+                if (span) {
+                    const old = span.innerText;
+                    span.innerText = ok ? '✅ 已複製！貼去通訊軟件就得' : '複製失敗，請再試一次';
+                    setTimeout(() => { span.innerText = old; }, 2500);
+                }
+            }
+            if (typeof showToast === 'function') showToast(ok ? '已複製成份報告 ✅' : '複製失敗，請再試一次');
+            return ok;
+        }
+
+        function copyDripResult(btn) {
+            if (dripResultText) copyTextWithFeedback(dripResultText, btn);
         }
 
         function formatMinutesToTime(mins) {
@@ -2634,6 +2687,7 @@
             const container = document.getElementById('staff-breakdown-container');
             container.innerHTML = '';
 
+            const dripLines = [];
             let currentStart = startTotalMins;
 
             for (let i = 0; i < staffCount; i++) {
@@ -2655,9 +2709,12 @@
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', cardHtml);
+                dripLines.push('人員 ' + letter + '：' + startTimeStr + ' - ' + endTimeStr);
 
                 currentStart = currentEnd;
             }
+
+            dripResultText = '【行水神器】人員時間分配結果\n總共時間：' + totalDurationMins + ' 分鐘\n每人平均：' + perPersonText + '\n\n人員時間分配結果：\n' + dripLines.join('\n');
 
             document.getElementById('res-total-mins').innerText = totalDurationMins;
             document.getElementById('res-per-time').innerText = perPersonText;
@@ -2668,6 +2725,7 @@
 
         /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
         let mpMode = 'wm';
+        let mpResultText = '';
 
         function mpRng(seed) {
             let a = seed >>> 0;
@@ -2782,10 +2840,15 @@
             document.querySelectorAll('input[name="mp-time-preset"]').forEach(r => { r.checked = (r.value === p); });
         }
 
+        function copyMpResult(btn) {
+            if (mpResultText) copyTextWithFeedback(mpResultText, btn);
+        }
+
         function resetMultiRoster() {
             setMpTimePreset('manual');
             const spSel = document.getElementById('mp-special-select');
             if (spSel) spSel.value = 'p2';
+            mpResultText = '';
             document.getElementById('mp-start-hour').value = '15';
             document.getElementById('mp-start-min').value = '15';
             document.getElementById('mp-end-hour').value = '22';
@@ -3114,6 +3177,7 @@
                 ? 'bg-slate-100 text-slate-600 border-slate-300'
                 : (lab === '飯' ? 'bg-orange-100 text-orange-900 border-orange-300' : 'bg-sky-100 text-sky-900 border-sky-300');
             let personHtml = '';
+            const personTxtLines = [];
             per.forEach((bs, pi) => {
                 bs.sort((a, b) => a.s - b.s);
                 const segs = [];
@@ -3129,6 +3193,7 @@
                     '<span class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-sm font-extrabold ' + chipCls(sg.label) + '">' +
                     sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）</span>'
                 ).join(' ');
+                personTxtLines.push(names[pi] + '（總休息 ' + restTotal + ' 分鐘）：' + segs.map(sg => sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）').join(' '));
                 personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm space-y-2">' +
                     '<div class="flex items-center justify-between flex-wrap gap-2">' +
                     '<span class="font-extrabold text-slate-900 text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">' + String.fromCharCode(65 + pi) + '</span>' + mpEsc(names[pi]) + '</span>' +
@@ -3142,6 +3207,7 @@
             blocks.forEach(b => { boundSet.add(b.s); boundSet.add(b.e); });
             const bounds = Array.from(boundSet).sort((a, b) => a - b);
             let segHtml = '';
+            const segTxtLines = [];
             for (let i = 0; i + 1 < bounds.length; i++) {
                 const a = bounds[i], b = bounds[i + 1];
                 const resting = blocks.filter(x => x.s <= a && x.e >= b);
@@ -3149,6 +3215,7 @@
                 const working = [];
                 for (let pi = 0; pi < N; pi++) if (!rNames.has(pi)) working.push(names[pi]);
                 const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => mpEsc(names[x.p]) + '（' + x.label + '）').join('、');
+                segTxtLines.push(clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分） 休息：' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、') + ' ｜ 工作：' + working.join('、'));
                 segHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm">' +
                     '<span class="font-extrabold text-slate-900">' + clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分）</span>' +
                     '<span class="font-bold text-sky-900"> 休息：' + restTxt + '</span>' +
@@ -3166,6 +3233,7 @@
                 lane.push(b);
             });
             let reliefHtml = '';
+            const reliefTxtLines = [];
             lanes.forEach((lane, li) => {
                 let line = '<span class="font-extrabold text-orange-900">休息位 ' + (li + 1) + '：</span> ';
                 lane.forEach((b, bi) => {
@@ -3174,6 +3242,13 @@
                     else line += ' → ' + clock(b.s) + ' ' + mpEsc(names[lane[bi - 1].p]) + ' 返工接替 ' + seg;
                 });
                 reliefHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm leading-relaxed">' + line + '</div>';
+                let lineTxt = '休息位 ' + (li + 1) + '：';
+                lane.forEach((b, bi) => {
+                    const segT = names[b.p] + ' ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
+                    if (bi === 0) lineTxt += ' ' + segT;
+                    else lineTxt += ' → ' + clock(b.s) + ' ' + names[lane[bi - 1].p] + ' 返工接替 ' + segT;
+                });
+                reliefTxtLines.push(lineTxt);
             });
             document.getElementById('mp-relief-list').innerHTML = reliefHtml;
 
@@ -3205,6 +3280,18 @@
                 remOut.innerHTML = '<span class="font-extrabold">備註：</span>' + mpEsc(remarks).replace(/\n/g, '<br>');
                 remOut.classList.remove('hidden');
             } else remOut.classList.add('hidden');
+
+            const mpModeNameTxt = mpMode === 'wm' ? '一水一飯' : (mpMode === 'meal' ? '一飯' : '水飯水');
+            mpResultText = '【多人行水大作戰】編排結果\n模式：' + mpModeNameTxt +
+                '\n總時段：' + T + ' 分鐘（' + clock(0) + ' - ' + clock(G2) + '）' +
+                '\n每人總休息：約 ' + Math.round(restPer) + ' 分鐘（' + (mpMode === 'meal' ? '平均分配' : '全員相同') + '）' +
+                '\n當值人數：全程保持 ' + M + ' 人（休息 ' + (N - M) + ' 人）' +
+                '\n' + mealInfo +
+                '\n\n每人時間表（工 / 水 / 飯）：\n' + personTxtLines.join('\n') +
+                '\n\n分段總表（每段邊個休息、邊個工作）：\n' + segTxtLines.join('\n') +
+                '\n\n接替鏈（邊個休息完，接替邊個）：\n' + reliefTxtLines.join('\n') +
+                (warnings.length ? '\n\n' + warnings.map(w => '⚠️ ' + w).join('\n') : '') +
+                (remarks ? '\n\n備註：' + remarks : '');
 
             resBox.classList.remove('hidden');
             updateLucideIcons();
