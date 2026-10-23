@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.10</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.11</span>
             </div>
         </section>
 
@@ -1064,7 +1064,21 @@
                             <input type="radio" name="eq-mode" value="gb" onchange="setEqMode('gb')" class="w-5 h-5 shrink-0 accent-black">
                             <span class="text-lg font-bold text-slate-900">摷 Guard Break<span class="block text-xs font-bold text-slate-500">三人一組・兩個崗位：每 part 2 人當值、1 人休息，輪流轉</span></span>
                         </label>
+                        <div id="eq-post-single-wrap" class="pl-9 space-y-2">
+                            <span class="text-xs text-slate-500 font-bold block">崗位名稱（唔輸入就用預設）</span>
+                            <input type="text" id="eq-post-name" placeholder="預設：崗位一" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                        </div>
                         <div id="eq-gb-box" class="hidden pl-9 space-y-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="space-y-1">
+                                    <span class="text-xs text-slate-500 font-bold block">崗位一名稱</span>
+                                    <input type="text" id="eq-gb-post-1" placeholder="預設：崗位一" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                </div>
+                                <div class="space-y-1">
+                                    <span class="text-xs text-slate-500 font-bold block">崗位二名稱</span>
+                                    <input type="text" id="eq-gb-post-2" placeholder="預設：崗位二" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                </div>
+                            </div>
                             <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
                                 <input type="radio" name="eq-gb-method" value="unit" checked onchange="setGbMethod('unit')" class="w-5 h-5 shrink-0 accent-black">
                                 <span class="text-lg font-bold text-slate-900">自選每 part 分鐘<span class="block text-xs font-bold text-slate-500">第一輪 3 parts 跟足你揀嘅分鐘；第二輪將剩餘時間 ÷ 3 平均攤分</span></span>
@@ -2714,6 +2728,7 @@
                 eqMode = 'normal';
                 document.querySelector('input[name="eq-mode"][value="normal"]').checked = true;
                 document.getElementById('eq-gb-box').classList.add('hidden');
+                document.getElementById('eq-post-single-wrap').classList.remove('hidden');
                 document.getElementById('eq-error').classList.add('hidden');
                 document.getElementById('drip-calc-result').classList.add('hidden');
             }
@@ -2762,6 +2777,10 @@
             eqMode = 'normal';
             document.querySelector('input[name="eq-gb-method"][value="unit"]').checked = true;
             gbMethod = 'unit';
+            document.getElementById('eq-post-name').value = '';
+            document.getElementById('eq-gb-post-1').value = '';
+            document.getElementById('eq-gb-post-2').value = '';
+            document.getElementById('eq-post-single-wrap').classList.remove('hidden');
             document.getElementById('eq-gb-unit-wrap').classList.remove('hidden');
             document.getElementById('eq-gb-box').classList.add('hidden');
             document.getElementById('eq-error').classList.add('hidden');
@@ -2822,6 +2841,7 @@
         function setEqMode(m) {
             eqMode = m;
             document.getElementById('eq-gb-box').classList.toggle('hidden', m !== 'gb');
+            document.getElementById('eq-post-single-wrap').classList.toggle('hidden', m === 'gb');
             document.getElementById('eq-error').classList.add('hidden');
         }
 
@@ -2890,6 +2910,10 @@
             const totals = {};
             letters.forEach(L => { totals[L] = { work: 0, rest: 0, restParts: 0 }; });
 
+            const gbP1Name = document.getElementById('eq-gb-post-1').value.trim() || '崗位一';
+            const gbP2Name = document.getElementById('eq-gb-post-2').value.trim() || '崗位二';
+            const escHtmlGb = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
             const container = document.getElementById('staff-breakdown-container');
             container.classList.remove('sm:grid-cols-2');
             container.innerHTML = '';
@@ -2897,8 +2921,11 @@
 
             groups.forEach((mem, gi) => {
                 lines.push('【第 ' + (gi + 1) + ' 組】人員 ' + mem.join('、'));
+                lines.push('時間｜' + gbP1Name + '｜' + gbP2Name + '｜休息');
                 let ghtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm space-y-2">'
-                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（人員 ' + mem.join('、') + '）</p>';
+                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（人員 ' + mem.join('、') + '）</p>'
+                    + '<div class="overflow-x-auto"><table class="w-full text-sm md:text-base font-bold text-slate-700 border-collapse">'
+                    + '<thead><tr class="bg-blue-50 text-blue-950"><th class="px-3 py-2.5 text-left border border-blue-100">時間</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtmlGb(gbP1Name) + '</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtmlGb(gbP2Name) + '</th><th class="px-3 py-2.5 text-left border border-blue-100">休息</th></tr></thead><tbody>';
                 for (let i = 0; i < K; i++) {
                     const rester = mem[i % 3];
                     const p1 = mem[(i + 1) % 3];
@@ -2909,13 +2936,10 @@
                     totals[p2].work += durs[i];
                     const t1 = formatMinutesToTime(starts[i]);
                     const t2 = formatMinutesToTime(starts[i] + durs[i]);
-                    ghtml += '<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm md:text-base font-bold text-slate-700 border-t border-slate-100 pt-2">'
-                        + '<span class="font-extrabold text-blue-900 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">Part ' + (i + 1) + '｜' + t1 + ' - ' + t2 + '</span>'
-                        + '<span>崗位一：人員 ' + p1 + '</span><span>崗位二：人員 ' + p2 + '</span>'
-                        + '<span class="text-emerald-700">休息：人員 ' + rester + '</span></div>';
-                    lines.push('Part ' + (i + 1) + ' ' + t1 + ' - ' + t2 + '｜崗位一：人員 ' + p1 + '｜崗位二：人員 ' + p2 + '｜休息：人員 ' + rester);
+                    ghtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + t1 + ' - ' + t2 + '</td><td class="px-3 py-2.5 border border-blue-100">人員 ' + p1 + '</td><td class="px-3 py-2.5 border border-blue-100">人員 ' + p2 + '</td><td class="px-3 py-2.5 border border-blue-100 text-emerald-700">人員 ' + rester + '</td></tr>';
+                    lines.push(t1 + ' - ' + t2 + '｜' + gbP1Name + '：人員 ' + p1 + '｜' + gbP2Name + '：人員 ' + p2 + '｜休息：人員 ' + rester);
                 }
-                ghtml += '</div>';
+                ghtml += '</tbody></table></div></div>';
                 container.insertAdjacentHTML('beforeend', ghtml);
                 lines.push('');
             });
@@ -2972,10 +2996,17 @@
             if (eqMode === 'gb') { calculateGuardBreak(startTotalMins, endTotalMins, staffCount); return; }
 
             const container = document.getElementById('staff-breakdown-container');
-            container.classList.add('sm:grid-cols-2');
+            container.classList.remove('sm:grid-cols-2');
             container.innerHTML = '';
 
+            const postNameRaw = document.getElementById('eq-post-name').value.trim();
+            const postName = postNameRaw || '崗位一';
+            const escHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
             const dripLines = [];
+            let tableHtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm overflow-x-auto">'
+                + '<table class="w-full text-sm md:text-base font-bold text-slate-700 border-collapse">'
+                + '<thead><tr class="bg-blue-50 text-blue-950"><th class="px-3 py-2.5 text-left border border-blue-100">時間</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtml(postName) + '</th></tr></thead><tbody>';
             let currentStart = startTotalMins;
 
             for (let i = 0; i < staffCount; i++) {
@@ -2985,24 +3016,15 @@
                 const startTimeStr = formatMinutesToTime(currentStart);
                 const endTimeStr = formatMinutesToTime(currentEnd);
 
-                const cardHtml = `
-                    <div class="bg-white p-4 rounded-2xl border-2 border-blue-100 flex items-center justify-between shadow-sm">
-                        <div class="flex items-center space-x-3">
-                            <span class="w-8 h-8 rounded-full bg-blue-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">${letter}</span>
-                            <span class="font-extrabold text-slate-900 text-base">人員 ${letter}</span>
-                        </div>
-                        <div class="text-sm md:text-base font-extrabold text-blue-900 bg-blue-50 px-3.5 py-2 rounded-xl border border-blue-200">
-                            ${startTimeStr} - ${endTimeStr}
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', cardHtml);
-                dripLines.push('人員 ' + letter + '：' + startTimeStr + ' - ' + endTimeStr);
+                tableHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + startTimeStr + ' - ' + endTimeStr + '</td><td class="px-3 py-2.5 border border-blue-100">人員 ' + letter + '</td></tr>';
+                dripLines.push(startTimeStr + ' - ' + endTimeStr + '｜' + postName + '：人員 ' + letter);
 
                 currentStart = currentEnd;
             }
+            tableHtml += '</tbody></table></div>';
+            container.insertAdjacentHTML('beforeend', tableHtml);
 
-            dripResultText = '【行水神器】人員時間分配結果\n總共時間：' + totalDurationMins + ' 分鐘\n每人平均：' + perPersonText + '\n\n人員時間分配結果：\n' + dripLines.join('\n');
+            dripResultText = '【行水神器】人員時間分配結果\n崗位：' + postName + '\n總共時間：' + totalDurationMins + ' 分鐘\n每人平均：' + perPersonText + '\n\n時間｜' + postName + '\n' + dripLines.join('\n');
 
             document.getElementById('res-total-mins').innerText = totalDurationMins;
             document.getElementById('res-per-time').innerText = perPersonText;
