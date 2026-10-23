@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.14</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.15</span>
             </div>
         </section>
 
@@ -1196,7 +1196,7 @@
                         </label>
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
                             <input type="radio" name="mp-wm-join" value="split" onchange="setMpWmJoin(false)" class="w-5 h-5 shrink-0 accent-black">
-                            <span class="text-lg font-bold text-slate-900">不連續<span class="block text-xs font-bold text-slate-500">唔要求相連：行水同食飯可以分開排（例如水喺前段、飯喺後段），總休息全員完全相同</span></span>
+                            <span class="text-lg font-bold text-slate-900">不連續<span class="block text-xs font-bold text-slate-500">行水同食飯分開排：上半段行水、下半段食飯，中間隔住工</span></span>
                         </label>
                     </div>
                 </div>
@@ -3315,6 +3315,35 @@
             return blocks;
         }
 
+        /* 一水一飯（不連續）：鏈式兩輪 — 上半段全部人輪流「水」，下半段全部人輪流「飯」，水飯必定分開 */
+        function mpSolveWMSplit(N, M) {
+            const R = N - M, U = 6 * N, H = 3 * N; // 全窗 12N 格；每輪佔 3N 單位(×2格)
+            const base = Math.floor(N / R), rem = N - base * R;
+            const blocks = [];
+            let p = 0;
+            for (let c = 0; c < R; c++) {
+                const k = base + (c < rem ? 1 : 0);
+                const persons = [];
+                for (let i = 0; i < k; i++) persons.push(p++);
+                const q = Math.floor(H / k), r = H - q * k;
+                const lens = [];
+                for (let i = 0; i < k; i++) lens.push(q + (i < r ? 1 : 0));
+                // 第一輪：水（單位 0..3N）
+                let cur = 0;
+                persons.forEach((pp, i) => {
+                    blocks.push({ p: pp, label: '水', s: cur * 2, e: (cur + lens[i]) * 2 });
+                    cur += lens[i];
+                });
+                // 第二輪：飯（單位 3N..6N），用返同一位次序 — 每人水喺上半段、飯喺下半段同一位次，中間必定隔住工（除非嗰位成段休息）
+                cur = H;
+                persons.forEach((pp, i) => {
+                    blocks.push({ p: pp, label: '飯', s: cur * 2, e: (cur + lens[i]) * 2 });
+                    cur += lens[i];
+                });
+            }
+            return blocks;
+        }
+
         /* 一水一飯：N 等份輪換，每人休息 R 份；休息前半 = 水，後半 = 飯。回傳 blocks（12N 格座標） */
         function mpSolveWM(N, M) {
             const R = N - M;
@@ -3581,7 +3610,7 @@
 
             let blocks = null;
             try {
-                if (mpMode === 'wm') blocks = mpWmJoin ? mpSolveWMJoin(N, M) : mpSolveWM(N, M);
+                if (mpMode === 'wm') blocks = mpWmJoin ? mpSolveWMJoin(N, M) : mpSolveWMSplit(N, M);
                 else if (mpMode === 'meal') blocks = mpSolveMeal(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
                 else blocks = mpSolveWMW(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
             } catch (e) { blocks = null; }
@@ -3600,7 +3629,7 @@
             const segMins = (a, b) => disp(b) - disp(a);
 
             // 警告（唔阻計算）
-            const restFairLabel = (mpMode === 'meal' || (mpMode === 'wm' && mpWmJoin)) ? '平均分配' : '全員相同';
+            const restFairLabel = (mpMode === 'meal' || mpMode === 'wm') ? '平均分配' : '全員相同';
             const warnings = [];
             const seen = {};
             names.forEach(nm => { if (seen[nm]) warnings.push('有重複名稱「' + nm + '」，結果會照樣顯示，核對時請留意。'); seen[nm] = true; });
@@ -3608,12 +3637,12 @@
                 const full = blocks.filter(b => segMins(b.s, b.e) >= T - 2).length;
                 if (full > 0) warnings.push('提示：呢組人數下（休息人數多過一半），數學上有 ' + full + ' 人要成段時間休息（食飯）先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數，或者改用其他模式。');
             }
-            if (mpMode === 'wm' && mpWmJoin) {
+            if (mpMode === 'wm') {
                 const totalsJ = [];
                 for (let i = 0; i < N; i++) totalsJ.push(0);
                 blocks.forEach(b => { totalsJ[b.p] += segMins(b.s, b.e); });
                 const fullJ = totalsJ.filter(t => t >= T - 2).length;
-                if (fullJ > 0) warnings.push('提示：「水飯連續」模式下，呢組人數（休息人數多過一半）數學上有 ' + fullJ + ' 人要成段時間連續休息先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數，或者改用「不連續」。');
+                if (fullJ > 0) warnings.push('提示：呢組人數（休息人數多過一半）數學上有 ' + fullJ + ' 人要成段時間休息先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數。');
             }
             if (mpMode === 'wm' && restPer / 2 < 60) {
                 warnings.push('提示：一水一飯模式下每人食飯約 ' + Math.round(restPer / 2) + ' 分鐘（總休息大家除），少過 60 分鐘。如果食飯一定要足 1 小時，請改用「水飯水」模式。');
