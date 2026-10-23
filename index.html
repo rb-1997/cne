@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.2</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.6</span>
             </div>
         </section>
 
@@ -1035,6 +1035,12 @@
                         </p>
                         <div id="staff-breakdown-container" class="grid gap-3 sm:grid-cols-2"></div>
                     </div>
+                    <div class="pt-1">
+                        <button onclick="copyDripResult(this)" class="w-full bg-white hover:bg-blue-50 text-blue-800 font-extrabold py-3 rounded-2xl border-2 border-blue-300 transition-all flex items-center justify-center gap-2 text-base">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                            <span>一鍵 Copy（複製成份報告）</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1074,11 +1080,23 @@
                         <i data-lucide="zap" class="w-5 h-5 text-orange-600"></i>
                         時段快速選擇
                     </label>
-                    <select id="mp-time-preset" onchange="setMpTimePreset(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                        <option value="p1">08:20 – 15:15</option>
-                        <option value="p2" selected>15:15 – 22:35</option>
-                        <option value="manual">人手輸入（自己揀開始／結束時間）</option>
-                    </select>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-time-preset" value="special" onchange="setMpTimePreset('special')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">特別班次</span>
+                        </label>
+                        <div id="mp-special-box" class="hidden pl-9">
+                            <select id="mp-special-select" onchange="setMpSpecial(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                <option value="p1">08:20 – 15:15</option>
+                                <option value="p2" selected>15:15 – 22:35</option>
+                            </select>
+                        </div>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-time-preset" value="manual" checked onchange="setMpTimePreset('manual')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">手動輸入（自己揀開始／結束時間）</span>
+                        </label>
+                    </div>
+                    <p class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">📖 使用說明：預設係「手動輸入」，自己揀開始同結束時間就得。如果嗰更係特別班次，點選「特別班次」黑點，再喺下拉選單揀返班次時間（08:20–15:15 或 15:15–22:35），時間會自動填好，唔使自己入。</p>
                 </div>
 
                 <div id="mp-time-inputs" class="grid md:grid-cols-2 gap-5">
@@ -1120,7 +1138,7 @@
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                             <i data-lucide="users" class="w-5 h-5 text-orange-600"></i>
-                            總人數（全部返工人員）
+                            總當值人數
                         </label>
                         <select id="mp-total" onchange="buildMpNames()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
                     </div>
@@ -1187,6 +1205,13 @@
                     </div>
 
                     <div id="mp-remarks-out" class="hidden p-4 bg-white border-2 border-orange-200 rounded-2xl text-slate-800 text-sm md:text-base font-medium"></div>
+
+                    <div class="pt-1">
+                        <button onclick="copyMpResult(this)" class="w-full bg-white hover:bg-orange-50 text-orange-800 font-extrabold py-3 rounded-2xl border-2 border-orange-300 transition-all flex items-center justify-center gap-2 text-base">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
+                            <span>一鍵 Copy（複製成份報告）</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -2447,13 +2472,31 @@
         }
 
         const dailyQuotes = [
-            "襟屌 爛做 矛詐型", "縮骨 算爆 老撚土", "又一day", "舔伙記", "舔毛",
-            "part上part落", "食參", "舔糖", "出part", "行水", "轟", "擺橫", "擺門",
-            "全", "拔水", "開鐘", "剩肉", "開60", "水塘", "放血", "太陽", "月亮",
-            "開OP", "92 77", "five five 58", "返8抖24", "757", "兩早兩晏兩通宵",
-            "返二放一", "半日安", "西麗湖", "孖腸", "地下秩序", "又一日", "搞撚掂",
-            "燒焊", "落去搏", "關人鳩打千秋", "食伙記", "老屎窟", "人板", "瞓醒有",
-            "有餅", "矛餅", "跳2", "剔爆", "追case"
+            "同事係同事，唔係屋企人", "返工可以合作，唔使交心", "距離啱啱好，關係先長久", "太熟會冇分寸，太近會生是非",
+            "禮貌就夠，熱情要收", "同一更返工，唔代表同一條心", "笑住打招呼，好過攬頭攬頸", "保持距離，唔係冷漠，係自保",
+            "邊界一日冇咗，煩惱日日都嚟", "同事之間，最貴係分寸", "唔好將更表以外嘅人生都交出去", "拍檔還拍檔，朋友還朋友",
+            "近得滯嘅同事，遠得快嘅是非", "返工唔使搵知己，準時交更就得", "有距離先有尊重，有尊重先冇 drama", "同事唔使討好，做到嘢就夠",
+            "唔好因為一餐飯，就以為係自己人", "更表上夾到，唔代表心入面夾到", "留一線距離，日後好相見", "職場唔講感情，只講分寸",
+            "私事講出口，就唔再係秘密", "你今日講嘅心事，聽日變人哋嘅話題", "唔好攞私隱，換一時嘅親近", "屋企事留返屋企講，更衣室唔係樹窟",
+            "人哋問幾多，唔代表你要答幾多", "講三分留七分，先係醒目人", "你嘅弱點，唔好親手交俾人", "秘密一出門，就唔再歸你管",
+            "唔好喺茶水間，講晒成個人生", "私隱唔分享，唔係冇朋友，係冇把柄俾人", "今日嘅知心話，隨時係明日嘅競爭籌碼", "人哋知得你越多，傷你嘅方法越多",
+            "返工戴面具，唔係虛偽，係保護色", "唔好講你有幾攰、幾窮、幾想走", "病假點攞、屋企點鬧，唔使週圍唱", "講少啲私事，少好多是非",
+            "收埋啲心事，留返俾真朋友", "你以為係傾訴，人哋當係情報", "口密先行得遠，口疏最易中招", "私隱係盔甲，脫咗就自己受",
+            "同一條跑道，邊有真朋友", "有位爭嗰陣，先睇清邊個係人", "笑住同你講加油，轉頭踩你上位", "唔好低估隔籬位嗰個嘅野心",
+            "晉升得一個位，友情即刻計數", "你教識佢嗰招，隨時用嚟贏你", "職場冇永遠拍檔，只有暫時同路", "唔好將你嘅計劃，講俾對手聽",
+            "想升，就做好嘢，唔好做好人情", "競爭面前，先做好本份，唔好先信人情", "人哋讚你叻，可能係探你虛實", "唔出聲嗰個，先最有殺傷力",
+            "爭位嗰陣，舊情一文不值", "你嘅努力自己知就得，唔使週圍 announce", "低調做嘢，高調中招", "唔好俾人知你下一步想點行",
+            "有本事唔使唱，有成績自然有人睇到", "敵友唔分明嗰陣，沉默最安全", "升唔升到睇實力，都睇你收唔收得密", "職場如棋，你講晒啲棋俾人聽點贏",
+            "老嘅求穩，中嘅求升，青嘅求生活", "三代人同一更，三種唔同人生", "前輩嘅經驗要聽，前輩嘅牢騷唔使跟", "後生有衝勁，老手有分寸，邊個都唔好睇小",
+            "等退休嘅唔好笑人搏，搏緊嘅唔好笑人hea", "唔同年代，唔同計法，唔好用你把尺量人", "老人家驚變，後生仔驚悶，中間嗰班兩頭受氣", "經驗係寶，唔係攞嚟壓人嘅藉口",
+            "新人唔係唔識做，係未識呢度嘅潛規則", "青嘅想準時收工，老嘅想唔好出事，中年想升職加薪", "一更入面，有人追夢，有人等鐘，有人等退休金", "唔好同等退休嘅鬥衝，唔好同搏升嘅鬥hea",
+            "代溝唔係問題，唔尊重先係問題", "前輩食鹽多過你食米，都要睇佢食得啱唔啱", "後生唔係冇大冇細，係唔食嗰套", "三代同場，最緊要各安其位",
+            "你嘅上進心，喺人哋眼中可能係威脅", "你嘅hea，喺後生眼中可能係榜樣都係警號", "明白人哋企邊度，先唔會踩錯線", "公司唔係唔團結，係大家目標根本唔同",
+            "有人嚟返工，有人嚟等收工", "投閑置散唔係罪，最緊要唔好累街坊", "等退休都要有品，唔好將啲嘢推晒俾人", "Hea都要hea得醒目，唔好俾人捉到痛腳",
+            "唔搏升唔緊要，做好自己嗰份先", "平安收工，先係打工仔嘅終極目標", "唔求出位，只求唔出事", "少做少錯呢句，聽下好，唔好當真理做人",
+            "喺呢度生存，唔係最叻嗰個，係最穩嗰個", "留得青山在，唔怕冇更返", "唔好為咗公司，賠咗自己身體同心情", "返工係賣時間，唔係賣命，更加唔係賣尊嚴",
+            "睇通透就唔執著，唔執著就唔傷身", "有啲人唔係懶，係早已睇透冇得升", "有啲人唔出聲，唔係冇意見，係懶得同你拗", "做好自己，唔理閒事，最易捱到退休",
+            "職場長命訣：少講、多做、準時走", "唔好理人哋點hea，做好自己嗰更先", "人哋點諗唔重要，自己點過先重要", "收工之後嘅人生，先係真正屬於你"
         ];
 
         function initDailyQuote() {
@@ -2588,6 +2631,46 @@
             document.getElementById('staff-count-select').value = "3";
             document.getElementById('drip-calc-result').classList.add('hidden');
             document.getElementById('staff-breakdown-container').innerHTML = '';
+            dripResultText = '';
+        }
+
+        let dripResultText = '';
+
+        async function copyTextWithFeedback(text, btn) {
+            let ok = false;
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                    ok = true;
+                }
+            } catch (e) { ok = false; }
+            if (!ok) {
+                try {
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    ok = document.execCommand('copy');
+                    document.body.removeChild(ta);
+                } catch (e) { ok = false; }
+            }
+            if (btn) {
+                const span = btn.querySelector('span');
+                if (span) {
+                    const old = span.innerText;
+                    span.innerText = ok ? '✅ 已複製！貼去通訊軟件就得' : '複製失敗，請再試一次';
+                    setTimeout(() => { span.innerText = old; }, 2500);
+                }
+            }
+            if (typeof showToast === 'function') showToast(ok ? '已複製成份報告 ✅' : '複製失敗，請再試一次');
+            return ok;
+        }
+
+        function copyDripResult(btn) {
+            if (dripResultText) copyTextWithFeedback(dripResultText, btn);
         }
 
         function formatMinutesToTime(mins) {
@@ -2622,6 +2705,7 @@
             const container = document.getElementById('staff-breakdown-container');
             container.innerHTML = '';
 
+            const dripLines = [];
             let currentStart = startTotalMins;
 
             for (let i = 0; i < staffCount; i++) {
@@ -2643,9 +2727,12 @@
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', cardHtml);
+                dripLines.push('人員 ' + letter + '：' + startTimeStr + ' - ' + endTimeStr);
 
                 currentStart = currentEnd;
             }
+
+            dripResultText = '【行水神器】人員時間分配結果\n總共時間：' + totalDurationMins + ' 分鐘\n每人平均：' + perPersonText + '\n\n人員時間分配結果：\n' + dripLines.join('\n');
 
             document.getElementById('res-total-mins').innerText = totalDurationMins;
             document.getElementById('res-per-time').innerText = perPersonText;
@@ -2655,7 +2742,8 @@
 
 
         /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
-        let mpMode = 'wmw';
+        let mpMode = 'wm';
+        let mpResultText = '';
 
         function mpRng(seed) {
             let a = seed >>> 0;
@@ -2688,15 +2776,15 @@
                 em.add(new Option(v + ' 分', v));
             }
             sh.value = '15'; sm.value = '15'; eh.value = '22'; em.value = '35';
-            setMpTimePreset('p2');
+            setMpTimePreset('manual');
             const total = document.getElementById('mp-total');
             for (let n = 2; n <= 20; n++) total.add(new Option(n + ' 人', n));
-            total.value = '9';
+            total.value = '5';
             const duty = document.getElementById('mp-duty');
             for (let n = 1; n <= 19; n++) duty.add(new Option(n + ' 人', n));
             duty.value = '4';
             buildMpNames();
-            setMpMode('wmw');
+            setMpMode('wm');
         }
 
         function buildMpNames() {
@@ -2737,34 +2825,58 @@
                     : '水飯水：全程啱啱保持當值人數，每人「休息 → 食飯 → 休息」三段完整時段；食飯一整段唔劏開，最少 60 分鐘；每人總休息時間完全相同。');
         }
 
+        function mpApplyPeriod(v) {
+            const sh = document.getElementById('mp-start-hour');
+            const sm = document.getElementById('mp-start-min');
+            const eh = document.getElementById('mp-end-hour');
+            const em = document.getElementById('mp-end-min');
+            if (!sh) return;
+            if (v === 'p1') { sh.value = '08'; sm.value = '20'; eh.value = '15'; em.value = '15'; }
+            if (v === 'p2') { sh.value = '15'; sm.value = '15'; eh.value = '22'; em.value = '35'; }
+        }
+
+        function setMpSpecial(v) {
+            mpApplyPeriod(v);
+        }
+
         function setMpTimePreset(p) {
             const sh = document.getElementById('mp-start-hour');
             const sm = document.getElementById('mp-start-min');
             const eh = document.getElementById('mp-end-hour');
             const em = document.getElementById('mp-end-min');
             if (!sh) return;
-            if (p === 'p1') { sh.value = '08'; sm.value = '20'; eh.value = '15'; em.value = '15'; }
-            if (p === 'p2') { sh.value = '15'; sm.value = '15'; eh.value = '22'; em.value = '35'; }
-            const manual = (p === 'manual');
-            [sh, sm, eh, em].forEach(el => { el.disabled = !manual; });
+            const special = (p === 'special');
+            if (special) {
+                const sel = document.getElementById('mp-special-select');
+                if (sel) mpApplyPeriod(sel.value);
+            }
+            [sh, sm, eh, em].forEach(el => { el.disabled = special; });
             const box = document.getElementById('mp-time-inputs');
-            if (box) box.classList.toggle('opacity-40', !manual);
-            const sel = document.getElementById('mp-time-preset');
-            if (sel && sel.value !== p) sel.value = p;
+            if (box) box.classList.toggle('opacity-40', special);
+            const sbox = document.getElementById('mp-special-box');
+            if (sbox) sbox.classList.toggle('hidden', !special);
+            document.querySelectorAll('input[name="mp-time-preset"]').forEach(r => { r.checked = (r.value === p); });
+        }
+
+        function copyMpResult(btn) {
+            if (mpResultText) copyTextWithFeedback(mpResultText, btn);
         }
 
         function resetMultiRoster() {
-            setMpTimePreset('p2');
+            setMpTimePreset('manual');
+            const spSel = document.getElementById('mp-special-select');
+            if (spSel) spSel.value = 'p2';
+            mpResultText = '';
             document.getElementById('mp-start-hour').value = '15';
             document.getElementById('mp-start-min').value = '15';
             document.getElementById('mp-end-hour').value = '22';
             document.getElementById('mp-end-min').value = '35';
-            document.getElementById('mp-total').value = '9';
+            document.getElementById('mp-total').value = '5';
             document.getElementById('mp-duty').value = '4';
             document.getElementById('mp-remarks').value = '';
             buildMpNames();
             document.getElementById('mp-names').querySelectorAll('input').forEach(inp => inp.value = '');
-            setMpMode('wmw');
+            setMpMode('wm');
             document.getElementById('mp-error').classList.add('hidden');
             document.getElementById('mp-result').classList.add('hidden');
         }
@@ -3083,6 +3195,7 @@
                 ? 'bg-slate-100 text-slate-600 border-slate-300'
                 : (lab === '飯' ? 'bg-orange-100 text-orange-900 border-orange-300' : 'bg-sky-100 text-sky-900 border-sky-300');
             let personHtml = '';
+            const personTxtLines = [];
             per.forEach((bs, pi) => {
                 bs.sort((a, b) => a.s - b.s);
                 const segs = [];
@@ -3098,6 +3211,7 @@
                     '<span class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-sm font-extrabold ' + chipCls(sg.label) + '">' +
                     sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）</span>'
                 ).join(' ');
+                personTxtLines.push(names[pi] + '（總休息 ' + restTotal + ' 分鐘）：' + segs.map(sg => sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）').join(' '));
                 personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm space-y-2">' +
                     '<div class="flex items-center justify-between flex-wrap gap-2">' +
                     '<span class="font-extrabold text-slate-900 text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">' + String.fromCharCode(65 + pi) + '</span>' + mpEsc(names[pi]) + '</span>' +
@@ -3111,6 +3225,7 @@
             blocks.forEach(b => { boundSet.add(b.s); boundSet.add(b.e); });
             const bounds = Array.from(boundSet).sort((a, b) => a - b);
             let segHtml = '';
+            const segTxtLines = [];
             for (let i = 0; i + 1 < bounds.length; i++) {
                 const a = bounds[i], b = bounds[i + 1];
                 const resting = blocks.filter(x => x.s <= a && x.e >= b);
@@ -3118,6 +3233,7 @@
                 const working = [];
                 for (let pi = 0; pi < N; pi++) if (!rNames.has(pi)) working.push(names[pi]);
                 const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => mpEsc(names[x.p]) + '（' + x.label + '）').join('、');
+                segTxtLines.push(clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分） 休息：' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、') + ' ｜ 工作：' + working.join('、'));
                 segHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm">' +
                     '<span class="font-extrabold text-slate-900">' + clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分）</span>' +
                     '<span class="font-bold text-sky-900"> 休息：' + restTxt + '</span>' +
@@ -3135,6 +3251,7 @@
                 lane.push(b);
             });
             let reliefHtml = '';
+            const reliefTxtLines = [];
             lanes.forEach((lane, li) => {
                 let line = '<span class="font-extrabold text-orange-900">休息位 ' + (li + 1) + '：</span> ';
                 lane.forEach((b, bi) => {
@@ -3143,6 +3260,13 @@
                     else line += ' → ' + clock(b.s) + ' ' + mpEsc(names[lane[bi - 1].p]) + ' 返工接替 ' + seg;
                 });
                 reliefHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm leading-relaxed">' + line + '</div>';
+                let lineTxt = '休息位 ' + (li + 1) + '：';
+                lane.forEach((b, bi) => {
+                    const segT = names[b.p] + ' ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
+                    if (bi === 0) lineTxt += ' ' + segT;
+                    else lineTxt += ' → ' + clock(b.s) + ' ' + names[lane[bi - 1].p] + ' 返工接替 ' + segT;
+                });
+                reliefTxtLines.push(lineTxt);
             });
             document.getElementById('mp-relief-list').innerHTML = reliefHtml;
 
@@ -3174,6 +3298,18 @@
                 remOut.innerHTML = '<span class="font-extrabold">備註：</span>' + mpEsc(remarks).replace(/\n/g, '<br>');
                 remOut.classList.remove('hidden');
             } else remOut.classList.add('hidden');
+
+            const mpModeNameTxt = mpMode === 'wm' ? '一水一飯' : (mpMode === 'meal' ? '一飯' : '水飯水');
+            mpResultText = '【多人行水大作戰】編排結果\n模式：' + mpModeNameTxt +
+                '\n總時段：' + T + ' 分鐘（' + clock(0) + ' - ' + clock(G2) + '）' +
+                '\n每人總休息：約 ' + Math.round(restPer) + ' 分鐘（' + (mpMode === 'meal' ? '平均分配' : '全員相同') + '）' +
+                '\n當值人數：全程保持 ' + M + ' 人（休息 ' + (N - M) + ' 人）' +
+                '\n' + mealInfo +
+                '\n\n每人時間表（工 / 水 / 飯）：\n' + personTxtLines.join('\n') +
+                '\n\n分段總表（每段邊個休息、邊個工作）：\n' + segTxtLines.join('\n') +
+                '\n\n接替鏈（邊個休息完，接替邊個）：\n' + reliefTxtLines.join('\n') +
+                (warnings.length ? '\n\n' + warnings.map(w => '⚠️ ' + w).join('\n') : '') +
+                (remarks ? '\n\n備註：' + remarks : '');
 
             resBox.classList.remove('hidden');
             updateLucideIcons();
