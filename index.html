@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.15</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.16</span>
             </div>
         </section>
 
@@ -1191,12 +1191,16 @@
                     </label>
                     <div class="space-y-2">
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
-                            <input type="radio" name="mp-wm-join" value="join" checked onchange="setMpWmJoin(true)" class="w-5 h-5 shrink-0 accent-black">
+                            <input type="radio" name="mp-wm-join" value="join" checked onchange="setMpWmMode('join')" class="w-5 h-5 shrink-0 accent-black">
                             <span class="text-lg font-bold text-slate-900">連續（預設）<span class="block text-xs font-bold text-slate-500">每人一次過休息：行水 → 食飯，相連唔分開</span></span>
                         </label>
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
-                            <input type="radio" name="mp-wm-join" value="split" onchange="setMpWmJoin(false)" class="w-5 h-5 shrink-0 accent-black">
-                            <span class="text-lg font-bold text-slate-900">不連續<span class="block text-xs font-bold text-slate-500">行水同食飯分開排：上半段行水、下半段食飯，中間隔住工</span></span>
+                            <input type="radio" name="mp-wm-join" value="split" onchange="setMpWmMode('split')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">不連續<span class="block text-xs font-bold text-slate-500">行水同食飯分開排：前段行水、後段食飯，中間隔住工；水同飯各佔總休息一半</span></span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-wm-join" value="split60" onchange="setMpWmMode('split60')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">不連續（強制食飯 60 分鐘）<span class="block text-xs font-bold text-slate-500">食飯每人最少 60 分鐘（去 canteen／叮飯／me time 都夠用）；行水 = 其餘休息時間，人人平均；水同飯分開排</span></span>
                         </label>
                     </div>
                 </div>
@@ -3101,10 +3105,10 @@
 
         /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
         let mpMode = 'wm';
-        let mpWmJoin = true;
+        let mpWmMode = 'join';
         let mpResultText = '';
 
-        function setMpWmJoin(j) { mpWmJoin = j; }
+        function setMpWmMode(m) { mpWmMode = m; }
 
         function mpRng(seed) {
             let a = seed >>> 0;
@@ -3181,7 +3185,7 @@
             wmw.className = mode === 'wmw' ? on : off;
             meal.className = mode === 'meal' ? on : off;
             document.getElementById('mp-mode-desc').innerText = mode === 'wm'
-                ? '一水一飯：全程啱啱保持當值人數，每人一次行水＋一次食飯；總休息時間由全員平均攤分（大家除），行水同食飯各佔一半。'
+                ? '一水一飯：全程啱啱保持當值人數，每人一次行水＋一次食飯；總休息時間全員平均攤分；行水同食飯點樣分配，睇下面「水同飯需唔需要連續？」嗰個選項。'
                 : (mode === 'meal'
                     ? '一飯：全程啱啱保持當值人數，每人成段時間只休息一次，就係食飯，冇行水。適合人手最緊張、只做到最有限度服務嗰陣。食飯時長全員平均分配，有幾多食幾多，唔使夠 60 分鐘。'
                     : '水飯水：全程啱啱保持當值人數，每人「休息 → 食飯 → 休息」三段完整時段；食飯一整段唔劏開，最少 60 分鐘；每人總休息時間完全相同。');
@@ -3243,7 +3247,7 @@
             document.getElementById('mp-posts').querySelectorAll('input').forEach(inp => inp.value = '');
             setMpMode('wm');
             document.querySelector('input[name="mp-wm-join"][value="join"]').checked = true;
-            mpWmJoin = true;
+            mpWmMode = 'join';
             document.getElementById('mp-error').classList.add('hidden');
             document.getElementById('mp-result').classList.add('hidden');
         }
@@ -3340,6 +3344,212 @@
                     blocks.push({ p: pp, label: '飯', s: cur * 2, e: (cur + lens[i]) * 2 });
                     cur += lens[i];
                 });
+            }
+            return blocks;
+        }
+
+
+        /* 將鏈式 blocks 轉返做 SA 嘅每人參數 {a 水、b 飯、h0 頭工、g 中間工、h1 尾工}(單位 = 6N 制) */
+        function mpSplitPersonsFromBlocks(blocks, N, U) {
+            const per = [];
+            for (let i = 0; i < N; i++) per.push({ a: 0, b: 0, h0: 0, g: 0, h1: 0 });
+            blocks.forEach(b => {
+                const p = per[b.p], s = b.s / 2, e = b.e / 2;
+                if (b.label === '水') { p.h0 = s; p.a = e - s; p._we = e; }
+                else { p.g = s - (p._we || 0); p.b = e - s; p.h1 = U - e; }
+            });
+            per.forEach(p => delete p._we);
+            return per;
+        }
+
+        /* 一水一飯(不連續/強制食飯60)SA 求解器 v6:
+           每人參數 {水 a、飯 b、頭工 h0、中間工 g、尾工 h1},a+b 固定 = 每人總休息(結構上人人相同);
+           硬成本 = 覆蓋偏差 + 次序違規×400 + g=0×400(硬相主動消滅);軟成本 = 飯長偏離目標 + g 罰;
+           移動只限單人(間隔移位 / 水飯互轉(拉平均偏向) / 整體移位),唔做人際轉移,總長永遠守恆 */
+        function mpSolveSplitOnce(N, M, T, seed, budgetMs, polishMs, forceMeal, initMode) {
+            const R = N - M, U = 6 * N, P = 6 * R, W = U - P;
+            const unitMin = T / U;
+            const mealMinU = Math.ceil(59.5 / unitMin);
+            const minB = forceMeal ? mealMinU : 1;
+            if (P < minB + 1 || W < 1) return null;
+            const rng = mpRng(seed);
+            const deadline = performance.now() + budgetMs;
+            let persons;
+            if (initMode === 'greedy') {
+                persons = [];
+                const depthG = new Array(U).fill(0);
+                for (let i = 0; i < N; i++) {
+                    let bestP = null, bestScore = Infinity;
+                    for (let t = 0; t < 800; t++) {
+                        let b = forceMeal ? mealMinU : Math.round(P / 2) + Math.floor(rng() * 3) - 1;
+                        b = Math.max(minB, Math.min(P - 1, b));
+                        const a = P - b;
+                        const g = 1 + Math.floor(rng() * Math.max(1, W - 1));
+                        const h0 = Math.floor(rng() * (W - g + 1));
+                        const cand = { a: a, b: b, h0: h0, g: g, h1: W - g - h0 };
+                        const s1 = cand.h0, e1 = s1 + cand.a, s2 = e1 + cand.g, e2 = s2 + cand.b;
+                        let score = 0;
+                        for (let u = s1; u < e1; u++) score += depthG[u] >= R ? 100 : depthG[u] * 10;
+                        for (let u = s2; u < e2; u++) score += depthG[u] >= R ? 100 : depthG[u] * 10;
+                        // 次序意識:同已放好嘅人比較,違規重罰(新加入嘅人編號最大,水/飯開始都應該最遲)
+                        for (let j = 0; j < i; j++) {
+                            const q = persons[j];
+                            const qws = q.h0, qms = q.h0 + q.a + q.g;
+                            if (s1 < qws || s2 < qms) score += 500;
+                            if ((qws <= s1 && qms > s2) || (qws > s1 && qms <= s2)) score += 500;
+                        }
+                        if (score < bestScore) { bestScore = score; bestP = cand; }
+                    }
+                    persons.push(bestP);
+                    const bs1 = bestP.h0, be1 = bs1 + bestP.a, bs2 = be1 + bestP.g, be2 = bs2 + bestP.b;
+                    for (let u = bs1; u < be1; u++) depthG[u]++;
+                    for (let u = bs2; u < be2; u++) depthG[u]++;
+                }
+            } else {
+                persons = [];
+                for (let i = 0; i < N; i++) {
+                    const b = forceMeal ? mealMinU : Math.round(P / 2);
+                    let h0 = Math.min(Math.floor(i * W / Math.max(1, N)), Math.max(0, W - 1));
+                    let left = W - h0;
+                    let g = Math.min(Math.max(1, Math.floor(W / 3)), left); if (g < 1) g = 1; left -= g;
+                    persons.push({ a: P - b, b: b, h0: h0, g: g, h1: left });
+                }
+                for (let k = 0; k < N * 3; k++) {
+                    const p = persons[Math.floor(rng() * N)];
+                    const d = rng() < 0.5 ? 1 : -1;
+                    if (rng() < 0.5) { p.h0 += d; p.g -= d; if (p.h0 < 0 || p.g < 1) { p.h0 -= d; p.g += d; } }
+                    else { p.g += d; p.h1 -= d; if (p.g < 1 || p.h1 < 0) { p.g -= d; p.h1 += d; } }
+                }
+            }
+            function blocksOf(p) {
+                const s1 = p.h0, e1 = s1 + p.a;
+                const s2 = e1 + p.g, e2 = s2 + p.b;
+                return [[s1, e1], [s2, e2]];
+            }
+            const depth = new Array(U).fill(0);
+            function addToDepth(p, sign) { const bs = blocksOf(p); for (let q = 0; q < 2; q++) for (let t = bs[q][0]; t < bs[q][1]; t++) depth[t] += sign; }
+            persons.forEach(p => addToDepth(p, 1));
+            function hardCost() {
+                let c = 0;
+                for (let t = 0; t < U; t++) { const d = depth[t] - R; c += d * d * 10 + (d > 0 ? d * 40 : 0); }
+                for (let i = 0; i < N; i++) {
+                    if (persons[i].g < 1) c += 400;
+                    for (let j = i + 1; j < N; j++) {
+                        const A = persons[i], B = persons[j];
+                        const wsi = A.h0, wsj = B.h0;
+                        const msi = wsi + A.a + A.g, msj = wsj + B.a + B.g;
+                        if ((wsi <= wsj && msi > msj) || (wsi > wsj && msi <= msj)) c += 400;
+                    }
+                }
+                return c;
+            }
+            const targetB = forceMeal ? mealMinU : P / 2;
+            function softCost() {
+                let c = 0;
+                for (const p of persons) c += (p.b - targetB) * (p.b - targetB) * 0.6;
+                return c;
+            }
+            let hard = hardCost();
+            let best = null, bestSoft = Infinity;
+            function snapshot() {
+                const out = [];
+                persons.forEach((p, pi) => { const bs = blocksOf(p); out.push({ p: pi, label: '水', s: bs[0][0] * 2, e: bs[0][1] * 2 }); out.push({ p: pi, label: '飯', s: bs[1][0] * 2, e: bs[1][1] * 2 }); });
+                return out;
+            }
+            if (hard === 0) { best = snapshot(); bestSoft = softCost(); }
+            let temp = 60, moves = 0, polishUntil = null;
+            while (performance.now() < deadline) {
+                if (hard === 0) {
+                    if (polishUntil === null) polishUntil = performance.now() + polishMs;
+                    if (performance.now() > polishUntil) break;
+                }
+                moves++;
+                temp = Math.max(0.4, temp * 0.9997);
+                if (moves % 25000 === 0 && hard > 0) temp = 60;
+                const pi = Math.floor(rng() * N);
+                const p = persons[pi];
+                const old = { a: p.a, b: p.b, h0: p.h0, g: p.g, h1: p.h1 };
+                const softBefore = (hard === 0) ? softCost() : 0;
+                const kind = rng();
+                if (kind < 0.45) {
+                    const d = rng() < 0.5 ? 1 : -1;
+                    if (rng() < 0.5) { p.h0 += d; p.g -= d; } else { p.g += d; p.h1 -= d; }
+                    if (p.h0 < 0 || p.g < 0 || p.h1 < 0) { Object.assign(p, old); continue; }
+                } else if (kind < 0.8) {
+                    let d;
+                    if (rng() < 0.75) {
+                        if (forceMeal) d = (p.b > minB) ? -1 : 1;
+                        else d = (p.a >= p.b) ? -1 : 1;
+                    } else d = rng() < 0.5 ? 1 : -1;
+                    p.a += d; p.b -= d;
+                    if (p.a < 1 || p.b < minB) { Object.assign(p, old); continue; }
+                } else {
+                    const d = rng() < 0.5 ? 1 : -1;
+                    p.h0 += d; p.h1 -= d;
+                    if (p.h0 < 0 || p.h1 < 0) { Object.assign(p, old); continue; }
+                }
+                addToDepth(old, -1); addToDepth(p, 1);
+                const newHard = hardCost();
+                let accept;
+                if (hard === 0) {
+                    if (newHard > 0) accept = false;
+                    else { const dS = softCost() - softBefore; accept = dS <= 0 || rng() < Math.exp(-dS / Math.max(0.4, temp * 0.2)); }
+                } else {
+                    const dC = newHard - hard;
+                    accept = dC <= 0 || rng() < Math.exp(-dC / temp);
+                }
+                if (accept) {
+                    hard = newHard;
+                    if (hard === 0) { const s = softCost(); if (s < bestSoft) { bestSoft = s; best = snapshot(); } }
+                } else {
+                    addToDepth(p, -1); Object.assign(p, old); addToDepth(p, 1);
+                }
+            }
+            return best ? { blocks: best, soft: bestSoft } : null;
+        }
+
+        function mpSolveSplitSA(N, M, T, seed, forceMeal) {
+            let best = null;
+            const modes = M <= 2 ? ['greedy', 'greedy', 'stag'] : ['stag', 'stag', 'greedy'];
+            const totalDeadline = performance.now() + 3000;
+            const balFloor = 0.15 * N + 0.7;
+            for (let k = 0; k < modes.length; k++) {
+                const remain = totalDeadline - performance.now();
+                if (k > 0 && remain < 400) break;
+                const r = mpSolveSplitOnce(N, M, T, seed + k * 104729, Math.min(1500, Math.max(400, remain)), 260, forceMeal, modes[k]);
+                if (!r) continue;
+                if (!best || r.soft < best.soft) best = r;
+                if (best.soft <= balFloor) break;
+            }
+            if (!best && M >= 2) {
+                const r = mpSolveSplitOnce(N, M, T, seed + 987654, 2500, 900, forceMeal, M <= 2 ? 'greedy' : 'stag');
+                if (r) best = r;
+            }
+            if (!best) return forceMeal ? mpSolveSplit60Chain(N, M, T) : mpSolveWMSplit(N, M);
+            return best.blocks;
+        }
+
+        /* 後備(求解器排唔到先用):鏈式兩輪 + 食飯區長度保證每人食飯 >= 60 分鐘 */
+        function mpSolveSplit60Chain(N, M, T) {
+            const R = N - M, U = 6 * N;
+            const unitMin = T / U;
+            const mealMinU = Math.ceil(59.5 / unitMin);
+            const base = Math.floor(N / R), rem = N - base * R;
+            const kmax = base + (rem > 0 ? 1 : 0);
+            if (mealMinU * kmax > U - kmax) return null; // 食飯區點都唔夠長,保證唔到 >= 60
+            const Z = Math.min(U - kmax, mealMinU * kmax);
+            const blocks = [];
+            let p = 0;
+            for (let c = 0; c < R; c++) {
+                const k = base + (c < rem ? 1 : 0);
+                const persons = [];
+                for (let i = 0; i < k; i++) persons.push(p++);
+                const qw = Math.floor((U - Z) / k), rw = (U - Z) - qw * k;
+                let cur = 0;
+                persons.forEach((pp, i) => { const len = qw + (i < rw ? 1 : 0); blocks.push({ p: pp, label: '水', s: cur * 2, e: (cur + len) * 2 }); cur += len; });
+                const qm = Math.floor(Z / k), rm = Z - qm * k;
+                cur = U - Z;
+                persons.forEach((pp, i) => { const len = qm + (i < rm ? 1 : 0); blocks.push({ p: pp, label: '飯', s: cur * 2, e: (cur + len) * 2 }); cur += len; });
             }
             return blocks;
         }
@@ -3598,6 +3808,11 @@
             if (mpMode === 'wmw' && T >= 60 && M < N && restPer < Math.max(100, 60 + 2 * T / (3 * N))) {
                 errors.push('每人平均只可休息約 ' + Math.round(restPer) + ' 分鐘，唔夠分三段（食飯至少 60 分鐘，另加兩段休息）。請加長時段、減少必須當值人數，或改用「一水一飯」。');
             }
+            if (mpMode === 'wm' && mpWmMode === 'split60' && T >= 60 && M < N) {
+                const unitMinV = T / (6 * N);
+                const needMin = (Math.ceil(59.5 / unitMinV) + 1) * unitMinV;
+                if (restPer < needMin - 0.01) errors.push('「不連續（強制食飯 60 分鐘）」需要每人平均總休息最少約 ' + Math.ceil(needMin) + ' 分鐘（食飯 60 分鐘＋最少一份行水），而家每人平均約 ' + Math.round(restPer) + ' 分鐘，唔夠分。請加長時段、減少必須當值人數，或者改用其他選項。');
+            }
             if (mpMode === 'wm' && T >= 60 && M < N && restPer < 20) {
                 errors.push('每人平均只可休息約 ' + Math.round(restPer) + ' 分鐘，太少，排唔到。請加長時段或減少必須當值人數。');
             }
@@ -3608,15 +3823,23 @@
                 return;
             }
 
+            const mpSeed = N * 1000003 + M * 10007 + T * 101 + startMins;
             let blocks = null;
+            let mpFallback = false;
             try {
-                if (mpMode === 'wm') blocks = mpWmJoin ? mpSolveWMJoin(N, M) : mpSolveWMSplit(N, M);
-                else if (mpMode === 'meal') blocks = mpSolveMeal(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
-                else blocks = mpSolveWMW(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
+                if (mpMode === 'wm') {
+                    if (mpWmMode === 'join') blocks = mpSolveWMJoin(N, M);
+                    else {
+                        blocks = mpSolveSplitSA(N, M, T, mpSeed, mpWmMode === 'split60');
+                        if (!blocks) { blocks = mpWmMode === 'split60' ? mpSolveSplit60Chain(N, M, T) : mpSolveWMSplit(N, M); mpFallback = true; }
+                    }
+                }
+                else if (mpMode === 'meal') blocks = mpSolveMeal(N, M, T, mpSeed);
+                else blocks = mpSolveWMW(N, M, T, mpSeed);
             } catch (e) { blocks = null; }
 
             if (!blocks) {
-                const modeName = mpMode === 'meal' ? '一飯' : '水飯水';
+                const modeName = mpMode === 'meal' ? '一飯' : (mpMode === 'wm' ? '一水一飯' : '水飯水');
                 errBox.innerHTML = '<p>⚠️ 呢組數字暫時排唔到一個完全公平嘅「' + modeName + '」編排。可以試下：加長總時段、減少必須當值人數，或者改用其他模式。</p>';
                 errBox.classList.remove('hidden');
                 errBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -3629,7 +3852,17 @@
             const segMins = (a, b) => disp(b) - disp(a);
 
             // 警告（唔阻計算）
-            const restFairLabel = (mpMode === 'meal' || mpMode === 'wm') ? '平均分配' : '全員相同';
+            const totalsArr = [];
+            for (let i = 0; i < N; i++) totalsArr.push(0);
+            blocks.forEach(b => { totalsArr[b.p] += segMins(b.s, b.e); });
+            const totMin = Math.min.apply(null, totalsArr), totMax = Math.max.apply(null, totalsArr);
+            const restUniform = (totMax - totMin <= 2);
+            const restLineTxt = restUniform
+                ? '每人總休息：約 ' + Math.round(restPer) + ' 分鐘（全員相同）'
+                : '每人總休息：最少 ' + totMin + ' 分鐘 ～ 最多 ' + totMax + ' 分鐘（平均 ' + Math.round(restPer) + ' 分鐘）';
+            const restLineHtml = restUniform
+                ? '每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（全員相同）'
+                : '每人總休息：<span class="font-extrabold text-slate-900">最少 ' + totMin + ' ～ 最多 ' + totMax + ' 分鐘</span>（平均 ' + Math.round(restPer) + ' 分鐘）';
             const warnings = [];
             const seen = {};
             names.forEach(nm => { if (seen[nm]) warnings.push('有重複名稱「' + nm + '」，結果會照樣顯示，核對時請留意。'); seen[nm] = true; });
@@ -3637,15 +3870,25 @@
                 const full = blocks.filter(b => segMins(b.s, b.e) >= T - 2).length;
                 if (full > 0) warnings.push('提示：呢組人數下（休息人數多過一半），數學上有 ' + full + ' 人要成段時間休息（食飯）先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數，或者改用其他模式。');
             }
-            if (mpMode === 'wm') {
-                const totalsJ = [];
-                for (let i = 0; i < N; i++) totalsJ.push(0);
-                blocks.forEach(b => { totalsJ[b.p] += segMins(b.s, b.e); });
-                const fullJ = totalsJ.filter(t => t >= T - 2).length;
-                if (fullJ > 0) warnings.push('提示：呢組人數（休息人數多過一半）數學上有 ' + fullJ + ' 人要成段時間休息先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數。');
+            if (mpFallback) {
+                warnings.push('提示：呢組人數／時段用平均求解器排唔到，已改用後備排法，每人總休息未必完全平均（最少 ' + totMin + ' 分鐘、最多 ' + totMax + ' 分鐘），請留意。');
             }
-            if (mpMode === 'wm' && restPer / 2 < 60) {
-                warnings.push('提示：一水一飯模式下每人食飯約 ' + Math.round(restPer / 2) + ' 分鐘（總休息大家除），少過 60 分鐘。如果食飯一定要足 1 小時，請改用「水飯水」模式。');
+            if (mpMode === 'meal' && !restUniform) {
+                warnings.push('提示：一飯係「每人一整段過」嘅排法，總人數 ÷ 休息人數除唔盡嗰陣，每人總休息冇辦法完全平均（今次最少 ' + totMin + ' 分鐘、最多 ' + totMax + ' 分鐘），係呢種排法嘅數學限制。要總休息完全平均，可以改用「一水一飯（不連續）」或「水飯水」。');
+            }
+            if (mpMode === 'wm' && mpWmMode === 'join') {
+                const fullJ = totalsArr.filter(t => t >= T - 2).length;
+                if (fullJ > 0) warnings.push('提示：呢組人數（休息人數多過一半）數學上有 ' + fullJ + ' 人要成段時間休息先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數。');
+                if (!restUniform) warnings.push('提示：「連續」係每人一整段過嘅排法，總人數 ÷ 休息人數除唔盡嗰陣，每人總休息冇辦法完全平均（今次最少 ' + totMin + ' 分鐘、最多 ' + totMax + ' 分鐘），係呢種排法嘅數學限制。要總休息完全平均，可以改用「不連續」。');
+            }
+            if (mpMode === 'wm' && mpWmMode !== 'split60' && restPer / 2 < 60) {
+                warnings.push('提示：一水一飯模式下每人食飯約 ' + Math.round(restPer / 2) + ' 分鐘（總休息大家除），少過 60 分鐘。如果食飯一定要足 1 小時，請改用「不連續（強制食飯 60 分鐘）」或者「水飯水」模式。');
+            }
+            if (mpMode === 'wm' && mpWmMode !== 'join' && !mpFallback && !restUniform) {
+                warnings.push('提示：呢組人數／時段比較極端，自動求解器已經盡力，每人總休息仍有差異（最少 ' + totMin + ' 分鐘、最多 ' + totMax + ' 分鐘）。可以試下加長時段或者調整人數。');
+            }
+            if (mpMode === 'wm' && mpWmMode === 'split60' && restPer - 60 < 15) {
+                warnings.push('提示：扣起食飯 60 分鐘之後，每人行水只剩約 ' + Math.max(0, Math.round(restPer - 60)) + ' 分鐘，時間比較緊。');
             }
 
             // 每人時間表
@@ -3761,11 +4004,16 @@
                 const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
                 mealInfo = '每人只食飯一次：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全員平均分配）';
             } else {
-                mealInfo = '每人行水約 ' + Math.round(restPer / 2) + ' 分鐘、食飯約 ' + Math.round(restPer / 2) + ' 分鐘';
+                const wMins = blocks.filter(b => b.label === '水').map(b => segMins(b.s, b.e));
+                const fMins = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
+                const avgW = Math.round(wMins.reduce((x, y) => x + y, 0) / Math.max(1, wMins.length));
+                const minF = Math.min.apply(null, fMins), maxF = Math.max.apply(null, fMins);
+                if (mpWmMode === 'split60') mealInfo = '每人食飯：最短 ' + minF + ' 分鐘、最長 ' + maxF + ' 分鐘' + (minF >= 60 ? '（全部 ≥ 60 分鐘 ✓）' : '（⚠️ 有人少過 60 分鐘）') + '；行水約 ' + avgW + ' 分鐘';
+                else mealInfo = '每人行水約 ' + avgW + ' 分鐘、食飯約 ' + Math.round(fMins.reduce((x, y) => x + y, 0) / Math.max(1, fMins.length)) + ' 分鐘';
             }
             document.getElementById('mp-summary').innerHTML =
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">總時段：<span class="font-extrabold text-slate-900">' + T + ' 分鐘</span>（' + clock(0) + ' - ' + clock(G2) + '）</div>' +
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（' + restFairLabel + '）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + restLineHtml + '</div>' +
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">當值人數：全程保持 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息 ' + (N - M) + ' 人）</div>' +
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
 
@@ -3781,10 +4029,10 @@
                 remOut.classList.remove('hidden');
             } else remOut.classList.add('hidden');
 
-            const mpModeNameTxt = mpMode === 'wm' ? ('一水一飯（水飯' + (mpWmJoin ? '連續' : '不連續') + '）') : (mpMode === 'meal' ? '一飯' : '水飯水');
+            const mpModeNameTxt = mpMode === 'wm' ? (mpWmMode === 'join' ? '一水一飯（水飯連續）' : (mpWmMode === 'split60' ? '一水一飯（不連續・強制食飯 60 分鐘）' : '一水一飯（水飯不連續）')) : (mpMode === 'meal' ? '一飯' : '水飯水');
             mpResultText = '【多人行水大作戰】編排結果\n模式：' + mpModeNameTxt +
                 '\n總時段：' + T + ' 分鐘（' + clock(0) + ' - ' + clock(G2) + '）' +
-                '\n每人總休息：約 ' + Math.round(restPer) + ' 分鐘（' + restFairLabel + '）' +
+                '\n' + restLineTxt +
                 '\n當值人數：全程保持 ' + M + ' 人（休息 ' + (N - M) + ' 人）' +
                 '\n崗位：' + postNames.join('、') +
                 '\n' + mealInfo +
