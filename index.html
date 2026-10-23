@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.16</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.17</span>
             </div>
         </section>
 
@@ -1192,7 +1192,7 @@
                     <div class="space-y-2">
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
                             <input type="radio" name="mp-wm-join" value="join" checked onchange="setMpWmMode('join')" class="w-5 h-5 shrink-0 accent-black">
-                            <span class="text-lg font-bold text-slate-900">連續（預設）<span class="block text-xs font-bold text-slate-500">每人一次過休息：行水 → 食飯，相連唔分開</span></span>
+                            <span class="text-lg font-bold text-slate-900">連續（預設）<span class="block text-xs font-bold text-slate-500">每人一次過休息：行水 → 食飯，相連唔分開。留意：總人數除唔盡休息人數嗰陣，各人總休息會有差別（排法限制）；要全員平均請用「不連續」</span></span>
                         </label>
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
                             <input type="radio" name="mp-wm-join" value="split" onchange="setMpWmMode('split')" class="w-5 h-5 shrink-0 accent-black">
@@ -3781,6 +3781,70 @@
             return blocks;
         }
 
+        /* 分鐘級休息線:R 條線以整數分鐘砌滿全窗 [0,T],線內各人長度相差 <= 1 分鐘;
+           線與線人數差 <= 1 — 呢個係「每人一整段」排法嘅最平均砌法(每人長度由所屬線嘅人數決定) */
+        function mpMinuteTracks(N, R, T) {
+            const base = Math.floor(N / R), rem = N - base * R;
+            const tracks = [];
+            let p = 0;
+            for (let c = 0; c < R; c++) {
+                const k = base + (c < rem ? 1 : 0);
+                const q = Math.floor(T / k), r = T - q * k;
+                const tr = [];
+                let cur = 0;
+                for (let i = 0; i < k; i++) {
+                    const len = q + (i < r ? 1 : 0);
+                    tr.push({ p: p++, s: cur, e: cur + len });
+                    cur += len;
+                }
+                tracks.push(tr);
+            }
+            return tracks;
+        }
+        function mpScaleMinBlocks(minBlocks, N, T) {
+            const G2 = 12 * N, cache = {};
+            const g = m => (cache[m] !== undefined ? cache[m] : (cache[m] = m * G2 / T));
+            return minBlocks.map(b => ({ p: b.p, label: b.label, s: g(b.s), e: g(b.e) }));
+        }
+        /* 一水一飯(連續)分鐘級引擎:每人一整段(前半水、後半飯);
+           砌完驗「行水次序 = 食飯次序」,違規回傳 null,主流程用返舊鏈式引擎 */
+        function mpSolveWMJoinMin(N, M, T) {
+            const R = N - M;
+            const tracks = mpMinuteTracks(N, R, T);
+            const mb = [];
+            tracks.forEach(tr => tr.forEach(sg => {
+                const L = sg.e - sg.s;
+                if (L >= 2) {
+                    const w = Math.floor(L / 2);
+                    mb.push({ p: sg.p, label: '水', s: sg.s, e: sg.s + w });
+                    mb.push({ p: sg.p, label: '飯', s: sg.s + w, e: sg.e });
+                } else {
+                    mb.push({ p: sg.p, label: '飯', s: sg.s, e: sg.e });
+                }
+            }));
+            const wS = {}, mS = {};
+            mb.forEach(b => { if (b.label === '水') wS[b.p] = b.s; else if (mS[b.p] === undefined) mS[b.p] = b.s; });
+            const both = Object.keys(wS).map(Number);
+            const wo = both.slice().sort((a, b) => wS[a] - wS[b] || a - b);
+            const mo = both.slice().sort((a, b) => mS[a] - mS[b] || a - b);
+            for (let i = 0; i < wo.length; i++) if (wo[i] !== mo[i]) return null;
+            return mpScaleMinBlocks(mb, N, T);
+        }
+        /* 一飯分鐘級引擎:每人一整段飯,長度去到「一整段」排法嘅最平均 */
+        function mpSolveMealMin(N, M, T) {
+            const R = N - M;
+            const tracks = mpMinuteTracks(N, R, T);
+            const mb = [];
+            tracks.forEach(tr => tr.forEach(sg => mb.push({ p: sg.p, label: '飯', s: sg.s, e: sg.e })));
+            return mpScaleMinBlocks(mb, N, T);
+        }
+        /* 結果頁一鍵:由「連續」轉「不連續」重新計算(全員平均) */
+        function mpUseSplit() {
+            const radio = document.querySelector('input[name="mp-wm-join"][value="split"]');
+            if (radio) radio.click();
+            calculateMultiRoster();
+        }
+
         function calculateMultiRoster() {
             const errBox = document.getElementById('mp-error');
             const resBox = document.getElementById('mp-result');
@@ -3828,13 +3892,13 @@
             let mpFallback = false;
             try {
                 if (mpMode === 'wm') {
-                    if (mpWmMode === 'join') blocks = mpSolveWMJoin(N, M);
+                    if (mpWmMode === 'join') blocks = mpSolveWMJoinMin(N, M, T) || mpSolveWMJoin(N, M);
                     else {
                         blocks = mpSolveSplitSA(N, M, T, mpSeed, mpWmMode === 'split60');
                         if (!blocks) { blocks = mpWmMode === 'split60' ? mpSolveSplit60Chain(N, M, T) : mpSolveWMSplit(N, M); mpFallback = true; }
                     }
                 }
-                else if (mpMode === 'meal') blocks = mpSolveMeal(N, M, T, mpSeed);
+                else if (mpMode === 'meal') blocks = mpSolveMealMin(N, M, T);
                 else blocks = mpSolveWMW(N, M, T, mpSeed);
             } catch (e) { blocks = null; }
 
@@ -4002,7 +4066,7 @@
                 mealInfo = '每人食飯一整段：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全部 ≥ 60 分鐘 ✓）';
             } else if (mpMode === 'meal') {
                 const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
-                mealInfo = '每人只食飯一次：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全員平均分配）';
+                mealInfo = '每人只食飯一次：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘' + (restUniform ? '（全員相同）' : '（平均 ' + Math.round(restPer) + ' 分鐘）');
             } else {
                 const wMins = blocks.filter(b => b.label === '水').map(b => segMins(b.s, b.e));
                 const fMins = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
@@ -4018,10 +4082,14 @@
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
 
             const warnBox = document.getElementById('mp-warn');
-            if (warnings.length) {
-                warnBox.innerHTML = warnings.map(w => '<p>⚠️ ' + mpEsc(w) + '</p>').join('');
+            let warnHtml = warnings.map(w => '<p>⚠️ ' + mpEsc(w) + '</p>').join('');
+            if (mpMode === 'wm' && mpWmMode === 'join' && !restUniform && (N - M) * 2 <= N) {
+                warnHtml = '<div class="mb-2"><button type="button" onclick="mpUseSplit()" class="w-full px-4 py-3 rounded-xl bg-orange-600 text-white font-extrabold text-base shadow hover:bg-orange-700 transition">「連續」排法所限，各人總休息唔平均（最少 ' + totMin + ' ～ 最多 ' + totMax + ' 分鐘）— 撳呢度改用「不連續」重新計算，全員平均</button></div>' + warnHtml;
+            }
+            if (warnHtml) {
+                warnBox.innerHTML = warnHtml;
                 warnBox.classList.remove('hidden');
-            } else warnBox.classList.add('hidden');
+            } else { warnBox.innerHTML = ''; warnBox.classList.add('hidden'); }
 
             const remOut = document.getElementById('mp-remarks-out');
             if (remarks) {
