@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.11</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.12</span>
             </div>
         </section>
 
@@ -1035,20 +1035,28 @@
                             整理裝備人數
                         </label>
                         <div class="pt-1">
-                            <select id="staff-count-select" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900">
-                                <option value="2">2 人 (人員 A, B)</option>
-                                <option value="3" selected>3 人 (人員 A, B, C)</option>
-                                <option value="4">4 人 (人員 A, B, C, D)</option>
-                                <option value="5">5 人 (人員 A, B, C, D, E)</option>
-                                <option value="6">6 人 (人員 A, B, C, D, E, F)</option>
-                                <option value="7">7 人 (人員 A, B, C, D, E, F, G)</option>
-                                <option value="8">8 人 (人員 A, B, C, D, E, F, G, H)</option>
-                                <option value="9">9 人 (人員 A, B, C, D, E, F, G, H, I)</option>
+                            <select id="staff-count-select" onchange="buildEqNames()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900">
+                                <option value="2">2 人 (人員 1, 2)</option>
+                                <option value="3" selected>3 人 (人員 1, 2, 3)</option>
+                                <option value="4">4 人 (人員 1, 2, 3, 4)</option>
+                                <option value="5">5 人 (人員 1, 2, 3, 4, 5)</option>
+                                <option value="6">6 人 (人員 1, 2, 3, 4, 5, 6)</option>
+                                <option value="7">7 人 (人員 1, 2, 3, 4, 5, 6, 7)</option>
+                                <option value="8">8 人 (人員 1, 2, 3, 4, 5, 6, 7, 8)</option>
+                                <option value="9">9 人 (人員 1, 2, 3, 4, 5, 6, 7, 8, 9)</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
+
+                <div class="space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="id-card" class="w-5 h-5 text-blue-600"></i>
+                        人員名稱（可留空，自動用「人員 1、2、3…」）
+                    </label>
+                    <div id="eq-names" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                </div>
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
@@ -1248,16 +1256,24 @@
                             <i data-lucide="shield" class="w-5 h-5 text-orange-600"></i>
                             必須當值人數（任何時刻）
                         </label>
-                        <select id="mp-duty" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
+                        <select id="mp-duty" onchange="buildMpPosts()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                         <i data-lucide="id-card" class="w-5 h-5 text-orange-600"></i>
-                        人員名稱（可留空，自動用「人員 A、B、C…」）
+                        人員名稱（可留空，自動用「人員 1、2、3…」）
                     </label>
                     <div id="mp-names" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="briefcase" class="w-5 h-5 text-orange-600"></i>
+                        崗位名稱（可留空，自動用「崗位 1、2、3…」；崗位數目 = 必須當值人數）
+                    </label>
+                    <div id="mp-posts" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
                 </div>
 
                 <div class="space-y-2">
@@ -2770,9 +2786,43 @@
             endMin.value = "00";
         }
 
+        function buildEqNames() {
+            const sel = document.getElementById('staff-count-select');
+            const box = document.getElementById('eq-names');
+            if (!sel || !box) return;
+            const n = parseInt(sel.value, 10) || 0;
+            const old = [];
+            box.querySelectorAll('input').forEach(inp => old.push(inp.value));
+            box.innerHTML = '';
+            for (let i = 0; i < n; i++) {
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.maxLength = 12;
+                inp.placeholder = '人員 ' + (i + 1);
+                inp.value = old[i] || '';
+                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
+                box.appendChild(inp);
+            }
+        }
+
+        function eqGetNames() {
+            const sel = document.getElementById('staff-count-select');
+            const box = document.getElementById('eq-names');
+            const n = parseInt(sel.value, 10) || 0;
+            if (!box || box.querySelectorAll('input').length !== n) buildEqNames();
+            const names = [];
+            document.getElementById('eq-names').querySelectorAll('input').forEach((inp, i) => {
+                const v = inp.value.trim();
+                names.push(v || ('人員 ' + (i + 1)));
+            });
+            return names;
+        }
+
         function resetEquipmentCalc() {
             initTimeDropdowns();
             document.getElementById('staff-count-select').value = "3";
+            buildEqNames();
+            document.getElementById('eq-names').querySelectorAll('input').forEach(inp => inp.value = '');
             document.querySelector('input[name="eq-mode"][value="normal"]').checked = true;
             eqMode = 'normal';
             document.querySelector('input[name="eq-gb-method"][value="unit"]').checked = true;
@@ -2898,8 +2948,7 @@
             }
             const K = durs.length;
 
-            const letters = [];
-            for (let i = 0; i < staffCount; i++) letters.push(String.fromCharCode(65 + i));
+            const letters = eqGetNames();
             const groups = [];
             for (let g = 0; g < staffCount / 3; g++) groups.push([letters[3 * g], letters[3 * g + 1], letters[3 * g + 2]]);
 
@@ -2920,10 +2969,10 @@
             const lines = [];
 
             groups.forEach((mem, gi) => {
-                lines.push('【第 ' + (gi + 1) + ' 組】人員 ' + mem.join('、'));
+                lines.push('【第 ' + (gi + 1) + ' 組】' + mem.join('、'));
                 lines.push('時間｜' + gbP1Name + '｜' + gbP2Name + '｜休息');
                 let ghtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm space-y-2">'
-                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（人員 ' + mem.join('、') + '）</p>'
+                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（' + mem.join('、') + '）</p>'
                     + '<div class="overflow-x-auto"><table class="w-full text-sm md:text-base font-bold text-slate-700 border-collapse">'
                     + '<thead><tr class="bg-blue-50 text-blue-950"><th class="px-3 py-2.5 text-left border border-blue-100">時間</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtmlGb(gbP1Name) + '</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtmlGb(gbP2Name) + '</th><th class="px-3 py-2.5 text-left border border-blue-100">休息</th></tr></thead><tbody>';
                 for (let i = 0; i < K; i++) {
@@ -2936,8 +2985,8 @@
                     totals[p2].work += durs[i];
                     const t1 = formatMinutesToTime(starts[i]);
                     const t2 = formatMinutesToTime(starts[i] + durs[i]);
-                    ghtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + t1 + ' - ' + t2 + '</td><td class="px-3 py-2.5 border border-blue-100">人員 ' + p1 + '</td><td class="px-3 py-2.5 border border-blue-100">人員 ' + p2 + '</td><td class="px-3 py-2.5 border border-blue-100 text-emerald-700">人員 ' + rester + '</td></tr>';
-                    lines.push(t1 + ' - ' + t2 + '｜' + gbP1Name + '：人員 ' + p1 + '｜' + gbP2Name + '：人員 ' + p2 + '｜休息：人員 ' + rester);
+                    ghtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + t1 + ' - ' + t2 + '</td><td class="px-3 py-2.5 border border-blue-100">' + p1 + '</td><td class="px-3 py-2.5 border border-blue-100">' + p2 + '</td><td class="px-3 py-2.5 border border-blue-100 text-emerald-700">' + rester + '</td></tr>';
+                    lines.push(t1 + ' - ' + t2 + '｜' + gbP1Name + '：' + p1 + '｜' + gbP2Name + '：' + p2 + '｜休息：' + rester);
                 }
                 ghtml += '</tbody></table></div></div>';
                 container.insertAdjacentHTML('beforeend', ghtml);
@@ -2949,8 +2998,8 @@
                 + '<p class="font-extrabold text-slate-900 text-base">每人總計</p>';
             letters.forEach(L => {
                 const t = totals[L];
-                sumHtml += '<p class="text-sm md:text-base font-bold text-slate-700">人員 ' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）</p>';
-                sumLines.push('人員 ' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）');
+                sumHtml += '<p class="text-sm md:text-base font-bold text-slate-700">' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）</p>';
+                sumLines.push('' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）');
             });
             notes.forEach(n => {
                 sumHtml += '<p class="text-sm font-bold text-orange-800 bg-orange-50 border border-orange-200 rounded-xl px-3 py-2">💡 ' + n + '</p>';
@@ -3003,6 +3052,7 @@
             const postName = postNameRaw || '崗位一';
             const escHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+            const personNames = eqGetNames();
             const dripLines = [];
             let tableHtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm overflow-x-auto">'
                 + '<table class="w-full text-sm md:text-base font-bold text-slate-700 border-collapse">'
@@ -3010,14 +3060,13 @@
             let currentStart = startTotalMins;
 
             for (let i = 0; i < staffCount; i++) {
-                const letter = String.fromCharCode(65 + i);
                 let currentEnd = (i === staffCount - 1) ? endTotalMins : (currentStart + perPersonMins);
 
                 const startTimeStr = formatMinutesToTime(currentStart);
                 const endTimeStr = formatMinutesToTime(currentEnd);
 
-                tableHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + startTimeStr + ' - ' + endTimeStr + '</td><td class="px-3 py-2.5 border border-blue-100">人員 ' + letter + '</td></tr>';
-                dripLines.push(startTimeStr + ' - ' + endTimeStr + '｜' + postName + '：人員 ' + letter);
+                tableHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + startTimeStr + ' - ' + endTimeStr + '</td><td class="px-3 py-2.5 border border-blue-100">' + personNames[i] + '</td></tr>';
+                dripLines.push(startTimeStr + ' - ' + endTimeStr + '｜' + postName + '：' + personNames[i]);
 
                 currentStart = currentEnd;
             }
@@ -3076,6 +3125,7 @@
             for (let n = 1; n <= 19; n++) duty.add(new Option(n + ' 人', n));
             duty.value = '4';
             buildMpNames();
+            buildMpPosts();
             setMpMode('wm');
         }
 
@@ -3092,7 +3142,7 @@
                 const inp = document.createElement('input');
                 inp.type = 'text';
                 inp.maxLength = 12;
-                inp.placeholder = '人員 ' + letter;
+                inp.placeholder = '人員 ' + (i + 1);
                 inp.value = old[i] || '';
                 inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
                 box.appendChild(inp);
@@ -3168,6 +3218,8 @@
             document.getElementById('mp-remarks').value = '';
             buildMpNames();
             document.getElementById('mp-names').querySelectorAll('input').forEach(inp => inp.value = '');
+            buildMpPosts();
+            document.getElementById('mp-posts').querySelectorAll('input').forEach(inp => inp.value = '');
             setMpMode('wm');
             document.getElementById('mp-error').classList.add('hidden');
             document.getElementById('mp-result').classList.add('hidden');
@@ -3178,9 +3230,39 @@
             const names = [];
             inputs.forEach((inp, i) => {
                 const v = inp.value.trim();
-                names.push(v || ('人員 ' + String.fromCharCode(65 + i)));
+                names.push(v || ('人員 ' + (i + 1)));
             });
             return names;
+        }
+
+        function buildMpPosts() {
+            const dutyEl = document.getElementById('mp-duty');
+            const box = document.getElementById('mp-posts');
+            if (!dutyEl || !box) return;
+            const n = parseInt(dutyEl.value, 10) || 0;
+            const old = [];
+            box.querySelectorAll('input').forEach(inp => old.push(inp.value));
+            box.innerHTML = '';
+            for (let i = 0; i < n; i++) {
+                const inp = document.createElement('input');
+                inp.type = 'text';
+                inp.maxLength = 12;
+                inp.placeholder = '崗位 ' + (i + 1);
+                inp.value = old[i] || '';
+                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
+                box.appendChild(inp);
+            }
+        }
+
+        function mpGetPosts() {
+            const box = document.getElementById('mp-posts');
+            const posts = [];
+            if (!box) return posts;
+            box.querySelectorAll('input').forEach((inp, i) => {
+                const v = inp.value.trim();
+                posts.push(v || ('崗位 ' + (i + 1)));
+            });
+            return posts;
         }
 
         /* 一水一飯：N 等份輪換，每人休息 R 份；休息前半 = 水，後半 = 飯。回傳 blocks（12N 格座標） */
@@ -3506,13 +3588,17 @@
                 personTxtLines.push(names[pi] + '（總休息 ' + restTotal + ' 分鐘）：' + segs.map(sg => sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）').join(' '));
                 personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm space-y-2">' +
                     '<div class="flex items-center justify-between flex-wrap gap-2">' +
-                    '<span class="font-extrabold text-slate-900 text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">' + String.fromCharCode(65 + pi) + '</span>' + mpEsc(names[pi]) + '</span>' +
+                    '<span class="font-extrabold text-slate-900 text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">' + (pi + 1) + '</span>' + mpEsc(names[pi]) + '</span>' +
                     '<span class="text-sm font-extrabold text-orange-900 bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-200">總休息 ' + restTotal + ' 分鐘</span></div>' +
                     '<div class="flex flex-wrap gap-1.5">' + chips + '</div></div>';
             });
             document.getElementById('mp-person-list').innerHTML = personHtml;
 
             // 分段總表
+            const postNamesRaw = mpGetPosts();
+            const postNames = [];
+            for (let j = 0; j < M; j++) postNames.push(postNamesRaw[j] || ('崗位 ' + (j + 1)));
+            let postOf = {};
             const boundSet = new Set([0, G2]);
             blocks.forEach(b => { boundSet.add(b.s); boundSet.add(b.e); });
             const bounds = Array.from(boundSet).sort((a, b) => a - b);
@@ -3522,14 +3608,24 @@
                 const a = bounds[i], b = bounds[i + 1];
                 const resting = blocks.filter(x => x.s <= a && x.e >= b);
                 const rNames = new Set(resting.map(x => x.p));
-                const working = [];
-                for (let pi = 0; pi < N; pi++) if (!rNames.has(pi)) working.push(names[pi]);
+                const workingIdx = [];
+                for (let pi = 0; pi < N; pi++) if (!rNames.has(pi)) workingIdx.push(pi);
+                const wSet = new Set(workingIdx);
+                Object.keys(postOf).forEach(k => { if (!wSet.has(Number(k))) delete postOf[k]; });
+                const usedP = new Set(Object.values(postOf));
+                const freeP = [];
+                for (let j = 0; j < M; j++) if (!usedP.has(j)) freeP.push(j);
+                let fpI = 0;
+                const assign = {};
+                workingIdx.forEach(pi => { if (postOf[pi] === undefined) postOf[pi] = freeP[fpI++]; assign[postOf[pi]] = pi; });
+                const workTxt = postNames.map((pn, j) => pn + '：' + names[assign[j]]).join('、');
+                const workHtml = postNames.map((pn, j) => mpEsc(pn) + '：' + mpEsc(names[assign[j]])).join('、');
                 const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => mpEsc(names[x.p]) + '（' + x.label + '）').join('、');
-                segTxtLines.push(clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分） 休息：' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、') + ' ｜ 工作：' + working.join('、'));
+                segTxtLines.push(clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分） 休息：' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、') + ' ｜ 工作：' + workTxt);
                 segHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm">' +
                     '<span class="font-extrabold text-slate-900">' + clock(a) + '-' + clock(b) + '（' + segMins(a, b) + '分）</span>' +
                     '<span class="font-bold text-sky-900"> 休息：' + restTxt + '</span>' +
-                    '<span class="font-bold text-slate-600"> ｜ 工作：' + working.map(mpEsc).join('、') + '</span></div>';
+                    '<span class="font-bold text-slate-600"> ｜ 工作：' + workHtml + '</span></div>';
             }
             document.getElementById('mp-segment-list').innerHTML = segHtml;
 
@@ -3596,6 +3692,7 @@
                 '\n總時段：' + T + ' 分鐘（' + clock(0) + ' - ' + clock(G2) + '）' +
                 '\n每人總休息：約 ' + Math.round(restPer) + ' 分鐘（' + (mpMode === 'meal' ? '平均分配' : '全員相同') + '）' +
                 '\n當值人數：全程保持 ' + M + ' 人（休息 ' + (N - M) + ' 人）' +
+                '\n崗位：' + postNames.join('、') +
                 '\n' + mealInfo +
                 '\n\n每人時間表（工 / 水 / 飯）：\n' + personTxtLines.join('\n') +
                 '\n\n分段總表（每段邊個休息、邊個工作）：\n' + segTxtLines.join('\n') +
@@ -5170,6 +5267,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             initTimeDropdowns();
+            buildEqNames();
             initMultiRoster();
             initDailyQuote();
             initQuartersDaysDropdown();
