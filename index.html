@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.13</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.14</span>
             </div>
         </section>
 
@@ -1183,6 +1183,23 @@
                     </button>
                 </div>
                 <p id="mp-mode-desc" class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3"></p>
+
+                <div id="mp-wm-join-box" class="hidden space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="link" class="w-5 h-5 text-orange-600"></i>
+                        水同飯需唔需要連續？
+                    </label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-wm-join" value="join" checked onchange="setMpWmJoin(true)" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">連續（預設）<span class="block text-xs font-bold text-slate-500">每人一次過休息：行水 → 食飯，相連唔分開</span></span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-wm-join" value="split" onchange="setMpWmJoin(false)" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">不連續<span class="block text-xs font-bold text-slate-500">唔要求相連：行水同食飯可以分開排（例如水喺前段、飯喺後段），總休息全員完全相同</span></span>
+                        </label>
+                    </div>
+                </div>
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
@@ -3084,7 +3101,10 @@
 
         /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
         let mpMode = 'wm';
+        let mpWmJoin = true;
         let mpResultText = '';
+
+        function setMpWmJoin(j) { mpWmJoin = j; }
 
         function mpRng(seed) {
             let a = seed >>> 0;
@@ -3165,6 +3185,7 @@
                 : (mode === 'meal'
                     ? '一飯：全程啱啱保持當值人數，每人成段時間只休息一次，就係食飯，冇行水。適合人手最緊張、只做到最有限度服務嗰陣。食飯時長全員平均分配，有幾多食幾多，唔使夠 60 分鐘。'
                     : '水飯水：全程啱啱保持當值人數，每人「休息 → 食飯 → 休息」三段完整時段；食飯一整段唔劏開，最少 60 分鐘；每人總休息時間完全相同。');
+            document.getElementById('mp-wm-join-box').classList.toggle('hidden', mode !== 'wm');
         }
 
         function mpApplyPeriod(v) {
@@ -3221,6 +3242,8 @@
             buildMpPosts();
             document.getElementById('mp-posts').querySelectorAll('input').forEach(inp => inp.value = '');
             setMpMode('wm');
+            document.querySelector('input[name="mp-wm-join"][value="join"]').checked = true;
+            mpWmJoin = true;
             document.getElementById('mp-error').classList.add('hidden');
             document.getElementById('mp-result').classList.add('hidden');
         }
@@ -3263,6 +3286,33 @@
                 posts.push(v || ('崗位 ' + (i + 1)));
             });
             return posts;
+        }
+
+        /* 一水一飯（連續）：鏈式排法 — 每人一整段休息，前半 = 水，後半 = 飯，相連唔分開 */
+        function mpSolveWMJoin(N, M) {
+            const R = N - M, U = 6 * N;
+            const base = Math.floor(N / R), rem = N - base * R;
+            const blocks = [];
+            let p = 0;
+            for (let c = 0; c < R; c++) {
+                const k = base + (c < rem ? 1 : 0);
+                const q = Math.floor(U / k), r = U - q * k;
+                let cur = 0;
+                for (let i = 0; i < k; i++) {
+                    const len = q + (i < r ? 1 : 0);
+                    const s = cur * 2, e = (cur + len) * 2;
+                    if (e - s >= 2) {
+                        const mid = s + Math.floor((e - s) / 2);
+                        blocks.push({ p: p, label: '水', s: s, e: mid });
+                        blocks.push({ p: p, label: '飯', s: mid, e: e });
+                    } else {
+                        blocks.push({ p: p, label: '飯', s: s, e: e });
+                    }
+                    cur += len;
+                    p++;
+                }
+            }
+            return blocks;
         }
 
         /* 一水一飯：N 等份輪換，每人休息 R 份；休息前半 = 水，後半 = 飯。回傳 blocks（12N 格座標） */
@@ -3531,7 +3581,7 @@
 
             let blocks = null;
             try {
-                if (mpMode === 'wm') blocks = mpSolveWM(N, M);
+                if (mpMode === 'wm') blocks = mpWmJoin ? mpSolveWMJoin(N, M) : mpSolveWM(N, M);
                 else if (mpMode === 'meal') blocks = mpSolveMeal(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
                 else blocks = mpSolveWMW(N, M, T, N * 1000003 + M * 10007 + T * 101 + startMins);
             } catch (e) { blocks = null; }
@@ -3550,12 +3600,20 @@
             const segMins = (a, b) => disp(b) - disp(a);
 
             // 警告（唔阻計算）
+            const restFairLabel = (mpMode === 'meal' || (mpMode === 'wm' && mpWmJoin)) ? '平均分配' : '全員相同';
             const warnings = [];
             const seen = {};
             names.forEach(nm => { if (seen[nm]) warnings.push('有重複名稱「' + nm + '」，結果會照樣顯示，核對時請留意。'); seen[nm] = true; });
             if (mpMode === 'meal') {
                 const full = blocks.filter(b => segMins(b.s, b.e) >= T - 2).length;
                 if (full > 0) warnings.push('提示：呢組人數下（休息人數多過一半），數學上有 ' + full + ' 人要成段時間休息（食飯）先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數，或者改用其他模式。');
+            }
+            if (mpMode === 'wm' && mpWmJoin) {
+                const totalsJ = [];
+                for (let i = 0; i < N; i++) totalsJ.push(0);
+                blocks.forEach(b => { totalsJ[b.p] += segMins(b.s, b.e); });
+                const fullJ = totalsJ.filter(t => t >= T - 2).length;
+                if (fullJ > 0) warnings.push('提示：「水飯連續」模式下，呢組人數（休息人數多過一半）數學上有 ' + fullJ + ' 人要成段時間連續休息先至維持到全程 ' + M + ' 人當值，冇辦法避免。如果唔想咁，請加大必須當值人數，或者改用「不連續」。');
             }
             if (mpMode === 'wm' && restPer / 2 < 60) {
                 warnings.push('提示：一水一飯模式下每人食飯約 ' + Math.round(restPer / 2) + ' 分鐘（總休息大家除），少過 60 分鐘。如果食飯一定要足 1 小時，請改用「水飯水」模式。');
@@ -3678,7 +3736,7 @@
             }
             document.getElementById('mp-summary').innerHTML =
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">總時段：<span class="font-extrabold text-slate-900">' + T + ' 分鐘</span>（' + clock(0) + ' - ' + clock(G2) + '）</div>' +
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（' + (mpMode === 'meal' ? '平均分配' : '全員相同') + '）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">每人總休息：<span class="font-extrabold text-slate-900">約 ' + Math.round(restPer) + ' 分鐘</span>（' + restFairLabel + '）</div>' +
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">當值人數：全程保持 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息 ' + (N - M) + ' 人）</div>' +
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
 
@@ -3694,10 +3752,10 @@
                 remOut.classList.remove('hidden');
             } else remOut.classList.add('hidden');
 
-            const mpModeNameTxt = mpMode === 'wm' ? '一水一飯' : (mpMode === 'meal' ? '一飯' : '水飯水');
+            const mpModeNameTxt = mpMode === 'wm' ? ('一水一飯（水飯' + (mpWmJoin ? '連續' : '不連續') + '）') : (mpMode === 'meal' ? '一飯' : '水飯水');
             mpResultText = '【多人行水大作戰】編排結果\n模式：' + mpModeNameTxt +
                 '\n總時段：' + T + ' 分鐘（' + clock(0) + ' - ' + clock(G2) + '）' +
-                '\n每人總休息：約 ' + Math.round(restPer) + ' 分鐘（' + (mpMode === 'meal' ? '平均分配' : '全員相同') + '）' +
+                '\n每人總休息：約 ' + Math.round(restPer) + ' 分鐘（' + restFairLabel + '）' +
                 '\n當值人數：全程保持 ' + M + ' 人（休息 ' + (N - M) + ' 人）' +
                 '\n崗位：' + postNames.join('、') +
                 '\n' + mealInfo +
