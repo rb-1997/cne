@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.7</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.8</span>
             </div>
         </section>
 
@@ -1014,6 +1014,43 @@
                             </select>
                         </div>
                     </div>
+                </div>
+
+
+                <div class="space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="repeat" class="w-5 h-5 text-blue-600"></i>
+                        模式
+                    </label>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="eq-mode" value="normal" checked onchange="setEqMode('normal')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">單人模式<span class="block text-xs font-bold text-slate-500">成段時間平均分俾每位同事（原本計法）</span></span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="eq-mode" value="gb" onchange="setEqMode('gb')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">摷 Guard Break<span class="block text-xs font-bold text-slate-500">三人一組・兩個崗位：每 part 2 人當值、1 人休息，輪流轉</span></span>
+                        </label>
+                        <div id="eq-gb-box" class="hidden pl-9 space-y-2">
+                            <span class="text-xs text-slate-500 font-bold block">每一 part 幾多分鐘</span>
+                            <select id="eq-gb-unit" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                <option value="15">15 分鐘 / part</option>
+                                <option value="20">20 分鐘 / part</option>
+                                <option value="25">25 分鐘 / part</option>
+                                <option value="30">30 分鐘 / part</option>
+                                <option value="35">35 分鐘 / part</option>
+                                <option value="40">40 分鐘 / part</option>
+                                <option value="45" selected>45 分鐘 / part</option>
+                                <option value="50">50 分鐘 / part</option>
+                                <option value="55">55 分鐘 / part</option>
+                                <option value="60">60 分鐘 / part</option>
+                                <option value="75">75 分鐘 / part</option>
+                                <option value="90">90 分鐘 / part</option>
+                            </select>
+                            <p class="text-sm font-bold text-blue-900 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">📖 摷 Guard Break：人數必須係 3 嘅倍數（3／6／9 人）。成段時間以每 part 分鐘數切開輪換；如果除唔盡，剩低嘅分鐘會加落最後一 part — 嗰 part 嘅當值同事做多少少，全員同時間完成，賺蝕唔會太明顯。</p>
+                        </div>
+                    </div>
+                    <p id="eq-error" class="hidden text-base font-bold text-red-700 bg-red-50 border-2 border-red-200 rounded-2xl px-4 py-3"></p>
                 </div>
 
                 <div class="pt-2">
@@ -2654,6 +2691,10 @@
         function resetEquipmentCalc() {
             initTimeDropdowns();
             document.getElementById('staff-count-select').value = "3";
+            document.querySelector('input[name="eq-mode"][value="normal"]').checked = true;
+            eqMode = 'normal';
+            document.getElementById('eq-gb-box').classList.add('hidden');
+            document.getElementById('eq-error').classList.add('hidden');
             document.getElementById('drip-calc-result').classList.add('hidden');
             document.getElementById('staff-breakdown-container').innerHTML = '';
             dripResultText = '';
@@ -2705,7 +2746,112 @@
             return `${h}:${m}`;
         }
 
+        let eqMode = 'normal';
+
+        function setEqMode(m) {
+            eqMode = m;
+            document.getElementById('eq-gb-box').classList.toggle('hidden', m !== 'gb');
+            document.getElementById('eq-error').classList.add('hidden');
+        }
+
+        function calculateGuardBreak(startTotalMins, endTotalMins, staffCount) {
+            const errEl = document.getElementById('eq-error');
+            const resultBox = document.getElementById('drip-calc-result');
+            const showErr = (msg) => {
+                errEl.innerText = msg;
+                errEl.classList.remove('hidden');
+                resultBox.classList.add('hidden');
+            };
+            if (staffCount % 3 !== 0) {
+                showErr('⚠️ 摷 Guard Break 要三人一組，人數必須係 3 嘅倍數（3、6 或 9 人）。而家人數係 ' + staffCount + ' 人，請改返人數，或者轉返單人模式。');
+                return;
+            }
+            const unit = parseInt(document.getElementById('eq-gb-unit').value, 10);
+            const T = endTotalMins - startTotalMins;
+            if (T < unit) {
+                showErr('⚠️ 成段時間得 ' + T + ' 分鐘，短過一 part（' + unit + ' 分鐘），請揀細啲嘅 part 分鐘數。');
+                return;
+            }
+            const K = Math.floor(T / unit);
+            const rem = T - K * unit;
+            const durs = [];
+            for (let i = 0; i < K; i++) durs.push(unit);
+            if (rem > 0) durs[K - 1] += rem;
+
+            const letters = [];
+            for (let i = 0; i < staffCount; i++) letters.push(String.fromCharCode(65 + i));
+            const groups = [];
+            for (let g = 0; g < staffCount / 3; g++) groups.push([letters[3 * g], letters[3 * g + 1], letters[3 * g + 2]]);
+
+            const starts = [];
+            let cur = startTotalMins;
+            for (let i = 0; i < K; i++) { starts.push(cur); cur += durs[i]; }
+
+            const totals = {};
+            letters.forEach(L => { totals[L] = { work: 0, rest: 0, restParts: 0 }; });
+
+            const container = document.getElementById('staff-breakdown-container');
+            container.classList.remove('sm:grid-cols-2');
+            container.innerHTML = '';
+            const lines = [];
+
+            groups.forEach((mem, gi) => {
+                lines.push('【第 ' + (gi + 1) + ' 組】人員 ' + mem.join('、'));
+                let ghtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm space-y-2">'
+                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（人員 ' + mem.join('、') + '）</p>';
+                for (let i = 0; i < K; i++) {
+                    const rester = mem[i % 3];
+                    const p1 = mem[(i + 1) % 3];
+                    const p2 = mem[(i + 2) % 3];
+                    totals[rester].rest += durs[i];
+                    totals[rester].restParts += 1;
+                    totals[p1].work += durs[i];
+                    totals[p2].work += durs[i];
+                    const t1 = formatMinutesToTime(starts[i]);
+                    const t2 = formatMinutesToTime(starts[i] + durs[i]);
+                    const ext = (i === K - 1 && rem > 0) ? ' <span class="text-xs font-extrabold text-white bg-orange-500 px-2 py-0.5 rounded-full">加長 +' + rem + ' 分鐘</span>' : '';
+                    ghtml += '<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm md:text-base font-bold text-slate-700 border-t border-slate-100 pt-2">'
+                        + '<span class="font-extrabold text-blue-900 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200">Part ' + (i + 1) + '｜' + t1 + ' - ' + t2 + '</span>'
+                        + '<span>崗位一：人員 ' + p1 + '</span><span>崗位二：人員 ' + p2 + '</span>'
+                        + '<span class="text-emerald-700">休息：人員 ' + rester + '</span>' + ext + '</div>';
+                    lines.push('Part ' + (i + 1) + ' ' + t1 + ' - ' + t2 + '｜崗位一：人員 ' + p1 + '｜崗位二：人員 ' + p2 + '｜休息：人員 ' + rester + ((i === K - 1 && rem > 0) ? '（加長 +' + rem + ' 分鐘）' : ''));
+                }
+                ghtml += '</div>';
+                container.insertAdjacentHTML('beforeend', ghtml);
+                lines.push('');
+            });
+
+            const sumLines = [];
+            let sumHtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm space-y-1.5">'
+                + '<p class="font-extrabold text-slate-900 text-base">每人總計</p>';
+            letters.forEach(L => {
+                const t = totals[L];
+                sumHtml += '<p class="text-sm md:text-base font-bold text-slate-700">人員 ' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）</p>';
+                sumLines.push('人員 ' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）');
+            });
+            const notes = [];
+            if (rem > 0) notes.push('最後一 part 由 ' + unit + ' 分鐘加長至 ' + durs[K - 1] + ' 分鐘（+' + rem + ' 分鐘），當值同事做多少少，全員同時間完成。');
+            if (K % 3 !== 0) notes.push('今次共 ' + K + ' parts，唔係 3 嘅倍數，所以休息 parts 數會相差一 part，屬正常輪換結果。');
+            notes.forEach(n => {
+                sumHtml += '<p class="text-sm font-bold text-orange-800 bg-orange-50 border border-orange-200 rounded-xl px-3 py-2">💡 ' + n + '</p>';
+                sumLines.push('💡 ' + n);
+            });
+            sumHtml += '</div>';
+            container.insertAdjacentHTML('beforeend', sumHtml);
+
+            const restVals = letters.map(L => totals[L].rest);
+            const rMin = Math.min.apply(null, restVals);
+            const rMax = Math.max.apply(null, restVals);
+            document.getElementById('res-total-mins').innerText = T;
+            document.getElementById('res-per-time').innerText = '休息 ' + (rMin === rMax ? rMin : (rMin + '–' + rMax)) + ' 分鐘';
+            dripResultText = '【行水神器・摷 Guard Break】\n總共時間：' + T + ' 分鐘\n每 part：' + unit + ' 分鐘（共 ' + K + ' parts' + (rem > 0 ? '，最後一 part 加長 ' + rem + ' 分鐘' : '') + '）\n\n'
+                + lines.join('\n') + '每人總計：\n' + sumLines.join('\n');
+            resultBox.classList.remove('hidden');
+            updateLucideIcons();
+        }
+
         function calculateEquipmentTime() {
+            document.getElementById('eq-error').classList.add('hidden');
             const sh = parseInt(document.getElementById('start-hour').value, 10);
             const sm = parseInt(document.getElementById('start-min').value, 10);
             const eh = parseInt(document.getElementById('end-hour').value, 10);
@@ -2727,7 +2873,10 @@
 
             let perPersonText = allocatedHours > 0 ? `${allocatedHours} 小時 ${allocatedMins} 分鐘` : `${allocatedMins} 分鐘`;
 
+            if (eqMode === 'gb') { calculateGuardBreak(startTotalMins, endTotalMins, staffCount); return; }
+
             const container = document.getElementById('staff-breakdown-container');
+            container.classList.add('sm:grid-cols-2');
             container.innerHTML = '';
 
             const dripLines = [];
