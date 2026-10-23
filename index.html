@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.9</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.10</span>
             </div>
         </section>
 
@@ -2710,6 +2710,13 @@
         }
 
         function showDripSection(name) {
+            if (name === 'single') {
+                eqMode = 'normal';
+                document.querySelector('input[name="eq-mode"][value="normal"]').checked = true;
+                document.getElementById('eq-gb-box').classList.add('hidden');
+                document.getElementById('eq-error').classList.add('hidden');
+                document.getElementById('drip-calc-result').classList.add('hidden');
+            }
             document.getElementById('drip-chooser').classList.toggle('hidden', name !== 'chooser');
             ['drip-single-back', 'drip-single-card'].forEach(id => document.getElementById(id).classList.toggle('hidden', name !== 'single'));
             ['drip-multi-back', 'drip-multi-card'].forEach(id => document.getElementById(id).classList.toggle('hidden', name !== 'multi'));
