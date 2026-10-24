@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.18</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.19</span>
             </div>
         </section>
 
@@ -924,7 +924,8 @@
 
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden min-h-[720px]">
                 <iframe
-                    src="https://waline-rb-1997.vercel.app"
+                    id="waline-board-frame"
+                    data-src="https://waline-rb-1997.vercel.app"
                     style="width: 100%; height: 720px; border: 0;"
                     allow="clipboard-write">
                 </iframe>
@@ -2725,6 +2726,14 @@
             });
         }
 
+        // 留言板 iframe 延遲載入：未撳入留言板前唔設 src，避免每次開站都觸發 Waline 請求（慳 Vercel CPU 用量）；撳入後先載入一次，之後重入唔再重載
+        function loadWalineBoard() {
+            const frame = document.getElementById('waline-board-frame');
+            if (frame && !frame.getAttribute('src')) {
+                frame.src = frame.dataset.src;
+            }
+        }
+
         function switchView(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
                 panel.classList.remove('active');
@@ -2746,6 +2755,8 @@
                 } else if (viewId === 'quarters') {
                     initQuartersDaysDropdown();
                     calculateQuartersPoints();
+                } else if (viewId === 'board') {
+                    loadWalineBoard();
                 }
 
                 trackViewPageview(viewId);
