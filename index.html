@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.20</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.21</span>
             </div>
         </section>
 
@@ -1337,6 +1337,12 @@
                             分段總表（每段邊個休息、邊個工作）：
                         </p>
                         <div id="mp-segment-list" class="space-y-2"></div>
+                        <div class="pt-1">
+                            <button onclick="mpDownloadSegImage(this)" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-extrabold py-3 rounded-2xl shadow transition-all flex items-center justify-center gap-2 text-base">
+                                <i data-lucide="camera" class="w-5 h-5"></i>
+                                <span>下載分段總表長圖</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="space-y-3">
@@ -3242,6 +3248,96 @@
 
         function copyMpResult(btn) {
             if (mpResultText) copyTextWithFeedback(mpResultText, btn);
+        }
+
+        /* 分段總表長圖:直接讀 #mp-segment-list 入面嗰張表嚟手繪(唔用外部庫);
+           圖入面只得呢個表(時間｜崗位｜休息),唔包摘要、每人卡、接替鏈、備註 */
+        async function mpDownloadSegImage(btn) {
+            const table = document.querySelector('#mp-segment-list table');
+            const origHtml = btn.innerHTML;
+            const restore = (msg) => { if (msg) btn.innerHTML = '<span>' + msg + '</span>'; setTimeout(() => { btn.innerHTML = origHtml; btn.disabled = false; }, 2500); };
+            if (!table) { btn.innerHTML = '<span>未有分段總表，請先計算</span>'; setTimeout(() => { btn.innerHTML = origHtml; }, 2500); return; }
+            btn.disabled = true; btn.innerHTML = '<span>正在出圖…</span>';
+            try {
+                const head = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+                const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim()));
+                if (!head.length || !rows.length) { restore('未有分段總表，請先計算'); return; }
+                const SCALE = 2, PAD = 48, CELLX = 28, CELLY = 20, LH = 42, TITLE = 52, GAP = 28, CAPW = 340;
+                const FONT = '"PingFang HK", "Helvetica Neue", Arial, sans-serif';
+                const cv = document.createElement('canvas');
+                const ctx = cv.getContext('2d');
+                const fontFor = (bold) => (bold ? '800 ' : '700 ') + '30px ' + FONT;
+                function wrap(text, maxW, bold) {
+                    ctx.font = fontFor(bold);
+                    if (ctx.measureText(text).width <= maxW) return [text];
+                    // 有「、」先按「、」分段打包,唔好拆散人名(例:「人員 10」唔好斷成「人員 1／0」)
+                    if (text.indexOf('、') >= 0) {
+                        const toks = [];
+                        text.split('、').forEach((part, i, arr) => { if (i < arr.length - 1) toks.push(part + '、'); else if (part) toks.push(part); });
+                        const lines = []; let cur = ''; let ok = true;
+                        for (const tk of toks) {
+                            if (ctx.measureText(tk).width > maxW) { ok = false; break; }
+                            if (ctx.measureText(cur + tk).width <= maxW) cur += tk;
+                            else { lines.push(cur); cur = tk; }
+                        }
+                        if (ok) { if (cur) lines.push(cur); return lines.length ? lines : ['']; }
+                    }
+                    const lines = []; let cur = '';
+                    for (const ch of text) {
+                        if (ctx.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; }
+                        else cur += ch;
+                    }
+                    if (cur) lines.push(cur);
+                    return lines.length ? lines : [''];
+                }
+                const colW = head.map((h, j) => {
+                    let w = 0;
+                    ctx.font = fontFor(true); w = Math.max(w, ctx.measureText(h).width);
+                    rows.forEach(r => { ctx.font = fontFor(j === 0); w = Math.max(w, ctx.measureText(r[j] || '').width); });
+                    return Math.min(Math.ceil(w) + CELLX * 2, CAPW);
+                });
+                const headLines = head.map((h, j) => wrap(h, colW[j] - CELLX * 2, true));
+                const rowLines = rows.map(r => r.map((cell, j) => wrap(cell || '', colW[j] - CELLX * 2, j === 0)));
+                const headH = Math.max.apply(null, headLines.map(l => l.length)) * LH + CELLY * 2;
+                const rowHs = rowLines.map(rl => Math.max.apply(null, rl.map(l => l.length)) * LH + CELLY * 2);
+                const W = colW.reduce((a, b) => a + b, 0) + PAD * 2;
+                const H = PAD + TITLE + GAP + headH + rowHs.reduce((a, b) => a + b, 0) + PAD;
+                cv.width = W * SCALE; cv.height = H * SCALE;
+                ctx.scale(SCALE, SCALE);
+                ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
+                ctx.font = '800 44px ' + FONT; ctx.fillStyle = '#0F172A'; ctx.textBaseline = 'alphabetic';
+                ctx.fillText('分段總表', PAD, PAD + 44);
+                let y = PAD + TITLE + GAP, x = PAD;
+                const colX = []; colW.forEach(w => { colX.push(x); x += w; });
+                function drawRow(lines, y0, h, isHead, rowIdx) {
+                    ctx.fillStyle = isHead ? '#FFF7ED' : (rowIdx % 2 ? '#F8FAFC' : '#FFFFFF');
+                    ctx.fillRect(PAD, y0, W - PAD * 2, h);
+                    lines.forEach((cellLines, j) => {
+                        ctx.font = fontFor(isHead || j === 0);
+                        ctx.fillStyle = isHead ? '#431407' : (j === 0 ? '#0F172A' : (j === head.length - 1 ? '#0C4A6E' : '#334155'));
+                        ctx.textBaseline = 'middle';
+                        const cy = y0 + h / 2;
+                        cellLines.forEach((ln, li) => ctx.fillText(ln, colX[j] + CELLX, cy + (li - (cellLines.length - 1) / 2) * LH));
+                    });
+                    ctx.strokeStyle = '#FFEDD5'; ctx.lineWidth = 2;
+                    ctx.strokeRect(PAD, y0, W - PAD * 2, h);
+                    for (let j = 1; j < colX.length; j++) { ctx.beginPath(); ctx.moveTo(colX[j], y0); ctx.lineTo(colX[j], y0 + h); ctx.stroke(); }
+                }
+                drawRow(headLines, y, headH, true, 0); y += headH;
+                rowLines.forEach((rl, i) => { drawRow(rl, y, rowHs[i], false, i); y += rowHs[i]; });
+                const blob = await new Promise(res => cv.toBlob(res, 'image/png'));
+                if (!blob) { restore('出圖失敗，請再試一次'); return; }
+                const file = new File([blob], '分段總表.png', { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try { await navigator.share({ files: [file], title: '分段總表' }); restore('已分享'); return; }
+                    catch (e) { if (e && e.name === 'AbortError') { restore(''); return; } }
+                }
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob); a.download = '分段總表.png';
+                document.body.appendChild(a); a.click(); a.remove();
+                setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+                restore('已下載（去檔案 App 睇）');
+            } catch (e) { restore('出圖失敗，請再試一次'); }
         }
 
         function resetMultiRoster() {
