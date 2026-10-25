@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.23</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.24</span>
             </div>
         </section>
 
@@ -2950,12 +2950,11 @@
             return arr;
         }
 
-        /* ===== 人員專屬顏色（行水神器結果上色用：人數＝顏色數，絕不重複） ===== */
+        /* ===== 人員專屬顏色（行水神器結果上色用：人數＝顏色數，絕不重複；優先次序紅橙黃綠青藍紫，每輪七色、深淺唔同） ===== */
         const PERSON_COLORS = [
-            '#E53935', '#1E88E5', '#43A047', '#FB8C00', '#8E24AA',
-            '#00ACC1', '#D81B60', '#7CB342', '#5E35B1', '#F4511E',
-            '#039BE5', '#6D4C41', '#546E7A', '#00897B', '#F9A825',
-            '#AD1457', '#2E7D32', '#1565C0', '#EF6C00', '#37474F'
+            '#E53935', '#FB8C00', '#FDD835', '#43A047', '#00ACC1', '#1E88E5', '#8E24AA',
+            '#C62828', '#EF6C00', '#FFB300', '#2E7D32', '#00897B', '#1565C0', '#5E35B1',
+            '#EC407A', '#FFA726', '#FFEE58', '#7CB342', '#039BE5', '#AD1457'
         ];
         function personColor(i) { return PERSON_COLORS[i % PERSON_COLORS.length]; }
         function personOnColor(c) {
@@ -3300,7 +3299,7 @@
                     }
                     return out.length ? out : null;
                 }
-                const SCALE = 2, PAD = 48, CELLX = 28, CELLY = 20, LH = 42, TITLE = 52, GAP = 28, CAPW = 340;
+                const SCALE = 2, PAD = 48, CELLX = 28, CELLY = 20, LH = 42, TITLE = 52, SUB = 46, GAP = 24, CAPW = 340;
                 const FONT = '"PingFang HK", "Helvetica Neue", Arial, sans-serif';
                 const cv = document.createElement('canvas');
                 const ctx = cv.getContext('2d');
@@ -3338,14 +3337,30 @@
                 const rowLines = rows.map(r => r.map((cell, j) => wrap(cell || '', colW[j] - CELLX * 2, j === 0)));
                 const headH = Math.max.apply(null, headLines.map(l => l.length)) * LH + CELLY * 2;
                 const rowHs = rowLines.map(rl => Math.max.apply(null, rl.map(l => l.length)) * LH + CELLY * 2);
-                const W = colW.reduce((a, b) => a + b, 0) + PAD * 2;
-                const H = PAD + TITLE + GAP + headH + rowHs.reduce((a, b) => a + b, 0) + PAD;
+                const totalEl = document.getElementById('mp-total');
+                const dutyEl = document.getElementById('mp-duty');
+                let totalN = totalEl ? parseInt(totalEl.value, 10) : NaN;
+                let dutyN = dutyEl ? parseInt(dutyEl.value, 10) : NaN;
+                if (!totalN || totalN < 1) totalN = curNames.length;
+                if (!dutyN || dutyN < 1) dutyN = head.length - 2;
+                let restPart = '';
+                const mRest = (typeof mpResultText === 'string') ? mpResultText.match(/每人總休息：最少\s*(\d+)\s*分鐘\s*～\s*最多\s*(\d+)\s*分鐘/) : null;
+                const mUni = (!mRest && typeof mpResultText === 'string') ? mpResultText.match(/每人總休息：約\s*(\d+)\s*分鐘/) : null;
+                if (mRest) restPart = (mRest[1] === mRest[2]) ? ('平均每人休息 ' + mRest[1] + ' 分鐘') : ('平均每人休息 ' + mRest[1] + '～' + mRest[2] + ' 分鐘');
+                else if (mUni) restPart = '平均每人休息 ' + mUni[1] + ' 分鐘';
+                const subLine = totalN + '人' + dutyN + (restPart ? '，' + restPart : '');
+                ctx.font = '700 30px ' + FONT;
+                const subW = ctx.measureText(subLine).width;
+                const W = Math.max(colW.reduce((a, b) => a + b, 0) + PAD * 2, Math.ceil(subW) + PAD * 2);
+                const H = PAD + TITLE + SUB + GAP + headH + rowHs.reduce((a, b) => a + b, 0) + PAD;
                 cv.width = W * SCALE; cv.height = H * SCALE;
                 ctx.scale(SCALE, SCALE);
                 ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
                 ctx.font = '800 44px ' + FONT; ctx.fillStyle = '#0F172A'; ctx.textBaseline = 'alphabetic';
                 ctx.fillText('分段總表', PAD, PAD + 44);
-                let y = PAD + TITLE + GAP, x = PAD;
+                ctx.font = '700 30px ' + FONT; ctx.fillStyle = '#475569';
+                ctx.fillText(subLine, PAD, PAD + TITLE + 34);
+                let y = PAD + TITLE + SUB + GAP, x = PAD;
                 const colX = []; colW.forEach(w => { colX.push(x); x += w; });
                 function drawRow(lines, rawCells, y0, h, isHead, rowIdx) {
                     ctx.fillStyle = isHead ? '#FFF7ED' : (rowIdx % 2 ? '#F8FAFC' : '#FFFFFF');
