@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.22</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.23</span>
             </div>
         </section>
 
@@ -3279,6 +3279,27 @@
                 const head = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
                 const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim()));
                 if (!head.length || !rows.length) { restore('未有分段總表，請先計算'); return; }
+                const curNames = (typeof mpGetNames === 'function') ? mpGetNames() : [];
+                function personIdxForCell(text) {
+                    const t = (text || '').trim();
+                    if (!t) return -1;
+                    for (let k = 0; k < curNames.length; k++) if (curNames[k] === t) return k;
+                    return -1;
+                }
+                function restTokensForCell(text) {
+                    const toks = (text || '').split('、').map(s => s.trim()).filter(Boolean);
+                    const out = [];
+                    for (const tk of toks) {
+                        let best = -1, bestLen = -1;
+                        for (let k = 0; k < curNames.length; k++) {
+                            const nm = curNames[k];
+                            if (tk.indexOf(nm) === 0 && nm.length > bestLen) { best = k; bestLen = nm.length; }
+                        }
+                        if (best < 0) return null;
+                        out.push({ idx: best, text: tk });
+                    }
+                    return out.length ? out : null;
+                }
                 const SCALE = 2, PAD = 48, CELLX = 28, CELLY = 20, LH = 42, TITLE = 52, GAP = 28, CAPW = 340;
                 const FONT = '"PingFang HK", "Helvetica Neue", Arial, sans-serif';
                 const cv = document.createElement('canvas');
@@ -3326,12 +3347,41 @@
                 ctx.fillText('分段總表', PAD, PAD + 44);
                 let y = PAD + TITLE + GAP, x = PAD;
                 const colX = []; colW.forEach(w => { colX.push(x); x += w; });
-                function drawRow(lines, y0, h, isHead, rowIdx) {
+                function drawRow(lines, rawCells, y0, h, isHead, rowIdx) {
                     ctx.fillStyle = isHead ? '#FFF7ED' : (rowIdx % 2 ? '#F8FAFC' : '#FFFFFF');
                     ctx.fillRect(PAD, y0, W - PAD * 2, h);
                     lines.forEach((cellLines, j) => {
-                        ctx.font = fontFor(isHead || j === 0);
-                        ctx.fillStyle = isHead ? '#431407' : (j === 0 ? '#0F172A' : (j === head.length - 1 ? '#0C4A6E' : '#334155'));
+                        if (!isHead && j === head.length - 1) {
+                            const toks = restTokensForCell(rawCells[j]);
+                            if (toks) {
+                                const tokLines = toks.map(tk => wrap(tk.text, colW[j] - CELLX * 2, false));
+                                const totalLines = tokLines.reduce((a, b) => a + b.length, 0);
+                                let by = y0 + (h - totalLines * LH) / 2;
+                                toks.forEach((tk, ti) => {
+                                    const bh = tokLines[ti].length * LH;
+                                    const c = personColor(tk.idx);
+                                    ctx.fillStyle = c;
+                                    ctx.fillRect(colX[j], by, colW[j], bh);
+                                    ctx.font = fontFor(true);
+                                    ctx.fillStyle = personOnColor(c);
+                                    ctx.textBaseline = 'middle';
+                                    tokLines[ti].forEach((ln, li) => ctx.fillText(ln, colX[j] + CELLX, by + (li + 0.5) * LH));
+                                    by += bh;
+                                });
+                                return;
+                            }
+                        }
+                        let fillC = null;
+                        if (!isHead && j > 0 && j < head.length - 1) {
+                            const pi = personIdxForCell(rawCells[j]);
+                            if (pi >= 0) {
+                                fillC = personColor(pi);
+                                ctx.fillStyle = fillC;
+                                ctx.fillRect(colX[j], y0, colW[j], h);
+                            }
+                        }
+                        ctx.font = fontFor(isHead || j === 0 || fillC !== null);
+                        ctx.fillStyle = isHead ? '#431407' : (j === 0 ? '#0F172A' : (j === head.length - 1 ? '#0C4A6E' : (fillC !== null ? personOnColor(fillC) : '#334155')));
                         ctx.textBaseline = 'middle';
                         const cy = y0 + h / 2;
                         cellLines.forEach((ln, li) => ctx.fillText(ln, colX[j] + CELLX, cy + (li - (cellLines.length - 1) / 2) * LH));
@@ -3340,8 +3390,8 @@
                     ctx.strokeRect(PAD, y0, W - PAD * 2, h);
                     for (let j = 1; j < colX.length; j++) { ctx.beginPath(); ctx.moveTo(colX[j], y0); ctx.lineTo(colX[j], y0 + h); ctx.stroke(); }
                 }
-                drawRow(headLines, y, headH, true, 0); y += headH;
-                rowLines.forEach((rl, i) => { drawRow(rl, y, rowHs[i], false, i); y += rowHs[i]; });
+                drawRow(headLines, head, y, headH, true, 0); y += headH;
+                rowLines.forEach((rl, i) => { drawRow(rl, rows[i], y, rowHs[i], false, i); y += rowHs[i]; });
                 const blob = await new Promise(res => cv.toBlob(res, 'image/png'));
                 if (!blob) { restore('出圖失敗，請再試一次'); return; }
                 const file = new File([blob], '分段總表.png', { type: 'image/png' });
