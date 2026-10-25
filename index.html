@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.28</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.29</span>
             </div>
         </section>
 
@@ -1275,21 +1275,21 @@
                     </label>
                     <div class="space-y-2">
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
-                            <input type="radio" name="mp-time-preset" value="special" onchange="setMpTimePreset('special')" class="w-5 h-5 shrink-0 accent-black">
-                            <span class="text-lg font-bold text-slate-900">特別班次</span>
-                        </label>
-                        <div id="mp-special-box" class="hidden pl-9">
-                            <select id="mp-special-select" onchange="setMpSpecial(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
-                                <option value="p1">08:20 – 15:15</option>
-                                <option value="p2" selected>15:15 – 22:35</option>
-                            </select>
-                        </div>
-                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
                             <input type="radio" name="mp-time-preset" value="manual" checked onchange="setMpTimePreset('manual')" class="w-5 h-5 shrink-0 accent-black">
                             <span class="text-lg font-bold text-slate-900">手動輸入（自己揀開始／結束時間）</span>
                         </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-time-preset" value="special" onchange="setMpTimePreset('special')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">特別班次（新皇崗口岸限定）</span>
+                        </label>
+                        <div id="mp-special-box" class="hidden pl-9">
+                            <select id="mp-special-select" onchange="setMpSpecial(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                                <option value="p1" selected>08:20 – 15:15</option>
+                                <option value="p2">15:15 – 22:35</option>
+                            </select>
+                        </div>
                     </div>
-                    <p class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">📖 使用說明：預設係「手動輸入」，自己揀開始同結束時間就得。如果嗰更係特別班次，點選「特別班次」黑點，再喺下拉選單揀返班次時間（08:20–15:15 或 15:15–22:35），時間會自動填好，唔使自己入。</p>
+                    <p class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">📖 使用說明：預設係「手動輸入」，自己揀開始同結束時間就得。如果嗰更係特別班次（新皇崗口岸限定），點選「特別班次」黑點，時間會自動填做早班（08:20–15:15）；要轉晚班先再喺下拉選單揀 15:15–22:35。</p>
                 </div>
 
                 <div id="mp-time-inputs" class="grid md:grid-cols-2 gap-5">
@@ -3313,7 +3313,7 @@
             const special = (p === 'special');
             if (special) {
                 const sel = document.getElementById('mp-special-select');
-                if (sel) mpApplyPeriod(sel.value);
+                if (sel) { sel.value = 'p1'; mpApplyPeriod('p1'); }
             }
             [sh, sm, eh, em].forEach(el => { el.disabled = special; });
             const box = document.getElementById('mp-time-inputs');
