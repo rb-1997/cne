@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.21</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.22</span>
             </div>
         </section>
 
@@ -2950,6 +2950,23 @@
             return arr;
         }
 
+        /* ===== 人員專屬顏色（行水神器結果上色用：人數＝顏色數，絕不重複） ===== */
+        const PERSON_COLORS = [
+            '#E53935', '#1E88E5', '#43A047', '#FB8C00', '#8E24AA',
+            '#00ACC1', '#D81B60', '#7CB342', '#5E35B1', '#F4511E',
+            '#039BE5', '#6D4C41', '#546E7A', '#00897B', '#F9A825',
+            '#AD1457', '#2E7D32', '#1565C0', '#EF6C00', '#37474F'
+        ];
+        function personColor(i) { return PERSON_COLORS[i % PERSON_COLORS.length]; }
+        function personOnColor(c) {
+            const r = parseInt(c.slice(1, 3), 16), g = parseInt(c.slice(3, 5), 16), b = parseInt(c.slice(5, 7), 16);
+            return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? '#1F2937' : '#FFFFFF';
+        }
+        function personNameHtml(nameHtml, idx) {
+            const c = personColor(idx);
+            return '<span class="inline-block w-3 h-3 rounded-full align-middle" style="background-color:' + c + '"></span> <span style="color:' + c + '">' + nameHtml + '</span>';
+        }
+
         function calculateGuardBreak(startTotalMins, endTotalMins, staffCount) {
             const errEl = document.getElementById('eq-error');
             const resultBox = document.getElementById('drip-calc-result');
@@ -3014,7 +3031,7 @@
                 lines.push('【第 ' + (gi + 1) + ' 組】' + mem.join('、'));
                 lines.push('時間｜' + gbP1Name + '｜' + gbP2Name + '｜休息');
                 let ghtml = '<div class="bg-white p-4 rounded-2xl border-2 border-blue-100 shadow-sm space-y-2">'
-                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（' + mem.join('、') + '）</p>'
+                    + '<p class="font-extrabold text-slate-900 text-base">第 ' + (gi + 1) + ' 組（' + mem.map(m => personNameHtml(m, letters.indexOf(m))).join('、') + '）</p>'
                     + '<div class="overflow-x-auto"><table class="w-full text-sm md:text-base font-bold text-slate-700 border-collapse">'
                     + '<thead><tr class="bg-blue-50 text-blue-950"><th class="px-3 py-2.5 text-left border border-blue-100">時間</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtmlGb(gbP1Name) + '</th><th class="px-3 py-2.5 text-left border border-blue-100">' + escHtmlGb(gbP2Name) + '</th><th class="px-3 py-2.5 text-left border border-blue-100">休息</th></tr></thead><tbody>';
                 for (let i = 0; i < K; i++) {
@@ -3027,7 +3044,7 @@
                     totals[p2].work += durs[i];
                     const t1 = formatMinutesToTime(starts[i]);
                     const t2 = formatMinutesToTime(starts[i] + durs[i]);
-                    ghtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + t1 + ' - ' + t2 + '</td><td class="px-3 py-2.5 border border-blue-100">' + p1 + '</td><td class="px-3 py-2.5 border border-blue-100">' + p2 + '</td><td class="px-3 py-2.5 border border-blue-100 text-emerald-700">' + rester + '</td></tr>';
+                    ghtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + t1 + ' - ' + t2 + '</td><td class="px-3 py-2.5 border border-blue-100">' + personNameHtml(p1, letters.indexOf(p1)) + '</td><td class="px-3 py-2.5 border border-blue-100">' + personNameHtml(p2, letters.indexOf(p2)) + '</td><td class="px-3 py-2.5 border border-blue-100">' + personNameHtml(rester, letters.indexOf(rester)) + '</td></tr>';
                     lines.push(t1 + ' - ' + t2 + '｜' + gbP1Name + '：' + p1 + '｜' + gbP2Name + '：' + p2 + '｜休息：' + rester);
                 }
                 ghtml += '</tbody></table></div></div>';
@@ -3040,7 +3057,7 @@
                 + '<p class="font-extrabold text-slate-900 text-base">每人總計</p>';
             letters.forEach(L => {
                 const t = totals[L];
-                sumHtml += '<p class="text-sm md:text-base font-bold text-slate-700">' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）</p>';
+                sumHtml += '<p class="text-sm md:text-base font-bold text-slate-700">' + personNameHtml(L, letters.indexOf(L)) + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）</p>';
                 sumLines.push('' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）');
             });
             notes.forEach(n => {
@@ -3107,7 +3124,7 @@
                 const startTimeStr = formatMinutesToTime(currentStart);
                 const endTimeStr = formatMinutesToTime(currentEnd);
 
-                tableHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + startTimeStr + ' - ' + endTimeStr + '</td><td class="px-3 py-2.5 border border-blue-100">' + personNames[i] + '</td></tr>';
+                tableHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-3 py-2.5 border border-blue-100 whitespace-nowrap">' + startTimeStr + ' - ' + endTimeStr + '</td><td class="px-3 py-2.5 border border-blue-100">' + personNameHtml(personNames[i], i) + '</td></tr>';
                 dripLines.push(startTimeStr + ' - ' + endTimeStr + '｜' + postName + '：' + personNames[i]);
 
                 currentStart = currentEnd;
@@ -4295,7 +4312,7 @@
                 personTxtLines.push(names[pi] + '（總休息 ' + restTotal + ' 分鐘）：' + segs.map(sg => sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）').join(' '));
                 personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm space-y-2">' +
                     '<div class="flex items-center justify-between flex-wrap gap-2">' +
-                    '<span class="font-extrabold text-slate-900 text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full bg-orange-600 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">' + (pi + 1) + '</span>' + mpEsc(names[pi]) + '</span>' +
+                    '<span class="font-extrabold text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full font-extrabold text-sm flex items-center justify-center shadow-sm" style="background-color:' + personColor(pi) + ';color:' + personOnColor(personColor(pi)) + '">' + (pi + 1) + '</span><span style="color:' + personColor(pi) + '">' + mpEsc(names[pi]) + '</span></span>' +
                     '<span class="text-sm font-extrabold text-orange-900 bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-200">總休息 ' + restTotal + ' 分鐘</span></div>' +
                     '<div class="flex flex-wrap gap-1.5">' + chips + '</div></div>';
             });
@@ -4329,10 +4346,10 @@
                 workingIdx.forEach(pi => { if (postOf[pi] === undefined) postOf[pi] = freeP[fpI++]; assign[postOf[pi]] = pi; });
                 const workTxt = postNames.map((pn, j) => pn + '：' + names[assign[j]]).join('、');
                 const workHtml = postNames.map((pn, j) => mpEsc(pn) + '：' + mpEsc(names[assign[j]])).join('、');
-                const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => mpEsc(names[x.p]) + '（<wbr>' + x.label + '）').join('、');
+                const restTxt = resting.slice().sort((x, y) => x.p - y.p).map(x => '<span style="color:' + personColor(x.p) + '">' + mpEsc(names[x.p]) + '</span>（<wbr>' + x.label + '）').join('、');
                 segTxtLines.push(clock(a) + '-' + clock(b) + '｜' + postNames.map((pn, j) => names[assign[j]]).join('｜') + '｜' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、'));
                 segRowsHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 md:whitespace-nowrap font-extrabold text-slate-900 break-all">' + clock(a) + '-' + clock(b) + '</td>'
-                    + postNames.map((pn, j) => '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 break-all">' + mpEsc(names[assign[j]]) + '</td>').join('')
+                    + postNames.map((pn, j) => '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 break-all"><span style="color:' + personColor(assign[j]) + '">' + mpEsc(names[assign[j]]) + '</span></td>').join('')
                     + '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 text-sky-900 break-all">' + restTxt + '</td></tr>';
             }
             segHtml = '<div class="bg-white p-2 md:p-4 rounded-2xl border-2 border-orange-100 shadow-sm overflow-x-auto">'
@@ -4357,9 +4374,9 @@
             lanes.forEach((lane, li) => {
                 let line = '<span class="font-extrabold text-orange-900">休息位 ' + (li + 1) + '：</span> ';
                 lane.forEach((b, bi) => {
-                    const seg = mpEsc(names[b.p]) + ' ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
+                    const seg = '<span style="color:' + personColor(b.p) + '">' + mpEsc(names[b.p]) + '</span> ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
                     if (bi === 0) line += seg;
-                    else line += ' → ' + clock(b.s) + ' ' + mpEsc(names[lane[bi - 1].p]) + ' 返工接替 ' + seg;
+                    else line += ' → ' + clock(b.s) + ' ' + '<span style="color:' + personColor(lane[bi - 1].p) + '">' + mpEsc(names[lane[bi - 1].p]) + '</span>' + ' 返工接替 ' + seg;
                 });
                 reliefHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm leading-relaxed">' + line + '</div>';
                 let lineTxt = '休息位 ' + (li + 1) + '：';
