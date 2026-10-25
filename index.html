@@ -866,7 +866,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.26</span>
+                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.27</span>
             </div>
         </section>
 
@@ -1181,11 +1181,11 @@
                         <span class="block text-xs font-bold opacity-80 mt-1">每人 行水一次 ＋ 食飯一次</span>
                     </button>
                     <button id="mp-mode-wmw" onclick="setMpMode('wmw')" class="w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600">
-                        水飯水（L3式）
+                        水飯水
                         <span class="block text-xs font-bold opacity-80 mt-1">每人 休息 → 食飯 → 休息 三段</span>
                     </button>
                     <button id="mp-mode-meal" onclick="setMpMode('meal')" class="w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600">
-                        一飯（L3式）
+                        一飯（傳統模式）
                         <span class="block text-xs font-bold opacity-80 mt-1">每人 只食飯一次・冇行水</span>
                     </button>
                 </div>
@@ -1194,12 +1194,16 @@
                 <div id="mp-wm-join-box" class="hidden space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
                         <i data-lucide="link" class="w-5 h-5 text-orange-600"></i>
-                        水同飯需唔需要連續？
+                        排法選擇：
                     </label>
                     <div class="space-y-2">
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
-                            <input type="radio" name="mp-wm-join" value="join" checked onchange="setMpWmMode('join')" class="w-5 h-5 shrink-0 accent-black">
-                            <span class="text-lg font-bold text-slate-900">連續（預設）<span class="block text-xs font-bold text-slate-500">每人一次過休息：行水 → 食飯，相連唔分開。留意：總人數除唔盡休息人數嗰陣，各人總休息會有差別（排法限制）；要全員平均請用「不連續」</span></span>
+                            <input type="radio" name="mp-wm-join" value="int" checked onchange="setMpWmMode('int')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">傳統模式（預設）<span class="block text-xs font-bold text-slate-500">傳統更表式：分組輪換回合制，先水輪、後飯輪，同一輪換次序；飯每組固定 60 分鐘；水長度由時段計出；全部時間 5 分鐘一格</span></span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-wm-join" value="join" onchange="setMpWmMode('join')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">連續<span class="block text-xs font-bold text-slate-500">每人一次過休息：行水 → 食飯，相連唔分開。留意：總人數除唔盡休息人數嗰陣，各人總休息會有差別（排法限制）；要全員平均請用「不連續」</span></span>
                         </label>
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
                             <input type="radio" name="mp-wm-join" value="split" onchange="setMpWmMode('split')" class="w-5 h-5 shrink-0 accent-black">
@@ -1209,9 +1213,21 @@
                             <input type="radio" name="mp-wm-join" value="split60" onchange="setMpWmMode('split60')" class="w-5 h-5 shrink-0 accent-black">
                             <span class="text-lg font-bold text-slate-900">不連續（強制食飯 60 分鐘）<span class="block text-xs font-bold text-slate-500">食飯每人最少 60 分鐘（去 canteen／叮飯／me time 都夠用）；行水 = 其餘休息時間，人人平均；水同飯分開排</span></span>
                         </label>
+                    </div>
+                </div>
+                <div id="mp-wmw-box" class="hidden space-y-2">
+                    <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
+                        <i data-lucide="link" class="w-5 h-5 text-orange-600"></i>
+                        排法選擇：
+                    </label>
+                    <div class="space-y-2">
                         <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
-                            <input type="radio" name="mp-wm-join" value="int" onchange="setMpWmMode('int')" class="w-5 h-5 shrink-0 accent-black">
-                            <span class="text-lg font-bold text-slate-900">傳統整數（L3式）<span class="block text-xs font-bold text-slate-500">L3 傳統更表式：分組輪換回合制，先水輪、後飯輪，同一輪換次序；飯每組固定 60 分鐘；水長度由時段計出；全部時間 5 分鐘一格</span></span>
+                            <input type="radio" name="mp-wmw-mode" value="trad" checked onchange="setMpWmwMode('trad')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">傳統模式（預設）<span class="block text-xs font-bold text-slate-500">傳統更表式：分組輪換三回合——水輪、飯輪、水輪，同一輪換次序；飯每組固定 60 分鐘；水長度由時段計出</span></span>
+                        </label>
+                        <label class="flex items-center gap-3 px-4 py-3 border-2 border-slate-300 rounded-2xl bg-slate-50 cursor-pointer">
+                            <input type="radio" name="mp-wmw-mode" value="avg" onchange="setMpWmwMode('avg')" class="w-5 h-5 shrink-0 accent-black">
+                            <span class="text-lg font-bold text-slate-900">平均分配<span class="block text-xs font-bold text-slate-500">求解器自動分配：每人「休息 → 食飯 → 休息」三段，食飯一整段唔劏開，最少 60 分鐘；每人總休息完全相同</span></span>
                         </label>
                     </div>
                 </div>
@@ -3148,10 +3164,12 @@
 
         /* ===== 多人行水大作戰（view-drip 附加功能） ===== */
         let mpMode = 'wm';
-        let mpWmMode = 'join';
+        let mpWmMode = 'int';
+        let mpWmwMode = 'trad';
         let mpResultText = '';
 
         function setMpWmMode(m) { mpWmMode = m; }
+        function setMpWmwMode(m) { mpWmwMode = m; }
 
         function mpRng(seed) {
             let a = seed >>> 0;
@@ -3228,11 +3246,12 @@
             wmw.className = mode === 'wmw' ? on : off;
             meal.className = mode === 'meal' ? on : off;
             document.getElementById('mp-mode-desc').innerText = mode === 'wm'
-                ? '一水一飯：全程保持最少當值人數，每人一次行水＋一次食飯；總休息時間按選項分配；行水同食飯點樣分配，睇下面「水同飯需唔需要連續？」嗰個選項。'
+                ? '一水一飯：全程保持最少當值人數，每人一次行水＋一次食飯；總休息時間按選項分配；行水同食飯點樣分配，睇下面「排法選擇」嗰個選項。'
                 : (mode === 'meal'
-                    ? '一飯（L3式）：分組輪換，一組一整段休息就係食飯，冇行水；每組時長由時段除以組數計出，尾段由第一組補上。適合人手最緊張、只做到最有限度服務嗰陣。'
-                    : '水飯水（L3式）：分組輪換三回合——水輪、飯輪、水輪，同一輪換次序；飯每組固定 60 分鐘；每人總休息除尾段外完全相同。');
+                    ? '一飯（傳統模式）：分組輪換，一組一整段休息就係食飯，冇行水；每組時長由時段除以組數計出，尾段由第一組補上。適合人手最緊張、只做到最有限度服務嗰陣。'
+                    : '水飯水：全程保持最少當值人數，每人休息 → 食飯 → 休息三段；排法睇下面「排法選擇」（傳統模式：分組輪換回合制；平均分配：每人總休息完全相同）。');
             document.getElementById('mp-wm-join-box').classList.toggle('hidden', mode !== 'wm');
+            document.getElementById('mp-wmw-box').classList.toggle('hidden', mode !== 'wmw');
         }
 
         function mpApplyPeriod(v) {
@@ -3607,8 +3626,10 @@
             buildMpPosts();
             document.getElementById('mp-posts').querySelectorAll('input').forEach(inp => inp.value = '');
             setMpMode('wm');
-            document.querySelector('input[name="mp-wm-join"][value="join"]').checked = true;
-            mpWmMode = 'join';
+            document.querySelector('input[name="mp-wm-join"][value="int"]').checked = true;
+            mpWmMode = 'int';
+            document.querySelector('input[name="mp-wmw-mode"][value="trad"]').checked = true;
+            mpWmwMode = 'trad';
             document.getElementById('mp-error').classList.add('hidden');
             document.getElementById('mp-result').classList.add('hidden');
         }
@@ -4487,7 +4508,7 @@
             if (M >= N) errors.push('必須當值人數（' + M + ' 人）要少過總人數（' + N + ' 人），至少要留 1 個休息位。');
             if (T < 60) errors.push('總時段得 ' + T + ' 分鐘，太短，排唔到輪換編排。');
             const restPer = T * (N - M) / N;
-            if (mpMode === 'wmw' && T >= 60 && M < N && restPer < Math.max(100, 60 + 2 * T / (3 * N))) {
+            if (mpMode === 'wmw' && mpWmwMode === 'avg' && T >= 60 && M < N && restPer < Math.max(100, 60 + 2 * T / (3 * N))) {
                 errors.push('每人平均只可休息約 ' + Math.round(restPer) + ' 分鐘，唔夠分三段（食飯至少 60 分鐘，另加兩段休息）。請加長時段、減少必須當值人數，或改用「一水一飯」。');
             }
             if (mpMode === 'wm' && mpWmMode === 'split60' && T >= 60 && M < N) {
@@ -4512,14 +4533,14 @@
                 mpL3Info = null;
                 if (mpMode === 'wm') {
                     if (mpWmMode === 'join') blocks = mpSolveWMJoinMin(N, M, T) || mpSolveWMJoin(N, M);
-                    else if (mpWmMode === 'int') blocks = mpSolveL3(N, M, T, ['water', 'meal'], '一水一飯（傳統整數・L3式）');
+                    else if (mpWmMode === 'int') blocks = mpSolveL3(N, M, T, ['water', 'meal'], '一水一飯（傳統模式）');
                     else {
                         blocks = mpSolveSplitSA(N, M, T, mpSeed, mpWmMode === 'split60');
                         if (!blocks) { blocks = mpWmMode === 'split60' ? mpSolveSplit60Chain(N, M, T) : mpSolveWMSplit(N, M); mpFallback = true; }
                     }
                 }
-                else if (mpMode === 'meal') blocks = mpSolveL3(N, M, T, ['meal'], '一飯（L3式）');
-                else blocks = mpSolveL3(N, M, T, ['water', 'meal', 'water'], '水飯水（L3式）');
+                else if (mpMode === 'meal') blocks = mpSolveL3(N, M, T, ['meal'], '一飯（傳統模式）');
+                else blocks = mpWmwMode === 'avg' ? mpSolveWMW(N, M, T, mpSeed) : mpSolveL3(N, M, T, ['water', 'meal', 'water'], '水飯水（傳統模式）');
             } catch (e) { blocks = null; }
 
             if (!blocks) {
@@ -4531,7 +4552,7 @@
             }
 
             const G2 = 12 * N;
-            const mpIsL3 = (mpMode === 'wm' && mpWmMode === 'int') || mpMode === 'wmw' || mpMode === 'meal';
+            const mpIsL3 = (mpMode === 'wm' && mpWmMode === 'int') || (mpMode === 'wmw' && mpWmwMode === 'trad') || mpMode === 'meal';
             const disp = u => Math.round(u * T / G2);
             const clock = u => formatMinutesToTime(startMins + disp(u));
             const segMins = (a, b) => disp(b) - disp(a);
@@ -4551,6 +4572,7 @@
                 ? '每人總休息：<span class="font-extrabold text-slate-900">約 ' + restAvg + ' 分鐘</span>（全員相同）'
                 : '每人總休息：<span class="font-extrabold text-slate-900">最少 ' + totMin + ' ～ 最多 ' + totMax + ' 分鐘</span>（平均 ' + restAvg + ' 分鐘）';
             const warnings = [];
+            const redWarnings = [];
             const seen = {};
             names.forEach(nm => { if (seen[nm]) warnings.push('有重複名稱「' + nm + '」，結果會照樣顯示，核對時請留意。'); seen[nm] = true; });
             if (mpMode === 'meal') {
@@ -4564,10 +4586,10 @@
                 warnings.push('提示：一飯係「每人一整段過」嘅排法，總人數 ÷ 休息人數除唔盡嗰陣，每人總休息冇辦法完全平均（今次最少 ' + totMin + ' 分鐘、最多 ' + totMax + ' 分鐘），係呢種排法嘅數學限制。要總休息完全平均，可以改用「一水一飯（不連續）」或「水飯水」。');
             }
             if (mpIsL3 && mpL3Info && mpL3Info.tail > 0) {
-                warnings.push('L3式輪換尾段（' + clock(mpL3Info.tailStartU) + '–' + clock(G2) + '，' + mpL3Info.tail + ' 分鐘）由 ' + mpL3Info.firstGroup.map(pi => names[pi]).join('、') + ' 休息，標示為「休」；佢哋總休息因此多 ' + mpL3Info.tail + ' 分鐘。');
+                warnings.push('傳統模式尾段（' + clock(mpL3Info.tailStartU) + '–' + clock(G2) + '，' + mpL3Info.tail + ' 分鐘）由 ' + mpL3Info.firstGroup.map(pi => names[pi]).join('、') + ' 休息，標示為「休」；佢哋總休息因此多 ' + mpL3Info.tail + ' 分鐘。');
             }
             if (mpIsL3 && mpMode === 'meal' && mpL3Info && mpL3Info.breakLen > 0 && mpL3Info.breakLen < 60) {
-                warnings.push('一飯（L3式）每組休息只有 ' + mpL3Info.breakLen + ' 分鐘，少過食飯 60 分鐘。請加長時段或減少必須當值人數。');
+                redWarnings.push('一飯（傳統模式）每組休息只有 ' + mpL3Info.breakLen + ' 分鐘，少過食飯 60 分鐘，根本唔夠時間食飯。請加長時段或減少必須當值人數。');
             }
             if (mpMode === 'wm' && mpWmMode === 'join') {
                 const fullJ = totalsArr.filter(t => t >= T - 2).length;
@@ -4696,7 +4718,7 @@
             let mealInfo = '';
             if (mpMode === 'wmw') {
                 const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
-                mealInfo = '每人食飯一整段：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘（全部 ≥ 60 分鐘 ✓）';
+                mealInfo = '每人食飯一整段：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘' + (Math.min.apply(null, meals) >= 60 ? '（全部 ≥ 60 分鐘 ✓）' : '（⚠️ 有人少過 60 分鐘）');
             } else if (mpMode === 'meal') {
                 const meals = blocks.filter(b => b.label === '飯').map(b => segMins(b.s, b.e));
                 mealInfo = '每人只食飯一次：最短 ' + Math.min.apply(null, meals) + ' 分鐘、最長 ' + Math.max.apply(null, meals) + ' 分鐘' + (restUniform ? '（全員相同）' : '（平均 ' + restAvg + ' 分鐘）');
@@ -4716,7 +4738,7 @@
                 '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
 
             const warnBox = document.getElementById('mp-warn');
-            let warnHtml = warnings.map(w => '<p>⚠️ ' + mpEsc(w) + '</p>').join('');
+            let warnHtml = redWarnings.map(w => '<p class="text-red-700 font-extrabold">⚠️ ' + mpEsc(w) + '</p>').join('') + warnings.map(w => '<p>⚠️ ' + mpEsc(w) + '</p>').join('');
             if (mpMode === 'wm' && mpWmMode === 'join' && !restUniform && (N - M) * 2 <= N) {
                 warnHtml = '<div class="mb-2"><button type="button" onclick="mpUseSplit()" class="w-full px-4 py-3 rounded-xl bg-orange-600 text-white font-extrabold text-base shadow hover:bg-orange-700 transition">「連續」排法所限，各人總休息唔平均（最少 ' + totMin + ' ～ 最多 ' + totMax + ' 分鐘）— 撳呢度改用「不連續」重新計算，全員平均</button></div>' + warnHtml;
             }
@@ -4731,7 +4753,7 @@
                 remOut.classList.remove('hidden');
             } else remOut.classList.add('hidden');
 
-            const mpModeNameTxt = mpMode === 'wm' ? (mpWmMode === 'join' ? '一水一飯（水飯連續）' : (mpWmMode === 'split60' ? '一水一飯（不連續・強制食飯 60 分鐘）' : (mpWmMode === 'int' ? '一水一飯（傳統整數・L3式）' : '一水一飯（水飯不連續）'))) : (mpMode === 'meal' ? '一飯（L3式）' : '水飯水（L3式）');
+            const mpModeNameTxt = mpMode === 'wm' ? (mpWmMode === 'join' ? '一水一飯（水飯連續）' : (mpWmMode === 'split60' ? '一水一飯（不連續・強制食飯 60 分鐘）' : (mpWmMode === 'int' ? '一水一飯（傳統模式）' : '一水一飯（水飯不連續）'))) : (mpMode === 'meal' ? '一飯（傳統模式）' : (mpWmwMode === 'avg' ? '水飯水（平均分配）' : '水飯水（傳統模式）'));
             mpResultText = '【多人行水大作戰】編排結果\n模式：' + mpModeNameTxt +
                 '\n總時段：' + T + ' 分鐘（' + clock(0) + ' - ' + clock(G2) + '）' +
                 '\n' + restLineTxt +
