@@ -13,7 +13,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎃 CNE日常 - 萬聖節限定版</title>
+    <title>🍁 CNE日常 - 紅葉限定版</title>
 
     <!-- 網站 Favicon 及 手機桌面新增捷徑專屬 Icon -->
     <link rel="icon" type="image/png" href="https://rb-1997.github.io/cne/cne_daily180.png">
@@ -110,17 +110,17 @@
         }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         .animate-pulse-fast { animation: pulse 0.8s infinite; }
-        /* ===== Halloween Memo 紙 tiles：橫線紙 + washi 膠紙 + 微斜 ===== */
+        /* ===== 紅葉 Memo 紙 tiles：橫線紙 + washi 膠紙 + 微斜 ===== */
         .meta-card {
             height: 100%;
             background:
-                repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 20px, rgba(194,65,12,0.10) 20px, rgba(194,65,12,0.10) 21px),
+                repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 20px, rgba(185,28,28,0.10) 20px, rgba(185,28,28,0.10) 21px),
                 linear-gradient(175deg, #FFFDF6 0%, #FFF8E9 100%);
-            border: 1.5px solid rgba(194,65,12,0.22);
+            border: 1.5px solid rgba(185,28,28,0.22);
             border-radius: 0.4rem;
             padding: 0.8rem;
             padding-top: 1rem;
-            box-shadow: 0 2px 5px rgba(124,45,18,0.12), 0 6px 14px -6px rgba(124,45,18,0.15);
+            box-shadow: 0 2px 5px rgba(127,29,29,0.12), 0 6px 14px -6px rgba(127,29,29,0.15);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -138,10 +138,10 @@
             width: 62px;
             height: 20px;
             transform: translateX(-50%) rotate(-4deg);
-            background: repeating-linear-gradient(45deg, rgba(249,115,22,0.60) 0 7px, rgba(251,146,60,0.60) 7px 14px);
+            background: repeating-linear-gradient(45deg, rgba(220,38,38,0.60) 0 7px, rgba(245,158,11,0.60) 7px 14px);
             border-left: 2px dashed rgba(255,255,255,0.75);
             border-right: 2px dashed rgba(255,255,255,0.75);
-            box-shadow: 0 1px 2px rgba(124,45,18,0.18);
+            box-shadow: 0 1px 2px rgba(127,29,29,0.18);
             opacity: 0.92;
             pointer-events: none;
         }
@@ -150,57 +150,68 @@
         #view-home .grid .meta-card:nth-child(even) { transform: rotate(0.8deg); }
         .meta-card:hover {
             transform: rotate(0deg) translateY(-3px) !important;
-            box-shadow: 0 10px 22px -8px rgba(194,65,12,0.35);
+            box-shadow: 0 10px 22px -8px rgba(185,28,28,0.35);
         }
         .meta-card:active { transform: scale(0.98) !important; }
         @media (min-width: 768px) {
             .meta-card { padding: 1.1rem; padding-top: 1.25rem; border-radius: 0.5rem; }
             .meta-card::before { width: 74px; height: 22px; }
         }
-        /* ===== 萬聖節限定：飄浮蝙蝠 + 南瓜微光 + 搖曳 ===== */
-        @keyframes hw-float {
+        /* ===== 紅葉限定：飄落楓葉 + 葉影微光 + 搖曳 ===== */
+        @keyframes ml-float {
             0%, 100% { transform: translateY(0) rotate(-6deg); }
             50% { transform: translateY(-9px) rotate(6deg); }
         }
-        @keyframes hw-drift {
+        @keyframes ml-drift {
             0% { transform: translateX(-15%) translateY(0); opacity: 0; }
             10% { opacity: 1; }
             50% { transform: translateX(45vw) translateY(-14px); opacity: 1; }
             90% { opacity: 1; }
             100% { transform: translateX(105vw) translateY(6px); opacity: 0; }
         }
-        @keyframes hw-flicker {
-            0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(249,115,22,0.55)); }
-            45% { opacity: 0.82; filter: drop-shadow(0 0 2px rgba(249,115,22,0.25)); }
-            55% { opacity: 0.95; filter: drop-shadow(0 0 8px rgba(249,115,22,0.65)); }
+        @keyframes ml-glow {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(220,38,38,0.55)); }
+            45% { opacity: 0.82; filter: drop-shadow(0 0 2px rgba(220,38,38,0.25)); }
+            55% { opacity: 0.95; filter: drop-shadow(0 0 8px rgba(220,38,38,0.65)); }
         }
-        @keyframes hw-wiggle {
+        @keyframes ml-sway {
             0%, 100% { transform: rotate(-8deg); }
             50% { transform: rotate(8deg); }
         }
-        .hw-bat { animation: hw-drift 11s linear infinite; }
-        .hw-bat-2 { animation: hw-drift 16s linear infinite; animation-delay: -7s; }
-        .hw-float { animation: hw-float 3.6s ease-in-out infinite; display: inline-block; }
-        .hw-flicker { animation: hw-flicker 2.8s ease-in-out infinite; display: inline-block; }
-        .hw-wiggle { animation: hw-wiggle 2.4s ease-in-out infinite; display: inline-block; transform-origin: 50% 80%; }
+        .ml-leaf { animation: ml-drift 11s linear infinite; }
+        .ml-leaf-2 { animation: ml-drift 16s linear infinite; animation-delay: -7s; }
+        .ml-float { animation: ml-float 3.6s ease-in-out infinite; display: inline-block; }
+        .ml-glow { animation: ml-glow 2.8s ease-in-out infinite; display: inline-block; }
+        .ml-sway { animation: ml-sway 2.4s ease-in-out infinite; display: inline-block; transform-origin: 50% 80%; }
         @media (prefers-reduced-motion: reduce) {
-            .hw-bat, .hw-bat-2, .hw-float, .hw-flicker, .hw-wiggle { animation: none; }
+            .ml-leaf, .ml-leaf-2, .ml-float, .ml-glow, .ml-sway { animation: none; }
         }
+        /* ===== 紅葉限定：全版飄落楓葉（純裝飾，唔阻撳掣） ===== */
+        .ml-fall-wrap { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+        .ml-fall { position: absolute; top: -48px; animation: ml-fall linear infinite; will-change: transform; }
+        @keyframes ml-fall {
+            0% { transform: translate3d(0, -5vh, 0) rotate(0deg); opacity: 0; }
+            8% { opacity: 0.75; }
+            50% { transform: translate3d(24px, 50vh, 0) rotate(180deg); }
+            92% { opacity: 0.75; }
+            100% { transform: translate3d(-16px, 108vh, 0) rotate(340deg); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) { .ml-fall-wrap { display: none; } }
         .meta-icon {
             width: 2.4rem; height: 2.4rem;
             border-radius: 0.85rem;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 2px rgba(124,45,18, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 1px 2px rgba(127,29,29, 0.08);
             flex-shrink: 0;
         }
         @media (min-width: 768px) { .meta-icon { width: 2.75rem; height: 2.75rem; } }
         .meta-tag {
             font-size: 10px; font-weight: 700; line-height: 1;
             padding: 5px 9px; border-radius: 9999px;
-            background: #FFF7ED; color: #8A5A2B;
-            border: 1px solid #FED7AA; white-space: nowrap;
+            background: #FEF2F2; color: #8A5A2B;
+            border: 1px solid #FECACA; white-space: nowrap;
         }
-        .meta-title { font-size: 14.5px; font-weight: 800; color: #431407; line-height: 1.4; letter-spacing: 0.01em; }
+        .meta-title { font-size: 14.5px; font-weight: 800; color: #451A03; line-height: 1.4; letter-spacing: 0.01em; }
         @media (min-width: 768px) { .meta-title { font-size: 16px; } }
         .meta-desc {
             font-size: 11px; color: #8C6A3C; font-weight: 500; line-height: 1.55; margin-top: 3px;
@@ -212,7 +223,7 @@
             margin-top: 0.7rem; padding-top: 0.6rem;
             border-top: 1px solid #FFF1E0;
             display: flex; align-items: center; justify-content: space-between;
-            font-size: 11.5px; font-weight: 800; color: #C2410C;
+            font-size: 11.5px; font-weight: 800; color: #B91C1C;
         }
         @media (min-width: 768px) { .meta-foot { font-size: 12.5px; } }
             /* ===== Walkman 收音機 (view-radio 專用，全部已 scope) ===== */
@@ -480,7 +491,7 @@
       box-shadow: 0 1px 0 #101112, 0 2px 4px rgba(0,0,0,0.6);
     }
 #view-radio .btn-play {
-      background: linear-gradient(to bottom, #F97316, #EA580C);
+      background: linear-gradient(to bottom, #DC2626, #B91C1C);
     }
 #view-radio .btn-stop {
       background: linear-gradient(to bottom, #e74c3c, #c0392b);
@@ -535,13 +546,24 @@
     }
     </style>
 </head>
-<body class="bg-[#FFF1E0] text-slate-900 min-h-screen flex flex-col selection:bg-orange-100 selection:text-orange-900">
+<body class="bg-[#FFF1E0] text-slate-900 min-h-screen flex flex-col selection:bg-red-100 selection:text-red-900">
+    <!-- 紅葉限定：飄落楓葉 -->
+    <div class="ml-fall-wrap" aria-hidden="true">
+        <span class="ml-fall" style="left:3%;font-size:20px;animation-duration:16s;animation-delay:-2s">🍁</span>
+        <span class="ml-fall" style="left:12%;font-size:15px;animation-duration:21s;animation-delay:-9s">🍂</span>
+        <span class="ml-fall" style="left:24%;font-size:23px;animation-duration:14s;animation-delay:-5s">🍁</span>
+        <span class="ml-fall" style="left:38%;font-size:16px;animation-duration:19s;animation-delay:-13s">🍂</span>
+        <span class="ml-fall" style="left:55%;font-size:21px;animation-duration:15s;animation-delay:-7s">🍁</span>
+        <span class="ml-fall" style="left:68%;font-size:14px;animation-duration:22s;animation-delay:-16s">🍂</span>
+        <span class="ml-fall" style="left:81%;font-size:22px;animation-duration:17s;animation-delay:-4s">🍁</span>
+        <span class="ml-fall" style="left:93%;font-size:16px;animation-duration:20s;animation-delay:-11s">🍂</span>
+    </div>
 
     <!-- Header -->
-    <header class="bg-gradient-to-b from-[#FFE7CC] to-[#FFFBF2] border-b border-[#FBD38D] sticky top-0 z-30 shadow-[0_2px_12px_rgba(194,65,12,0.10)]">
+    <header class="bg-gradient-to-b from-[#FFE7CC] to-[#FFFBF2] border-b border-[#FBD38D] sticky top-0 z-30 shadow-[0_2px_12px_rgba(185,28,28,0.10)]">
         <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3 cursor-pointer select-none" onclick="switchView('home')">
-                <img src="https://rb-1997.github.io/cne/cne_daily180.png" alt="CNE日常 Logo" class="w-10 h-10 rounded-xl object-contain shadow-md shadow-orange-200/60">
+                <img src="https://rb-1997.github.io/cne/cne_daily180.png" alt="CNE日常 Logo" class="w-10 h-10 rounded-xl object-contain shadow-md shadow-red-200/60">
                 <div>
                     <h1 class="font-extrabold text-xl leading-tight text-slate-900">CNE日常</h1>
                     <p class="text-xs text-slate-500 font-medium">護理實用工具庫</p>
@@ -550,9 +572,9 @@
             
             <div class="flex items-center space-x-2">
                 <span class="inline-flex items-center gap-1.5 bg-[#2B1A0E] text-amber-300 pl-2 pr-2 sm:pl-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-extrabold shadow-sm whitespace-nowrap shrink-0">
-                    <span class="hw-flicker text-sm">🎃</span>萬聖節限定版
+                    <span class="ml-glow text-sm">🍁</span>紅葉限定版
                 </span>
-                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-3.5 py-1.5 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm whitespace-nowrap shrink-0">
+                <button id="back-home-btn" onclick="switchView('home')" class="hidden flex items-center space-x-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-3.5 py-1.5 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm whitespace-nowrap shrink-0">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -566,21 +588,21 @@
         <!-- ================= PAGE 1: HOME DASHBOARD (10-CARD GRID BALANCED LAYOUT) ================= -->
                 <!-- ================= PAGE 1: HOME DASHBOARD (META-STYLE UNIFORM 11-CARD GRID) ================= -->
         <section id="view-home" class="view-panel active space-y-4 md:space-y-5">
-            <!-- Banner: 萬聖節限定 -->
-            <div class="bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-3xl p-4 md:p-6 shadow-[0_2px_14px_rgba(194,65,12,0.10)] relative overflow-hidden">
-                <span class="hw-bat absolute top-3 left-0 text-xl pointer-events-none" aria-hidden="true">🦇</span>
-                <span class="hw-bat-2 absolute top-10 left-0 text-sm pointer-events-none" aria-hidden="true">🦇</span>
-                <span class="hw-float absolute top-2 right-3 text-2xl pointer-events-none" aria-hidden="true">🎃</span>
-                <span class="hw-float absolute bottom-2 right-16 text-lg pointer-events-none" style="animation-delay:-1.8s" aria-hidden="true">🥕</span>
-                <span class="hw-float absolute bottom-3 left-3 text-lg pointer-events-none hidden md:inline-block" style="animation-delay:-0.9s" aria-hidden="true">🍬</span>
+            <!-- Banner: 紅葉限定 -->
+            <div class="bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-3xl p-4 md:p-6 shadow-[0_2px_14px_rgba(185,28,28,0.10)] relative overflow-hidden">
+                <span class="ml-leaf absolute top-3 left-0 text-xl pointer-events-none" aria-hidden="true">🍂</span>
+                <span class="ml-leaf-2 absolute top-10 left-0 text-sm pointer-events-none" aria-hidden="true">🍂</span>
+                <span class="ml-float absolute top-2 right-3 text-2xl pointer-events-none" aria-hidden="true">🍁</span>
+                <span class="ml-float absolute bottom-2 right-16 text-lg pointer-events-none" style="animation-delay:-1.8s" aria-hidden="true">🌰</span>
+                <span class="ml-float absolute bottom-3 left-3 text-lg pointer-events-none hidden md:inline-block" style="animation-delay:-0.9s" aria-hidden="true">🍂</span>
                 <div class="relative z-10 space-y-2 md:space-y-2.5">
                     <div class="flex items-center justify-between gap-2 flex-wrap">
-                        <span class="inline-flex items-center gap-1.5 bg-white/80 border border-orange-200/80 px-3 py-1 rounded-full text-[11px] md:text-xs font-bold text-[#C2410C] shadow-sm">
-                            <span class="w-1.5 h-1.5 rounded-full bg-[#F97316] animate-pulse"></span>
+                        <span class="inline-flex items-center gap-1.5 bg-white/80 border border-red-200/80 px-3 py-1 rounded-full text-[11px] md:text-xs font-bold text-[#B91C1C] shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#DC2626] animate-pulse"></span>
                             每日更新 • 護理智慧
                         </span>
                         <div class="flex items-center gap-2">
-                            <button onclick="openQrModal()" title="分享/掃描 QR Code" class="flex items-center gap-1.5 bg-white hover:bg-orange-50/70 active:scale-95 text-[#C2410C] px-3 py-1.5 rounded-full text-xs md:text-sm font-bold border border-orange-200/80 transition-all shadow-sm">
+                            <button onclick="openQrModal()" title="分享/掃描 QR Code" class="flex items-center gap-1.5 bg-white hover:bg-red-50/70 active:scale-95 text-[#B91C1C] px-3 py-1.5 rounded-full text-xs md:text-sm font-bold border border-red-200/80 transition-all shadow-sm">
                                 <i data-lucide="qr-code" class="w-4 h-4"></i>
                                 <span>QR Code</span>
                             </button>
@@ -591,32 +613,32 @@
                         </div>
                     </div>
 
-                    <h2 class="text-xl md:text-2xl font-black tracking-wide text-orange-950">🎃 歡迎來到 CNE日常 <span class="hw-wiggle">🧙‍♀️</span></h2>
-                    <p class="text-sm md:text-base font-extrabold text-[#C2410C]">唔畀糖，就搗蛋！萬聖節期間限定營業中 👻</p>
+                    <h2 class="text-xl md:text-2xl font-black tracking-wide text-amber-950">🍁 歡迎來到 CNE日常 <span class="ml-sway">🍂</span></h2>
+                    <p class="text-sm md:text-base font-extrabold text-[#B91C1C]">紅葉紛飛，秋意正濃！紅葉期間限定營業中 🍂</p>
 
                     <div>
-                        <div class="bg-white/75 border border-orange-200/70 rounded-2xl px-3.5 py-2 font-extrabold text-xs md:text-sm inline-flex items-center gap-2 shadow-sm flex-wrap">
-                            <i data-lucide="sparkles" class="w-4 h-4 text-[#F97316] animate-pulse"></i>
-                            <span class="text-orange-800">每日金句：</span>
-                            <span id="daily-quote-text" class="text-orange-950 tracking-wide font-black">--</span>
+                        <div class="bg-white/75 border border-red-200/70 rounded-2xl px-3.5 py-2 font-extrabold text-xs md:text-sm inline-flex items-center gap-2 shadow-sm flex-wrap">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-[#DC2626] animate-pulse"></i>
+                            <span class="text-red-900">每日金句：</span>
+                            <span id="daily-quote-text" class="text-amber-950 tracking-wide font-black">--</span>
                         </div>
                     </div>
 
-                    <p class="hidden md:block text-orange-800/70 text-sm max-w-xl leading-relaxed font-medium">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。連出巡嘅女巫都話好用 🧙‍♀️</p>
+                    <p class="hidden md:block text-red-900/70 text-sm max-w-xl leading-relaxed font-medium">專為日常護理工作設計之快捷小工具平台，點擊圖示進入各項專屬功能。連出巡嘅女巫都話好用 🍂</p>
                 </div>
-                <i data-lucide="ghost" class="absolute -right-4 -bottom-6 w-32 h-32 md:w-40 md:h-40 text-orange-900/10 pointer-events-none"></i>
+                <i data-lucide="ghost" class="absolute -right-4 -bottom-6 w-32 h-32 md:w-40 md:h-40 text-red-900/10 pointer-events-none"></i>
             </div>
 
             <!-- Uniform Meta 10-Card Grid (all tiles identical style) -->
             <div>
                 <div class="flex items-center justify-between mb-3 md:mb-4">
                     <h3 class="text-sm md:text-base font-extrabold text-slate-800 flex items-center gap-2">
-                        <span class="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-[#F97316]/15 text-[#C2410C] flex items-center justify-center">
+                        <span class="w-7 h-7 md:w-8 md:h-8 rounded-xl bg-[#DC2626]/15 text-[#B91C1C] flex items-center justify-center">
                             <i data-lucide="layout-grid" class="w-4 h-4 md:w-[18px] md:h-[18px]"></i>
                         </span>
                         核心項目選單 (12項實用工具)
                     </h3>
-                    <span class="text-[11px] md:text-xs font-bold text-[#C2410C] bg-[#F97316]/10 border border-[#F97316]/25 px-2.5 py-1 rounded-full">點選進入</span>
+                    <span class="text-[11px] md:text-xs font-bold text-[#B91C1C] bg-[#DC2626]/10 border border-[#DC2626]/25 px-2.5 py-1 rounded-full">點選進入</span>
                 </div>
 
                 <!-- 11-Grid System: Mobile (2 cols), Desktop (5 cols) -->
@@ -666,7 +688,7 @@
                     <div onclick="switchView('draw')" class="meta-card group" style="--bd:#FDBA74; --gl:rgba(255,214,165,0.65)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
-                                <div class="meta-icon bg-[#FFE3C2] text-[#F97316]">
+                                <div class="meta-icon bg-[#FFE3C2] text-[#DC2626]">
                                     <i data-lucide="dices" class="w-5 h-5"></i>
                                 </div>
                                 <span class="meta-tag">假期排位</span>
@@ -706,7 +728,7 @@
                     <div onclick="switchView('shift')" class="meta-card group" style="--bd:#EAA887; --gl:rgba(255,228,209,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
-                                <div class="meta-icon bg-[#FFE4D1] text-[#EA580C]">
+                                <div class="meta-icon bg-[#FFE4D1] text-[#B91C1C]">
                                     <i data-lucide="calendar-check" class="w-5 h-5"></i>
                                 </div>
                                 <span class="meta-tag">約會好幫手</span>
@@ -803,10 +825,10 @@
                     </div>
 
                     <!-- Card 10: CNE無人駕駛 -->
-                    <div onclick="switchView('board')" class="meta-card group" style="--bd:#87B5B2; --gl:rgba(255,237,213,0.70)">
+                    <div onclick="switchView('board')" class="meta-card group" style="--bd:#87B5B2; --gl:rgba(254,242,242,0.70)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
-                                <div class="meta-icon bg-[#FFE3C2] text-[#C2410C]">
+                                <div class="meta-icon bg-[#FFE3C2] text-[#B91C1C]">
                                     <i data-lucide="message-square" class="w-5 h-5"></i>
                                 </div>
                                 <span class="meta-tag">匿名討論</span>
@@ -846,14 +868,14 @@
                     <div onclick="window.open('https://hk-bus-eta-riverbearai2-1543.vercel.app/', '_blank')" class="meta-card group" style="--bd:#2B1A0E; --gl:rgba(43,26,14,0.30)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
-                                <div class="meta-icon bg-[#2B1A0E] text-[#FB923C]">
+                                <div class="meta-icon bg-[#2B1A0E] text-[#F87171]">
                                     <i data-lucide="bus" class="w-5 h-5"></i>
                                 </div>
                                 <span class="meta-tag">即時班次</span>
                             </div>
                             <div>
-                                <h4 class="meta-title">CNE交通資訊 🎃</h4>
-                                <p class="meta-desc">巴士小巴港鐵睇晒！撳定位班次即現，撳心收藏，返工唔使跑住追車啦！🦇👻</p>
+                                <h4 class="meta-title">CNE交通資訊 🍁</h4>
+                                <p class="meta-desc">巴士小巴港鐵睇晒！撳定位班次即現，撳心收藏，返工唔使跑住追車啦！🍂🍂</p>
                             </div>
                         </div>
                         <div class="meta-foot">
@@ -866,23 +888,23 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#C2410C]/60 tracking-wide">版本 2.1.30</span>
+                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.31</span>
             </div>
         </section>
 
         <!-- ================= PAGE 10: 射擊訓練 ================= -->
         <section id="view-game" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="crosshair" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">射擊訓練</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">靶出現開42槍 • 靶消失袋槍</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">射擊訓練</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">靶出現開42槍 • 靶消失袋槍</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -899,24 +921,24 @@
 
         <!-- ================= PAGE: CNE無人駕駛留言板 ================= -->
         <section id="view-board" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="message-square" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">CNE無人駕駛留言板</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">同僚自由討論區 • 可匿名留言</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">CNE無人駕駛留言板</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">同僚自由討論區 • 可匿名留言</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
             </div>
 
-            <div class="bg-white/80 border border-orange-200/80 rounded-2xl px-4 py-3 text-xs text-orange-900/80 leading-relaxed space-y-1">
-                <p class="font-extrabold text-orange-950">📋 留言守則</p>
+            <div class="bg-white/80 border border-red-200/80 rounded-2xl px-4 py-3 text-xs text-red-900/80 leading-relaxed space-y-1">
+                <p class="font-extrabold text-amber-950">📋 留言守則</p>
                 <p>留言及暱稱會公開顯示，請勿透露個人資料（電話、地址、證件號碼等）。</p>
                 <p>請勿發表誹謗、侮辱、人身攻擊或侵犯他人私隱的內容；請勿發表違反香港法例（包括《香港國安法》）的內容。</p>
                 <p>站長保留審核、隱藏或刪除留言的權利；違規留言會被刪除，恕不另行通知。</p>
@@ -934,24 +956,24 @@
 
         <!-- ================= PAGE 2: 行水神器 ================= -->
         <section id="view-drip" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="droplets" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">行水神器</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">整理裝備時間分配計算器</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">行水神器</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">整理裝備時間分配計算器</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
             </div>
 
             <div id="drip-chooser" class="space-y-4">
-                <p class="text-base md:text-lg font-extrabold text-orange-950">請選擇計算模式：</p>
+                <p class="text-base md:text-lg font-extrabold text-amber-950">請選擇計算模式：</p>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div onclick="showDripSection('single')" class="bg-white p-6 rounded-3xl border-2 border-slate-200 shadow-sm cursor-pointer hover:border-blue-400 hover:shadow-md transition-all active:scale-[0.99]">
                         <div class="flex items-center gap-3 mb-3">
@@ -963,21 +985,21 @@
                         <p class="text-sm md:text-base text-slate-600 font-medium">整理裝備時間平均分配；或者三人一組、兩個崗位，2 做 1 休輪換（摷 Guard Break）。</p>
                         <p class="mt-4 font-extrabold text-blue-700 flex items-center gap-1.5">進入計算 <i data-lucide="chevron-right" class="w-4 h-4"></i></p>
                     </div>
-                    <div onclick="showDripSection('multi')" class="bg-white p-6 rounded-3xl border-2 border-orange-200 shadow-sm cursor-pointer hover:border-orange-400 hover:shadow-md transition-all active:scale-[0.99]">
+                    <div onclick="showDripSection('multi')" class="bg-white p-6 rounded-3xl border-2 border-red-200 shadow-sm cursor-pointer hover:border-red-400 hover:shadow-md transition-all active:scale-[0.99]">
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="p-3 bg-orange-600 text-white rounded-2xl shadow-sm">
+                            <div class="p-3 bg-red-700 text-white rounded-2xl shadow-sm">
                                 <i data-lucide="users-round" class="w-6 h-6"></i>
                             </div>
-                            <h3 class="font-extrabold text-slate-900 text-xl">多人行水大作戰 🎃</h3>
+                            <h3 class="font-extrabold text-slate-900 text-xl">多人行水大作戰 🍁</h3>
                         </div>
                         <p class="text-sm md:text-base text-slate-600 font-medium">成隊人一齊編排：一水一飯／水飯水／一飯，全程保持當值人數，休息全員平均攤分。</p>
-                        <p class="mt-4 font-extrabold text-orange-700 flex items-center gap-1.5">進入計算 <i data-lucide="chevron-right" class="w-4 h-4"></i></p>
+                        <p class="mt-4 font-extrabold text-red-800 flex items-center gap-1.5">進入計算 <i data-lucide="chevron-right" class="w-4 h-4"></i></p>
                     </div>
                 </div>
             </div>
 
             <div id="drip-single-back" class="hidden">
-                <button onclick="showDripSection('chooser')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="showDripSection('chooser')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回模式選擇</span>
                 </button>
@@ -1155,17 +1177,17 @@
 
             <!-- ================= 多人行水大作戰 ================= -->
             <div id="drip-multi-back" class="hidden">
-                <button onclick="showDripSection('chooser')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="showDripSection('chooser')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回模式選擇</span>
                 </button>
             </div>
 
-            <div id="drip-multi-card" class="hidden bg-white p-6 md:p-8 rounded-3xl border-2 border-orange-200 shadow-sm space-y-6">
-                <div class="flex items-center justify-between border-b-2 border-orange-100 pb-4">
+            <div id="drip-multi-card" class="hidden bg-white p-6 md:p-8 rounded-3xl border-2 border-red-200 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b-2 border-red-100 pb-4">
                     <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
-                        <i data-lucide="users-round" class="w-6 h-6 text-orange-600"></i>
-                        多人行水大作戰 🎃
+                        <i data-lucide="users-round" class="w-6 h-6 text-red-700"></i>
+                        多人行水大作戰 🍁
                     </h3>
                     <button onclick="resetMultiRoster()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
                         <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
@@ -1189,11 +1211,11 @@
                         <span class="block text-xs font-bold opacity-80 mt-1">每人 只食飯一次・冇行水</span>
                     </button>
                 </div>
-                <p id="mp-mode-desc" class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3"></p>
+                <p id="mp-mode-desc" class="text-sm font-bold text-red-900 bg-red-50 border border-red-200 rounded-xl px-4 py-3"></p>
 
                 <div id="mp-wm-join-box" class="hidden space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <i data-lucide="link" class="w-5 h-5 text-orange-600"></i>
+                        <i data-lucide="link" class="w-5 h-5 text-red-700"></i>
                         排法選擇：
                     </label>
                     <div class="space-y-2">
@@ -1241,7 +1263,7 @@
                 </div>
                 <div id="mp-wmw-box" class="hidden space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <i data-lucide="link" class="w-5 h-5 text-orange-600"></i>
+                        <i data-lucide="link" class="w-5 h-5 text-red-700"></i>
                         排法選擇：
                     </label>
                     <div class="space-y-2">
@@ -1270,7 +1292,7 @@
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <i data-lucide="zap" class="w-5 h-5 text-orange-600"></i>
+                        <i data-lucide="zap" class="w-5 h-5 text-red-700"></i>
                         時段快速選擇
                     </label>
                     <div class="space-y-2">
@@ -1283,45 +1305,45 @@
                             <span class="text-lg font-bold text-slate-900">特別班次（新皇崗口岸限定）</span>
                         </label>
                         <div id="mp-special-box" class="hidden pl-9">
-                            <select id="mp-special-select" onchange="setMpSpecial(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
+                            <select id="mp-special-select" onchange="setMpSpecial(this.value)" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900">
                                 <option value="p1" selected>08:20 – 15:15</option>
                                 <option value="p2">15:15 – 22:35</option>
                             </select>
                         </div>
                     </div>
-                    <p class="text-sm font-bold text-orange-900 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3">📖 使用說明：預設係「手動輸入」，自己揀開始同結束時間就得。如果嗰更係特別班次（新皇崗口岸限定），點選「特別班次」黑點，時間會自動填做早班（08:20–15:15）；要轉晚班先再喺下拉選單揀 15:15–22:35。</p>
+                    <p class="text-sm font-bold text-red-900 bg-red-50 border border-red-200 rounded-xl px-4 py-3">📖 使用說明：預設係「手動輸入」，自己揀開始同結束時間就得。如果嗰更係特別班次（新皇崗口岸限定），點選「特別班次」黑點，時間會自動填做早班（08:20–15:15）；要轉晚班先再喺下拉選單揀 15:15–22:35。</p>
                 </div>
 
                 <div id="mp-time-inputs" class="grid md:grid-cols-2 gap-5">
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                            <i data-lucide="clock" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="clock" class="w-5 h-5 text-red-700"></i>
                             開始時間
                         </label>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
-                                <select id="mp-start-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                                <select id="mp-start-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
-                                <select id="mp-start-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                                <select id="mp-start-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                         </div>
                     </div>
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                            <i data-lucide="clock-4" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="clock-4" class="w-5 h-5 text-red-700"></i>
                             結束時間
                         </label>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">小時</span>
-                                <select id="mp-end-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                                <select id="mp-end-hour" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                             <div>
                                 <span class="text-xs text-slate-500 font-bold block mb-1">分鐘</span>
-                                <select id="mp-end-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
+                                <select id="mp-end-min" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-bold text-slate-900"></select>
                             </div>
                         </div>
                     </div>
@@ -1330,23 +1352,23 @@
                 <div class="grid md:grid-cols-2 gap-5">
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                            <i data-lucide="users" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="users" class="w-5 h-5 text-red-700"></i>
                             總當值人數
                         </label>
-                        <select id="mp-total" onchange="buildMpNames()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
+                        <select id="mp-total" onchange="buildMpNames()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
                     </div>
                     <div class="space-y-2">
                         <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                            <i data-lucide="shield" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="shield" class="w-5 h-5 text-red-700"></i>
                             必須當值人數（任何時刻）
                         </label>
-                        <select id="mp-duty" onchange="buildMpPosts()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
+                        <select id="mp-duty" onchange="buildMpPosts()" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-slate-50 font-extrabold text-slate-900"></select>
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <i data-lucide="id-card" class="w-5 h-5 text-orange-600"></i>
+                        <i data-lucide="id-card" class="w-5 h-5 text-red-700"></i>
                         人員名稱（可留空，自動用「人員 1、2、3…」）
                     </label>
                     <div id="mp-names" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
@@ -1354,7 +1376,7 @@
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <i data-lucide="briefcase" class="w-5 h-5 text-orange-600"></i>
+                        <i data-lucide="briefcase" class="w-5 h-5 text-red-700"></i>
                         崗位名稱（可留空，自動用「崗位 1、2、3…」；崗位數目 = 必須當值人數）
                     </label>
                     <div id="mp-posts" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
@@ -1362,28 +1384,28 @@
 
                 <div class="space-y-2">
                     <label class="block text-base font-extrabold text-slate-800 flex items-center gap-1.5">
-                        <i data-lucide="notebook-pen" class="w-5 h-5 text-orange-600"></i>
+                        <i data-lucide="notebook-pen" class="w-5 h-5 text-red-700"></i>
                         備註
                     </label>
-                    <textarea id="mp-remarks" rows="2" placeholder="有咩要特別交代可以寫低，會顯示喺編排結果最尾。" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-medium text-slate-900"></textarea>
+                    <textarea id="mp-remarks" rows="2" placeholder="有咩要特別交代可以寫低，會顯示喺編排結果最尾。" class="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-base bg-slate-50 font-medium text-slate-900"></textarea>
                 </div>
 
                 <div id="mp-error" class="hidden p-4 bg-red-50 border-2 border-red-200 rounded-2xl text-red-800 font-bold text-sm md:text-base space-y-1"></div>
 
                 <div class="pt-2">
-                    <button onclick="calculateMultiRoster()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-orange-200 text-lg flex items-center justify-center gap-2">
+                    <button onclick="calculateMultiRoster()" class="w-full bg-red-700 hover:bg-red-800 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-red-200 text-lg flex items-center justify-center gap-2">
                         <i data-lucide="swords" class="w-6 h-6"></i>
                         <span>開始編排</span>
                     </button>
                 </div>
 
-                <div id="mp-result" class="hidden p-5 md:p-6 bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 rounded-3xl space-y-6">
+                <div id="mp-result" class="hidden p-5 md:p-6 bg-gradient-to-br from-red-50 to-amber-50 border-2 border-red-200 rounded-3xl space-y-6">
                     <div id="mp-summary" class="grid gap-3 sm:grid-cols-2 text-base text-slate-700"></div>
                     <div id="mp-warn" class="hidden p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl text-amber-900 font-bold text-sm md:text-base space-y-1"></div>
 
                     <div class="space-y-3">
                         <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
-                            <i data-lucide="list-checks" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="list-checks" class="w-5 h-5 text-red-700"></i>
                             每人時間表（工 / 水 / 飯）：
                         </p>
                         <div id="mp-person-list" class="grid gap-3"></div>
@@ -1391,12 +1413,12 @@
 
                     <div class="space-y-3">
                         <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
-                            <i data-lucide="layout-grid" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="layout-grid" class="w-5 h-5 text-red-700"></i>
                             分段總表（每段邊個休息、邊個工作）：
                         </p>
                         <div id="mp-segment-list" class="space-y-2"></div>
                         <div class="pt-1">
-                            <button onclick="mpDownloadSegImage(this)" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-extrabold py-3 rounded-2xl shadow transition-all flex items-center justify-center gap-2 text-base">
+                            <button onclick="mpDownloadSegImage(this)" class="w-full bg-red-700 hover:bg-red-800 text-white font-extrabold py-3 rounded-2xl shadow transition-all flex items-center justify-center gap-2 text-base">
                                 <i data-lucide="camera" class="w-5 h-5"></i>
                                 <span>下載分段總表長圖</span>
                             </button>
@@ -1405,16 +1427,16 @@
 
                     <div class="space-y-3">
                         <p class="text-base font-extrabold text-slate-800 flex items-center gap-2">
-                            <i data-lucide="repeat" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="repeat" class="w-5 h-5 text-red-700"></i>
                             接替鏈（邊個休息完，接替邊個）：
                         </p>
                         <div id="mp-relief-list" class="space-y-3"></div>
                     </div>
 
-                    <div id="mp-remarks-out" class="hidden p-4 bg-white border-2 border-orange-200 rounded-2xl text-slate-800 text-sm md:text-base font-medium"></div>
+                    <div id="mp-remarks-out" class="hidden p-4 bg-white border-2 border-red-200 rounded-2xl text-slate-800 text-sm md:text-base font-medium"></div>
 
                     <div class="pt-1">
-                        <button onclick="copyMpResult(this)" class="w-full bg-white hover:bg-orange-50 text-orange-800 font-extrabold py-3 rounded-2xl border-2 border-orange-300 transition-all flex items-center justify-center gap-2 text-base">
+                        <button onclick="copyMpResult(this)" class="w-full bg-white hover:bg-red-50 text-red-900 font-extrabold py-3 rounded-2xl border-2 border-red-300 transition-all flex items-center justify-center gap-2 text-base">
                             <i data-lucide="copy" class="w-5 h-5"></i>
                             <span>一鍵 Copy（複製成份報告）</span>
                         </button>
@@ -1425,17 +1447,17 @@
 
         <!-- ================= PAGE 3: 煙棚計算 ================= -->
         <section id="view-respiratory" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="flame" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">煙棚計算</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">檢獲香煙及雪茄 Compounding（複合罰款）與應繳關稅評估工具</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">煙棚計算</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">檢獲香煙及雪茄 Compounding（複合罰款）與應繳關稅評估工具</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -1444,7 +1466,7 @@
             <div class="bg-white p-6 md:p-8 rounded-3xl border-2 border-slate-200 shadow-sm space-y-6">
                 <div class="flex items-center justify-between border-b-2 border-slate-100 pb-4">
                     <h3 class="font-extrabold text-slate-900 text-xl flex items-center gap-2">
-                        <i data-lucide="file-spreadsheet" class="w-6 h-6 text-orange-600"></i>
+                        <i data-lucide="file-spreadsheet" class="w-6 h-6 text-red-700"></i>
                         檢獲香煙及雪茄 Compounding 罰款與關稅評估表
                     </h3>
                     <button onclick="resetCigCalc()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
@@ -1457,10 +1479,10 @@
                     <div class="space-y-4 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                         <div class="space-y-1.5">
                             <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
-                                <i data-lucide="box" class="w-5 h-5 text-orange-600"></i>
+                                <i data-lucide="box" class="w-5 h-5 text-red-700"></i>
                                 總檢獲香煙支數量 (支)
                             </label>
-                            <input type="number" id="cig-sticks" min="0" placeholder="例如: 200" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
+                            <input type="number" id="cig-sticks" min="0" placeholder="例如: 200" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
                         </div>
 
                         <div class="space-y-1.5 border-t border-slate-200 pt-3">
@@ -1468,31 +1490,31 @@
                                 <i data-lucide="flame" class="w-5 h-5 text-amber-600"></i>
                                 總檢獲雪茄重量 (克 / g)
                             </label>
-                            <input type="number" id="cigar-grams" min="0" placeholder="例如: 30" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
+                            <input type="number" id="cigar-grams" min="0" placeholder="例如: 30" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
                             <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">* 免稅額：19支香煙 或 1支雪茄(≤25克)，如旅客同時攜帶兩者，系統會優先自動減去雪茄免稅優惠25克。司機及駕駛者一律沒有豁免。</p>
                         </div>
                     </div>
 
                     <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                         <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
-                            <i data-lucide="car" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="car" class="w-5 h-5 text-red-700"></i>
                             身份類別 (是否跨境駕駛員)
                         </label>
                         <div class="space-y-2 pt-1">
-                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-orange-400 transition-colors">
-                                <input type="radio" name="is-driver" value="yes" class="w-5 h-5 text-orange-600 focus:ring-orange-500">
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-red-400 transition-colors">
+                                <input type="radio" name="is-driver" value="yes" class="w-5 h-5 text-red-700 focus:ring-red-600">
                                 <span class="text-base font-extrabold text-slate-900">🚗 是駕駛員 <span class="text-xs text-red-600 font-bold">(不設免稅優惠)</span></span>
                             </label>
-                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-orange-400 transition-colors">
-                                <input type="radio" name="is-driver" value="no" checked class="w-5 h-5 text-orange-600 focus:ring-orange-500">
-                                <span class="text-base font-extrabold text-slate-900">🧳 否 (一般旅客) <span class="text-xs text-orange-600 font-bold">(優先扣減雪茄免稅)</span></span>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-red-400 transition-colors">
+                                <input type="radio" name="is-driver" value="no" checked class="w-5 h-5 text-red-700 focus:ring-red-600">
+                                <span class="text-base font-extrabold text-slate-900">🧳 否 (一般旅客) <span class="text-xs text-red-700 font-bold">(優先扣減雪茄免稅)</span></span>
                             </label>
                         </div>
                     </div>
 
                     <div class="space-y-3 bg-slate-50 p-5 rounded-2xl border-2 border-slate-200">
                         <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
-                            <i data-lucide="shield-alert" class="w-5 h-5 text-orange-600"></i>
+                            <i data-lucide="shield-alert" class="w-5 h-5 text-red-700"></i>
                             申報通道狀況
                         </label>
                         <div class="space-y-2 pt-1">
@@ -1500,17 +1522,17 @@
                                 <input type="radio" name="cig-declaration" value="undeclared" checked class="w-5 h-5 text-red-600 focus:ring-red-500">
                                 <span class="text-base font-extrabold text-red-800">🟢 未有申報 / 綠通道截獲</span>
                             </label>
-                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-orange-400 transition-colors">
-                                <input type="radio" name="cig-declaration" value="declared" class="w-5 h-5 text-orange-600 focus:ring-orange-500">
-                                <span class="text-base font-extrabold text-orange-800">🔴 紅通道主動向 CNE 申報</span>
+                            <label class="flex items-center space-x-3 p-3 rounded-xl bg-white border-2 border-slate-200 cursor-pointer hover:border-red-400 transition-colors">
+                                <input type="radio" name="cig-declaration" value="declared" class="w-5 h-5 text-red-700 focus:ring-red-600">
+                                <span class="text-base font-extrabold text-red-900">🔴 紅通道主動向 CNE 申報</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-orange-100/80 p-4 rounded-2xl border-2 border-orange-200 flex flex-wrap items-center justify-between text-base text-orange-950 gap-3">
+                <div class="bg-red-100/80 p-4 rounded-2xl border-2 border-red-200 flex flex-wrap items-center justify-between text-base text-amber-950 gap-3">
                     <div class="flex items-center gap-2 font-extrabold">
-                        <i data-lucide="scale" class="w-5 h-5 text-orange-700"></i>
+                        <i data-lucide="scale" class="w-5 h-5 text-red-800"></i>
                         <span>法定標準稅率（香港 CNE 最新標準）：</span>
                     </div>
                     <div class="flex flex-wrap items-center gap-4 text-sm md:text-base font-bold">
@@ -1520,36 +1542,36 @@
                     </div>
                 </div>
 
-                <button onclick="calculateCigDuty()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-orange-200 text-lg flex items-center justify-center gap-2">
+                <button onclick="calculateCigDuty()" class="w-full bg-red-700 hover:bg-red-800 text-white font-extrabold py-4 rounded-2xl transition-all shadow-lg shadow-red-200 text-lg flex items-center justify-center gap-2">
                     <i data-lucide="calculator" class="w-6 h-6"></i>
                     <span>即刻計算 Compounding 評估結果</span>
                 </button>
 
                 <div id="cig-calc-result" class="hidden space-y-5">
-                    <div class="p-6 md:p-8 bg-gradient-to-br from-slate-900 via-slate-900 to-orange-950 text-white rounded-3xl shadow-xl space-y-6">
+                    <div class="p-6 md:p-8 bg-gradient-to-br from-slate-900 via-slate-900 to-amber-950 text-white rounded-3xl shadow-xl space-y-6">
                         <div class="flex justify-between items-center border-b border-slate-700 pb-4">
-                            <span class="text-base font-extrabold text-orange-400 tracking-wider uppercase">Compounding 罰款及關稅明細</span>
+                            <span class="text-base font-extrabold text-red-400 tracking-wider uppercase">Compounding 罰款及關稅明細</span>
                             <span id="res-cig-status-badge" class="px-4 py-1.5 rounded-full text-sm font-bold bg-red-500/20 text-red-300 border border-red-500/40">未有申報</span>
                         </div>
 
-                        <div id="compounding-steps-box" class="bg-orange-950/80 p-5 rounded-2xl border border-orange-700/60 text-sm space-y-3">
-                            <p class="font-extrabold text-orange-300 flex items-center gap-2 text-base md:text-lg">
-                                <i data-lucide="list-ordered" class="w-5 h-5 text-orange-400"></i>
+                        <div id="compounding-steps-box" class="bg-amber-950/80 p-5 rounded-2xl border border-red-800/60 text-sm space-y-3">
+                            <p class="font-extrabold text-red-300 flex items-center gap-2 text-base md:text-lg">
+                                <i data-lucide="list-ordered" class="w-5 h-5 text-red-400"></i>
                                 Compounding 複合罰款計算公式步驟：
                             </p>
                             <div class="space-y-2.5 text-slate-100 font-mono text-sm leading-relaxed">
-                                <p class="p-3 bg-slate-900/90 rounded-xl border border-orange-800/80">
-                                    <strong class="text-orange-300">· 第一步 (計算應繳總稅款)：</strong><br>
+                                <p class="p-3 bg-slate-900/90 rounded-xl border border-red-900/80">
+                                    <strong class="text-red-300">· 第一步 (計算應繳總稅款)：</strong><br>
                                     香煙稅款 ＝ (<span id="step1-cig-sticks">0</span>支 ÷ 1,000) × HK$3,306 ＝ HK$ <span id="step1-cig-tax">0</span><br>
                                     雪茄稅款 ＝ (<span id="step1-cigar-grams">0</span>克 ÷ 1,000) × HK$4,258 ＝ HK$ <span id="step1-cigar-tax">0</span><br>
-                                    應繳總稅款 ＝ <strong class="text-orange-400 text-base font-extrabold">HK$ <span id="step1-tax">0</span></strong>
+                                    應繳總稅款 ＝ <strong class="text-red-400 text-base font-extrabold">HK$ <span id="step1-tax">0</span></strong>
                                 </p>
-                                <p class="p-3 bg-slate-900/90 rounded-xl border border-orange-800/80">
-                                    <strong class="text-orange-300">· 第二步 (計算五倍稅額罰款部分)：</strong><br>
-                                    罰款部分 ＝ HK$ <span id="step2-tax">0</span> × 5 ＝ <strong class="text-orange-400 text-base font-extrabold">HK$ <span id="step2-fine5x">0</span></strong>
+                                <p class="p-3 bg-slate-900/90 rounded-xl border border-red-900/80">
+                                    <strong class="text-red-300">· 第二步 (計算五倍稅額罰款部分)：</strong><br>
+                                    罰款部分 ＝ HK$ <span id="step2-tax">0</span> × 5 ＝ <strong class="text-red-400 text-base font-extrabold">HK$ <span id="step2-fine5x">0</span></strong>
                                 </p>
-                                <p class="p-3 bg-slate-900/90 rounded-xl border border-orange-800/80">
-                                    <strong class="text-orange-300">· 第三步 (加上定額罰款)：</strong><br>
+                                <p class="p-3 bg-slate-900/90 rounded-xl border border-red-900/80">
+                                    <strong class="text-red-300">· 第三步 (加上定額罰款)：</strong><br>
                                     Compounding 總罰款 ＝ 定額罰款 HK$5,000 ＋ HK$ <span id="step3-fine5x">0</span> ＝ <strong class="text-red-400 text-base font-extrabold">HK$ <span id="step3-totalfine">0</span></strong>
                                 </p>
                             </div>
@@ -1566,15 +1588,15 @@
                                 <p class="text-base font-bold text-amber-400 mt-1"><span id="res-excess-sticks">0</span> 支煙 / <span id="res-excess-cigar-grams">0</span>g 雪茄</p>
                                 <p id="res-allowance-tag" class="text-xs text-slate-400 mt-1">(優先減去雪茄免稅)</p>
                             </div>
-                            <div class="bg-orange-950/90 p-4 rounded-2xl border border-orange-600/80 shadow-inner">
-                                <p class="text-xs text-orange-300 font-bold">第一步：總共稅款</p>
-                                <p class="text-xl md:text-2xl font-black text-orange-400 mt-1">HK$ <span id="res-tax-amount">0</span></p>
-                                <p class="text-xs text-orange-200/80 mt-1">(香煙+雪茄稅款)</p>
+                            <div class="bg-amber-950/90 p-4 rounded-2xl border border-red-700/80 shadow-inner">
+                                <p class="text-xs text-red-300 font-bold">第一步：總共稅款</p>
+                                <p class="text-xl md:text-2xl font-black text-red-400 mt-1">HK$ <span id="res-tax-amount">0</span></p>
+                                <p class="text-xs text-red-200/80 mt-1">(香煙+雪茄稅款)</p>
                             </div>
-                            <div class="bg-orange-950/90 p-4 rounded-2xl border border-orange-600/80 shadow-inner">
-                                <p class="text-xs text-orange-300 font-bold">第二步：五倍稅額總數</p>
-                                <p class="text-xl md:text-2xl font-black text-orange-400 mt-1">HK$ <span id="res-fine-5x-amount">0</span></p>
-                                <p class="text-xs text-orange-200/80 mt-1">(總稅款 × 5)</p>
+                            <div class="bg-amber-950/90 p-4 rounded-2xl border border-red-700/80 shadow-inner">
+                                <p class="text-xs text-red-300 font-bold">第二步：五倍稅額總數</p>
+                                <p class="text-xl md:text-2xl font-black text-red-400 mt-1">HK$ <span id="res-fine-5x-amount">0</span></p>
+                                <p class="text-xs text-red-200/80 mt-1">(總稅款 × 5)</p>
                             </div>
                         </div>
 
@@ -1604,17 +1626,17 @@
 
         <!-- ================= PAGE 4: 抽籤模式 ================= -->
         <section id="view-draw" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="dices" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">抽籤模式 (Random Picker)</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">包含多人抽籤（適合新年/長假排位）、畫鬼腳視覺版、二選一輪盤三大模式</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">抽籤模式 (Random Picker)</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">包含多人抽籤（適合新年/長假排位）、畫鬼腳視覺版、二選一輪盤三大模式</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -1693,7 +1715,7 @@
                         畫鬼腳（混色視覺版）
                     </h3>
                     <div class="flex items-center gap-2">
-                        <span id="ghost-integrity-badge" class="text-xs font-bold text-orange-700 bg-orange-50 border border-orange-200 px-3 py-1 rounded-full">🛡️ 等待生成數據...</span>
+                        <span id="ghost-integrity-badge" class="text-xs font-bold text-red-800 bg-red-50 border border-red-200 px-3 py-1 rounded-full">🛡️ 等待生成數據...</span>
                         <button onclick="resetGhostGame()" class="text-sm font-bold text-slate-600 hover:text-red-600 flex items-center gap-1.5 bg-slate-100 hover:bg-red-50 px-3.5 py-2 rounded-xl border border-slate-300 transition-colors">
                             <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
                             <span>重置</span>
@@ -1806,17 +1828,17 @@
 
         <!-- ================= PAGE 5: CR 金句 100 ================= -->
         <section id="view-quotes" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="quote" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">C R 金句 100</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">請選擇一個意向，系統將自動為你生成專業評語金句</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">C R 金句 100</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">請選擇一個意向，系統將自動為你生成專業評語金句</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -1850,7 +1872,7 @@
                         <i data-lucide="refresh-cw" class="w-5 h-5"></i>
                         <span>重新抽取</span>
                     </button>
-                    <button onclick="copyCrSentence()" class="px-6 py-3.5 bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-base md:text-lg rounded-2xl shadow-md shadow-orange-200 transition-all flex items-center gap-2">
+                    <button onclick="copyCrSentence()" class="px-6 py-3.5 bg-red-700 hover:bg-red-800 text-white font-extrabold text-base md:text-lg rounded-2xl shadow-md shadow-red-200 transition-all flex items-center gap-2">
                         <i data-lucide="copy" class="w-5 h-5"></i>
                         <span>一鍵複製</span>
                     </button>
@@ -1858,7 +1880,7 @@
             </div>
 
             <div id="toast-msg" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3.5 rounded-full text-sm md:text-base font-extrabold shadow-2xl opacity-0 transition-opacity pointer-events-none z-50 flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-5 h-5 text-orange-400"></i>
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-red-400"></i>
                 <span id="toast-text">已成功複製到剪貼簿！</span>
             </div>
         </section>
@@ -1897,17 +1919,17 @@
 
         <!-- ================= PAGE 7: 輪班預約好幫手 ================= -->
         <section id="view-shift" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="calendar-check" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">輪班預約好幫手</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">支援多位同事選擇不同 Pattern 班別，交叉比對食晚飯/聚會黃金日子</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">輪班預約好幫手</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">支援多位同事選擇不同 Pattern 班別，交叉比對食晚飯/聚會黃金日子</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -1920,17 +1942,17 @@
                     <div class="flex items-center justify-between border-b border-slate-200 pb-3 flex-wrap gap-2">
                         <div>
                             <h3 class="font-extrabold text-slate-900 text-lg flex items-center gap-2">
-                                <i data-lucide="user-plus" class="w-5 h-5 text-orange-600"></i>
+                                <i data-lucide="user-plus" class="w-5 h-5 text-red-700"></i>
                                 1. 設定同事所屬 Pattern 與基準班別
                             </h3>
                             <p class="text-xs text-slate-500 font-bold mt-0.5">💡 系統會**自動記錄**你輸入的同事與最愛設定，下次開啟網頁無需重複輸入！</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="saveStaffToStorage(true)" title="立即手動保存名單" class="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-xs md:text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all active:scale-95">
-                                <i data-lucide="save" class="w-4 h-4 text-orange-400"></i>
+                                <i data-lucide="save" class="w-4 h-4 text-red-400"></i>
                                 <span>儲存名單</span>
                             </button>
-                            <button onclick="addStaffRow()" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-xs md:text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all active:scale-95">
+                            <button onclick="addStaffRow()" class="px-3.5 py-2 bg-red-700 hover:bg-red-800 text-white font-extrabold text-xs md:text-sm rounded-xl shadow-sm flex items-center gap-1.5 transition-all active:scale-95">
                                 <i data-lucide="plus-circle" class="w-4 h-4"></i>
                                 <span>新增同事</span>
                             </button>
@@ -1962,7 +1984,7 @@
                         <input type="month" id="shift-view-month" onchange="renderMultiShiftRoster()" class="p-2 border-2 border-slate-300 rounded-xl font-bold bg-slate-50">
                     </div>
                     <div class="flex items-center gap-2">
-                        <select id="shift-filter-mode" onchange="renderMultiShiftRoster()" class="p-2 border-2 border-orange-300 rounded-xl font-bold bg-orange-50 text-orange-950 text-sm">
+                        <select id="shift-filter-mode" onchange="renderMultiShiftRoster()" class="p-2 border-2 border-red-300 rounded-xl font-bold bg-red-50 text-amber-950 text-sm">
                             <option value="all">顯示全部日子</option>
                             <option value="perfect">🥳 只顯示「強烈推薦（黃金晚餐日）」的日子</option>
                             <option value="suitable">👍 只顯示「適合約晚飯」的日子</option>
@@ -1971,7 +1993,7 @@
                 </div>
 
                 <!-- Joint Free-Time Summary Card -->
-                <div id="joint-free-summary-card" class="p-4 bg-orange-50 border-2 border-orange-200 rounded-2xl space-y-2"></div>
+                <div id="joint-free-summary-card" class="p-4 bg-red-50 border-2 border-red-200 rounded-2xl space-y-2"></div>
 
                 <!-- Multi-Staff Roster Table / List -->
                 <div class="space-y-3">
@@ -1985,17 +2007,17 @@
 
         <!-- ================= PAGE 8: 宿舍分數計算器 ================= -->
         <section id="view-quarters" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="building-2" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">宿舍分數計算器</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">宿舍分數計算器</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">CNE 部門宿舍 Quartering Points 試算表（依據附錄 VII）</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -2228,17 +2250,17 @@
 
         <!-- ================= PAGE 9: 退休金計算器 ================= -->
         <section id="view-pension" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                 <div class="flex items-center gap-3 md:gap-4">
-                    <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                         <i data-lucide="coins" class="w-7 h-7 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">退休金計算器</h2>
-                        <p class="text-sm md:text-base text-orange-800/75 font-medium">新退休金計劃下公務員退休金計算（NPS）</p>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">退休金計算器</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">新退休金計劃下公務員退休金計算（NPS）</p>
                     </div>
                 </div>
-                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                     <i data-lucide="arrow-left" class="w-4 h-4"></i>
                     <span>返回首頁</span>
                 </button>
@@ -2497,17 +2519,17 @@
 
                         <!-- ================= PAGE 11: 懷舊收音機 ================= -->
                     <section id="view-radio" class="view-panel child-view-panel space-y-6">
-                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(194,65,12,0.10)] flex-wrap">
+                        <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
                             <div class="flex items-center gap-3 md:gap-4">
-                                <div class="p-2.5 md:p-3 bg-white/85 border border-orange-200/80 text-[#C2410C] rounded-xl shadow-sm flex-shrink-0">
+                                <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
                                     <i data-lucide="radio" class="w-7 h-7 md:w-8 md:h-8"></i>
                                 </div>
                                 <div>
-                                    <h2 class="text-xl md:text-2xl font-extrabold text-orange-950">無廣告 Walkman 收音機</h2>
-                                    <p class="text-sm md:text-base text-orange-800/75 font-medium">90s 廣東話電台 • 懷舊金曲零廣告任聽</p>
+                                    <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">無廣告 Walkman 收音機</h2>
+                                    <p class="text-sm md:text-base text-red-900/75 font-medium">90s 廣東話電台 • 懷舊金曲零廣告任聽</p>
                                 </div>
                             </div>
-                            <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#C2410C] px-4 py-2 rounded-xl transition-all font-bold border border-orange-200/80 active:scale-95 shadow-sm">
+                            <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
                                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
                                 <span>返回首頁</span>
                             </button>
@@ -2636,7 +2658,7 @@
             <!-- Android Chrome Guide -->
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
                 <div class="flex items-center gap-2 font-extrabold text-slate-900 text-base">
-                    <span class="px-2 py-0.5 bg-orange-100 text-orange-800 rounded-lg text-xs font-black">Android / 安卓</span>
+                    <span class="px-2 py-0.5 bg-red-100 text-red-900 rounded-lg text-xs font-black">Android / 安卓</span>
                     <span>Chrome 瀏覽器教學：</span>
                 </div>
                 <ol class="text-xs md:text-sm text-slate-700 font-semibold space-y-2 list-decimal list-inside leading-relaxed">
@@ -3118,7 +3140,7 @@
                 sumLines.push('' + L + '：當值 ' + t.work + ' 分鐘・休息 ' + t.rest + ' 分鐘（' + t.restParts + ' parts）');
             });
             notes.forEach(n => {
-                sumHtml += '<p class="text-sm font-bold text-orange-800 bg-orange-50 border border-orange-200 rounded-xl px-3 py-2">💡 ' + n + '</p>';
+                sumHtml += '<p class="text-sm font-bold text-red-900 bg-red-50 border border-red-200 rounded-xl px-3 py-2">💡 ' + n + '</p>';
                 sumLines.push('💡 ' + n);
             });
             sumHtml += '</div>';
@@ -3265,7 +3287,7 @@
                 inp.maxLength = 12;
                 inp.placeholder = '人員 ' + (i + 1);
                 inp.value = old[i] || '';
-                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
+                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
                 box.appendChild(inp);
             }
         }
@@ -3276,8 +3298,8 @@
             const wmw = document.getElementById('mp-mode-wmw');
             const meal = document.getElementById('mp-mode-meal');
             if (!wm || !wmw || !meal) return;
-            const on = 'w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-orange-600 border-orange-600 text-white shadow-lg shadow-orange-200';
-            const off = 'w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600 hover:border-orange-400';
+            const on = 'w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-red-700 border-red-700 text-white shadow-lg shadow-red-200';
+            const off = 'w-full py-3 rounded-2xl border-2 font-extrabold text-base transition-all bg-white border-slate-300 text-slate-600 hover:border-red-400';
             wm.className = mode === 'wm' ? on : off;
             wmw.className = mode === 'wmw' ? on : off;
             meal.className = mode === 'meal' ? on : off;
@@ -3424,7 +3446,7 @@
                 let y = PAD + TITLE + SUB + GAP, x = PAD;
                 const colX = []; colW.forEach(w => { colX.push(x); x += w; });
                 function drawRow(lines, rawCells, y0, h, isHead, rowIdx) {
-                    ctx.fillStyle = isHead ? '#FFF7ED' : (rowIdx % 2 ? '#F8FAFC' : '#FFFFFF');
+                    ctx.fillStyle = isHead ? '#FEF2F2' : (rowIdx % 2 ? '#F8FAFC' : '#FFFFFF');
                     ctx.fillRect(PAD, y0, W - PAD * 2, h);
                     lines.forEach((cellLines, j) => {
                         if (!isHead && j === head.length - 1) {
@@ -3457,12 +3479,12 @@
                             }
                         }
                         ctx.font = fontFor(isHead || j === 0 || fillC !== null);
-                        ctx.fillStyle = isHead ? '#431407' : (j === 0 ? '#0F172A' : (j === head.length - 1 ? '#0C4A6E' : (fillC !== null ? personOnColor(fillC) : '#334155')));
+                        ctx.fillStyle = isHead ? '#451A03' : (j === 0 ? '#0F172A' : (j === head.length - 1 ? '#0C4A6E' : (fillC !== null ? personOnColor(fillC) : '#334155')));
                         ctx.textBaseline = 'middle';
                         const cy = y0 + h / 2;
                         cellLines.forEach((ln, li) => ctx.fillText(ln, colX[j] + CELLX, cy + (li - (cellLines.length - 1) / 2) * LH));
                     });
-                    ctx.strokeStyle = '#FFEDD5'; ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#FEE2E2'; ctx.lineWidth = 2;
                     ctx.strokeRect(PAD, y0, W - PAD * 2, h);
                     for (let j = 1; j < colX.length; j++) { ctx.beginPath(); ctx.moveTo(colX[j], y0); ctx.lineTo(colX[j], y0 + h); ctx.stroke(); }
                 }
@@ -3694,7 +3716,7 @@
                 inp.maxLength = 12;
                 inp.placeholder = '崗位 ' + (i + 1);
                 inp.value = old[i] || '';
-                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
+                inp.className = 'w-full px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none text-base bg-slate-50 font-bold text-slate-900';
                 box.appendChild(inp);
             }
         }
@@ -4648,7 +4670,7 @@
             blocks.forEach(b => per[b.p].push(b));
             const chipCls = lab => lab === '工'
                 ? 'bg-slate-100 text-slate-600 border-slate-300'
-                : (lab === '飯' ? 'bg-orange-100 text-orange-900 border-orange-300' : (lab === '休' ? 'bg-violet-100 text-violet-900 border-violet-300' : 'bg-sky-100 text-sky-900 border-sky-300'));
+                : (lab === '飯' ? 'bg-red-100 text-red-900 border-red-300' : (lab === '休' ? 'bg-violet-100 text-violet-900 border-violet-300' : 'bg-sky-100 text-sky-900 border-sky-300'));
             let personHtml = '';
             const personTxtLines = [];
             per.forEach((bs, pi) => {
@@ -4667,10 +4689,10 @@
                     sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）</span>'
                 ).join(' ');
                 personTxtLines.push(names[pi] + '（總休息 ' + restTotal + ' 分鐘）：' + segs.map(sg => sg.label + ' ' + clock(sg.s) + '-' + clock(sg.e) + '（' + segMins(sg.s, sg.e) + '分）').join(' '));
-                personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-orange-100 shadow-sm space-y-2">' +
+                personHtml += '<div class="bg-white p-4 rounded-2xl border-2 border-red-100 shadow-sm space-y-2">' +
                     '<div class="flex items-center justify-between flex-wrap gap-2">' +
                     '<span class="font-extrabold text-base flex items-center gap-2"><span class="w-8 h-8 rounded-full font-extrabold text-sm flex items-center justify-center shadow-sm" style="background-color:' + personColor(pi) + ';color:' + personOnColor(personColor(pi)) + '">' + (pi + 1) + '</span><span style="color:' + personColor(pi) + '">' + mpEsc(names[pi]) + '</span></span>' +
-                    '<span class="text-sm font-extrabold text-orange-900 bg-orange-50 px-3 py-1.5 rounded-xl border border-orange-200">總休息 ' + restTotal + ' 分鐘</span></div>' +
+                    '<span class="text-sm font-extrabold text-red-900 bg-red-50 px-3 py-1.5 rounded-xl border border-red-200">總休息 ' + restTotal + ' 分鐘</span></div>' +
                     '<div class="flex flex-wrap gap-1.5">' + chips + '</div></div>';
             });
             document.getElementById('mp-person-list').innerHTML = personHtml;
@@ -4709,15 +4731,15 @@
                     + (surplus.length ? '、' + surplus.map(pi => '<span style="color:' + personColor(pi) + '">' + mpEsc(names[pi]) + '</span>（後備當值）').join('、') : '');
                 segTxtLines.push(clock(a) + '-' + clock(b) + '｜' + postNames.map((pn, j) => names[assign[j]]).join('｜') + '｜' + resting.slice().sort((x, y) => x.p - y.p).map(x => names[x.p] + '（' + x.label + '）').join('、')
                     + (surplus.length ? '、' + surplus.map(pi => names[pi] + '（後備當值）').join('、') : ''));
-                segRowsHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 md:whitespace-nowrap font-extrabold text-slate-900 break-all">' + clock(a) + '-' + clock(b) + '</td>'
-                    + postNames.map((pn, j) => '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 break-all"><span style="color:' + personColor(assign[j]) + '">' + mpEsc(names[assign[j]]) + '</span></td>').join('')
-                    + '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-orange-100 text-sky-900 break-all">' + restTxt + '</td></tr>';
+                segRowsHtml += '<tr class="' + (i % 2 ? 'bg-slate-50' : 'bg-white') + '"><td class="px-1 py-2 md:px-3 md:py-2.5 border border-red-100 md:whitespace-nowrap font-extrabold text-slate-900 break-all">' + clock(a) + '-' + clock(b) + '</td>'
+                    + postNames.map((pn, j) => '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-red-100 break-all"><span style="color:' + personColor(assign[j]) + '">' + mpEsc(names[assign[j]]) + '</span></td>').join('')
+                    + '<td class="px-1 py-2 md:px-3 md:py-2.5 border border-red-100 text-sky-900 break-all">' + restTxt + '</td></tr>';
             }
-            segHtml = '<div class="bg-white p-2 md:p-4 rounded-2xl border-2 border-orange-100 shadow-sm overflow-x-auto">'
+            segHtml = '<div class="bg-white p-2 md:p-4 rounded-2xl border-2 border-red-100 shadow-sm overflow-x-auto">'
                 + '<table class="w-full table-fixed md:table-auto text-xs md:text-base font-bold text-slate-700 border-collapse">'
-                + '<thead><tr class="bg-orange-50 text-orange-950"><th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-orange-100 break-all">時間</th>'
-                + postNames.map(pn => '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-orange-100 break-all">' + mpEsc(pn) + '</th>').join('')
-                + '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-orange-100 break-all">休息</th></tr></thead><tbody>'
+                + '<thead><tr class="bg-red-50 text-amber-950"><th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">時間</th>'
+                + postNames.map(pn => '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">' + mpEsc(pn) + '</th>').join('')
+                + '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">休息</th></tr></thead><tbody>'
                 + segRowsHtml + '</tbody></table></div>';
             document.getElementById('mp-segment-list').innerHTML = segHtml;
 
@@ -4733,13 +4755,13 @@
             let reliefHtml = '';
             const reliefTxtLines = [];
             lanes.forEach((lane, li) => {
-                let line = '<span class="font-extrabold text-orange-900">休息位 ' + (li + 1) + '：</span> ';
+                let line = '<span class="font-extrabold text-red-900">休息位 ' + (li + 1) + '：</span> ';
                 lane.forEach((b, bi) => {
                     const seg = '<span style="color:' + personColor(b.p) + '">' + mpEsc(names[b.p]) + '</span> ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
                     if (bi === 0) line += seg;
                     else line += ' → ' + clock(b.s) + ' ' + '<span style="color:' + personColor(lane[bi - 1].p) + '">' + mpEsc(names[lane[bi - 1].p]) + '</span>' + ' 返工接替 ' + seg;
                 });
-                reliefHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 text-sm md:text-base shadow-sm leading-relaxed">' + line + '</div>';
+                reliefHtml += '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-red-100 text-sm md:text-base shadow-sm leading-relaxed">' + line + '</div>';
                 let lineTxt = '休息位 ' + (li + 1) + '：';
                 lane.forEach((b, bi) => {
                     const segT = names[b.p] + ' ' + b.label + '（' + clock(b.s) + '-' + clock(b.e) + '，' + segMins(b.s, b.e) + '分）';
@@ -4768,15 +4790,15 @@
                 else mealInfo = '每人行水約 ' + avgW + ' 分鐘、食飯約 ' + Math.round(fMins.reduce((x, y) => x + y, 0) / Math.max(1, fMins.length)) + ' 分鐘';
             }
             document.getElementById('mp-summary').innerHTML =
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">總時段：<span class="font-extrabold text-slate-900">' + T + ' 分鐘</span>（' + clock(0) + ' - ' + clock(G2) + '）</div>' +
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + restLineHtml + '</div>' +
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + (mpIsL3 && N % (N - M) !== 0 ? '當值人數：全程最少 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息最多 ' + (N - M) + ' 人；細組時段休息 ' + (N % (N - M)) + ' 人）' : '當值人數：全程保持 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息 ' + (N - M) + ' 人）') + '</div>' +
-                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-orange-100 font-bold">' + mealInfo + '</div>';
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-red-100 font-bold">總時段：<span class="font-extrabold text-slate-900">' + T + ' 分鐘</span>（' + clock(0) + ' - ' + clock(G2) + '）</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-red-100 font-bold">' + restLineHtml + '</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-red-100 font-bold">' + (mpIsL3 && N % (N - M) !== 0 ? '當值人數：全程最少 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息最多 ' + (N - M) + ' 人；細組時段休息 ' + (N % (N - M)) + ' 人）' : '當值人數：全程保持 <span class="font-extrabold text-slate-900">' + M + ' 人</span>（休息 ' + (N - M) + ' 人）') + '</div>' +
+                '<div class="bg-white px-4 py-3 rounded-2xl border-2 border-red-100 font-bold">' + mealInfo + '</div>';
 
             const warnBox = document.getElementById('mp-warn');
             let warnHtml = redWarnings.map(w => '<p class="text-red-700 font-extrabold">⚠️ ' + mpEsc(w) + '</p>').join('') + warnings.map(w => '<p>⚠️ ' + mpEsc(w) + '</p>').join('');
             if (mpMode === 'wm' && mpWmMode === 'join' && !restUniform && (N - M) * 2 <= N) {
-                warnHtml = '<div class="mb-2"><button type="button" onclick="mpUseSplit()" class="w-full px-4 py-3 rounded-xl bg-orange-600 text-white font-extrabold text-base shadow hover:bg-orange-700 transition">「連續」排法所限，各人總休息唔平均（最少 ' + totMin + ' ～ 最多 ' + totMax + ' 分鐘）— 撳呢度改用「不連續」重新計算，全員平均</button></div>' + warnHtml;
+                warnHtml = '<div class="mb-2"><button type="button" onclick="mpUseSplit()" class="w-full px-4 py-3 rounded-xl bg-red-700 text-white font-extrabold text-base shadow hover:bg-red-800 transition">「連續」排法所限，各人總休息唔平均（最少 ' + totMin + ' ～ 最多 ' + totMax + ' 分鐘）— 撳呢度改用「不連續」重新計算，全員平均</button></div>' + warnHtml;
             }
             if (warnHtml) {
                 warnBox.innerHTML = warnHtml;
@@ -4912,7 +4934,7 @@
             const badge = document.getElementById('res-cig-status-badge');
             if (isDeclared) {
                 badge.innerText = '🔴 紅色通道（主動申報）';
-                badge.className = 'px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-orange-500/20 text-orange-300 border border-orange-500/30';
+                badge.className = 'px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-red-600/20 text-red-300 border border-red-600/30';
             } else {
                 badge.innerText = '🟢 綠色通道（未有申報/截獲）';
                 badge.className = 'px-3.5 py-1.5 rounded-full text-xs md:text-sm font-bold bg-red-500/20 text-red-300 border border-red-500/30';
@@ -4920,8 +4942,8 @@
 
             const riskBox = document.getElementById('cig-risk-warning');
             if (excessSticks === 0 && excessCigarGrams === 0) {
-                riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-orange-50 border-orange-200 text-orange-950';
-                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-orange-600"></i> 符合法定免稅條件</p><p class="font-medium">攜帶香煙／雪茄數量符合法定免稅條件，可直接經綠色通道入境，免受任何科稅或處罰。</p>`;
+                riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-red-50 border-red-200 text-amber-950';
+                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-red-700"></i> 符合法定免稅條件</p><p class="font-medium">攜帶香煙／雪茄數量符合法定免稅條件，可直接經綠色通道入境，免受任何科稅或處罰。</p>`;
             } else if (isDeclared) {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-blue-50 border-blue-200 text-blue-950';
                 riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i> 合規申報，無刑事處罰</p><p class="font-medium">旅客／駕駛員已於紅色通道向 CNE 人員作出主動申報。繳清應繳總煙稅（HK$ ${totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}）後即可合法攜帶相關物品入境。</p>`;
@@ -5000,7 +5022,7 @@
                 currentList.forEach((person, index) => {
                     const rank = index + 1;
                     const isWinner = rank <= quota;
-                    const bgClass = isWinner ? 'bg-orange-50 border-l-4 border-orange-500 text-orange-950 font-extrabold' : 'bg-white border border-slate-200 text-slate-500 font-bold';
+                    const bgClass = isWinner ? 'bg-red-50 border-l-4 border-red-600 text-amber-950 font-extrabold' : 'bg-white border border-slate-200 text-slate-500 font-bold';
                     htmlContent += `
                         <div class="flex justify-between items-center p-3 rounded-xl text-sm ${bgClass}">
                             <span><span class="font-black text-slate-700 mr-2">#${rank}</span> ${person}</span>
@@ -5593,10 +5615,10 @@
                 shifts: [
                     { name: "早 1", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isDinnerOff: false, isDinnerSuitable: true },
                     { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isDinnerOff: false, isDinnerSuitable: true },
-                    { name: "放假 1", type: "off", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true },
+                    { name: "放假 1", type: "off", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true },
                     { name: "晏 1", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isDinnerOff: false, isDinnerSuitable: false },
                     { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isDinnerOff: false, isDinnerSuitable: false },
-                    { name: "放假 2", type: "off", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true }
+                    { name: "放假 2", type: "off", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true }
                 ]
             },
             pattern2: {
@@ -5607,10 +5629,10 @@
                     { name: "Swing", type: "swing", bg: "bg-indigo-100 border-indigo-300 text-indigo-950", isDinnerOff: false, isDinnerSuitable: false },
                     { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isDinnerOff: false, isDinnerSuitable: true },
                     { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isDinnerOff: false, isDinnerSuitable: false },
-                    { name: "放假 1", type: "off", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true },
+                    { name: "放假 1", type: "off", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true },
                     { name: "早 3", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isDinnerOff: false, isDinnerSuitable: true },
                     { name: "晏 3", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isDinnerOff: false, isDinnerSuitable: false },
-                    { name: "放假 2", type: "off", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true }
+                    { name: "放假 2", type: "off", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true }
                 ]
             },
             pattern3: {
@@ -5621,7 +5643,7 @@
                     { name: "Swing", type: "swing", bg: "bg-indigo-100 border-indigo-300 text-indigo-950", isDinnerOff: false, isDinnerSuitable: false },
                     { name: "早 2", type: "morning", bg: "bg-amber-100 border-amber-300 text-amber-950", isDinnerOff: false, isDinnerSuitable: true },
                     { name: "晏 2", type: "afternoon", bg: "bg-blue-100 border-blue-300 text-blue-950", isDinnerOff: false, isDinnerSuitable: false },
-                    { name: "放假", type: "off", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true }
+                    { name: "放假", type: "off", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true }
                 ]
             },
             pattern4: {
@@ -5634,14 +5656,14 @@
                     { name: "放假 1", note: "22:00備勤", type: "off1", bg: "bg-rose-100 border-rose-300 text-rose-950", isDinnerOff: false, isDinnerSuitable: false },
                     { name: "通宵 1", type: "night1", bg: "bg-purple-100 border-purple-300 text-purple-950", isDinnerOff: false, isDinnerSuitable: false },
                     { name: "通宵 2", note: "早放工/晚自由", type: "night2", bg: "bg-teal-100 border-teal-300 text-teal-950", isDinnerOff: true, isDinnerSuitable: true },
-                    { name: "放假 2", type: "off2", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true }
+                    { name: "放假 2", type: "off2", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true }
                 ]
             },
             pattern5: {
                 name: "Pattern5: 五天工作週，星期六日放假",
                 shifts: [
                     { name: "常規工作", type: "work", bg: "bg-slate-100 border-slate-300 text-slate-900", isDinnerOff: false, isDinnerSuitable: true },
-                    { name: "週末放假", type: "off", bg: "bg-orange-100 border-orange-300 text-orange-950", isDinnerOff: true, isDinnerSuitable: true }
+                    { name: "週末放假", type: "off", bg: "bg-red-100 border-red-300 text-amber-950", isDinnerOff: true, isDinnerSuitable: true }
                 ]
             }
         };
@@ -5753,7 +5775,7 @@
 
                 const patternPillsHtml = patternObj.shifts.map((s, pIdx) => {
                     let pillBg = "bg-slate-100 text-slate-700 border-slate-300";
-                    if (s.isDinnerOff) pillBg = "bg-orange-100 text-orange-900 border-orange-300 font-extrabold";
+                    if (s.isDinnerOff) pillBg = "bg-red-100 text-red-900 border-red-300 font-extrabold";
                     else if (s.isDinnerSuitable) pillBg = "bg-amber-100 text-amber-900 border-amber-300 font-bold";
                     else if (s.type === 'off1') pillBg = "bg-rose-100 text-rose-900 border-rose-300 font-bold";
                     else if (s.type === 'night1') pillBg = "bg-purple-100 text-purple-900 border-purple-300 font-bold";
@@ -5770,18 +5792,18 @@
                         <div class="grid sm:grid-cols-12 gap-3 items-center">
                             
                             <div class="sm:col-span-3 flex items-center gap-2">
-                                <span class="w-6 h-6 rounded-full bg-orange-600 text-white font-extrabold text-xs flex items-center justify-center flex-shrink-0">${index + 1}</span>
+                                <span class="w-6 h-6 rounded-full bg-red-700 text-white font-extrabold text-xs flex items-center justify-center flex-shrink-0">${index + 1}</span>
                                 
                                 <button type="button" onclick="toggleFavorite(${staff.id})" title="${isFav ? '點擊取消最愛' : '點擊加入我的最愛 (下次自動記住)'}" class="p-1 rounded-lg hover:bg-amber-100 active:scale-95 transition-transform flex-shrink-0">
                                     <i data-lucide="star" class="w-5 h-5 ${isFav ? 'text-amber-500 fill-amber-400' : 'text-slate-300 hover:text-amber-400'}"></i>
                                 </button>
 
-                                <input type="text" value="${staff.name}" onchange="updateStaffName(${staff.id}, this.value)" placeholder="同事姓名" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm font-extrabold text-slate-900 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-orange-500">
+                                <input type="text" value="${staff.name}" onchange="updateStaffName(${staff.id}, this.value)" placeholder="同事姓名" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm font-extrabold text-slate-900 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-red-600">
                             </div>
 
                             <div class="sm:col-span-4">
                                 <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">選擇 Pattern:</span>
-                                <select onchange="updateStaffPattern(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-slate-50 text-slate-900 focus:bg-white focus:ring-1 focus:ring-orange-500">
+                                <select onchange="updateStaffPattern(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-slate-50 text-slate-900 focus:bg-white focus:ring-1 focus:ring-red-600">
                                     <option value="pattern1" ${staff.patternKey === 'pattern1' ? 'selected' : ''}>Pattern1: 早1 早2 放假1 晏1 晏2 放假2</option>
                                     <option value="pattern2" ${staff.patternKey === 'pattern2' ? 'selected' : ''}>Pattern2: 早1 晏1 Swing 早2 晏2 放假1 早3 晏3 放假2</option>
                                     <option value="pattern3" ${staff.patternKey === 'pattern3' ? 'selected' : ''}>Pattern3: 早1 晏1 Swing 早2 晏2 放假</option>
@@ -5792,7 +5814,7 @@
 
                             <div class="sm:col-span-3">
                                 <span class="text-xs text-slate-500 font-bold block mb-0.5 sm:hidden">已知日期:</span>
-                                <input type="date" value="${staff.anchorDate}" onchange="updateStaffDate(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-orange-500">
+                                <input type="date" value="${staff.anchorDate}" onchange="updateStaffDate(${staff.id}, this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-red-600">
                             </div>
 
                             <div class="sm:col-span-2 flex items-center justify-between gap-1">
@@ -5801,7 +5823,7 @@
                                     ${staff.patternKey === 'pattern5' ? `
                                         <span class="text-xs font-bold text-slate-500 block px-1 py-1.5">自動按週六日</span>
                                     ` : `
-                                        <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-orange-500">
+                                        <select onchange="updateStaffType(${staff.id}, this.value)" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs font-bold bg-white text-slate-900 focus:ring-1 focus:ring-red-600">
                                             ${patternObj.shifts.map((p, i) => `<option value="${i}" ${staff.anchorType === i ? 'selected' : ''}>${p.name}</option>`).join('')}
                                         </select>
                                     `}
@@ -5816,7 +5838,7 @@
 
                         <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200/80 flex items-center gap-2 overflow-x-auto">
                             <span class="text-[11px] font-black text-slate-500 flex-shrink-0 flex items-center gap-1">
-                                <i data-lucide="eye" class="w-3.5 h-3.5 text-orange-600"></i>
+                                <i data-lucide="eye" class="w-3.5 h-3.5 text-red-700"></i>
                                 Pattern 順序預覽：
                             </span>
                             <div class="flex items-center gap-1.5 overflow-x-auto py-0.5">
@@ -5964,7 +5986,7 @@
 
                 let highlightBadge = '';
                 if (isPerfect) {
-                    highlightBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-black bg-orange-500 text-white shadow-sm flex items-center gap-1"><i data-lucide="party-popper" class="w-3.5 h-3.5"></i> 🎉 強烈推薦約會（黃金晚餐日）</span>`;
+                    highlightBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-black bg-red-600 text-white shadow-sm flex items-center gap-1"><i data-lucide="party-popper" class="w-3.5 h-3.5"></i> 🎉 強烈推薦約會（黃金晚餐日）</span>`;
                 } else if (isSuitable) {
                     highlightBadge = `<span class="px-2.5 py-1 rounded-full text-xs font-black bg-amber-500 text-white shadow-sm flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i> 👍 適合約晚飯（早更/放假，時間充裕）</span>`;
                 }
@@ -5984,7 +6006,7 @@
                 }).join('');
 
                 const dayBlockHtml = `
-                    <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl space-y-3 shadow-sm ${isPerfect ? 'border-orange-400 bg-orange-50/40' : (isSuitable ? 'border-amber-300 bg-amber-50/30' : '')}">
+                    <div class="p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl space-y-3 shadow-sm ${isPerfect ? 'border-red-400 bg-red-50/40' : (isSuitable ? 'border-amber-300 bg-amber-50/30' : '')}">
                         <div class="flex items-center justify-between border-b border-slate-200 pb-2 flex-wrap gap-2">
                             <span class="text-base font-black text-slate-900">${dateIsoStr} (週${weekdayStr})</span>
                             ${highlightBadge}
@@ -5999,10 +6021,10 @@
 
             const summaryBox = document.getElementById('joint-free-summary-card');
             summaryBox.innerHTML = `
-                <div class="flex flex-wrap items-center justify-between gap-2 text-sm font-extrabold text-orange-950">
-                    <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-5 h-5 text-orange-600"></i> ${viewY}年${viewM}月 晚餐聚會推薦分析：</span>
+                <div class="flex flex-wrap items-center justify-between gap-2 text-sm font-extrabold text-amber-950">
+                    <span class="flex items-center gap-1.5"><i data-lucide="sparkles" class="w-5 h-5 text-red-700"></i> ${viewY}年${viewM}月 晚餐聚會推薦分析：</span>
                     <div class="flex flex-wrap gap-3">
-                        <span class="bg-orange-100 text-orange-900 px-3 py-1 rounded-xl border border-orange-300">🎉 強烈推薦 (黃金晚餐日)：<strong class="text-orange-700 text-lg ml-1">${perfectDaysCount}</strong> 天</span>
+                        <span class="bg-red-100 text-red-900 px-3 py-1 rounded-xl border border-red-300">🎉 強烈推薦 (黃金晚餐日)：<strong class="text-red-800 text-lg ml-1">${perfectDaysCount}</strong> 天</span>
                         <span class="bg-amber-100 text-amber-900 px-3 py-1 rounded-xl border border-amber-300">👍 適合約晚飯 (早更/放假)：<strong class="text-amber-800 text-lg ml-1">${suitableDaysCount}</strong> 天</span>
                     </div>
                 </div>
