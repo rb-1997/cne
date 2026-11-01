@@ -865,7 +865,7 @@
                     </div>
 
                     <!-- Card 12: CNE交通資訊 -->
-                    <div onclick="window.open('https://hk-bus-eta-riverbearai2-1543.vercel.app/', '_blank')" class="meta-card group" style="--bd:#2B1A0E; --gl:rgba(43,26,14,0.30)">
+                    <div onclick="switchView('eta')" class="meta-card group" style="--bd:#2B1A0E; --gl:rgba(43,26,14,0.30)">
                         <div class="space-y-2 md:space-y-2.5">
                             <div class="flex items-center justify-between gap-1.5">
                                 <div class="meta-icon bg-[#2B1A0E] text-[#F87171]">
@@ -888,7 +888,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.32</span>
+                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.33</span>
             </div>
         </section>
 
@@ -950,6 +950,36 @@
                     data-src="https://waline-rb-1997.vercel.app"
                     style="width: 100%; height: 720px; border: 0;"
                     allow="clipboard-write">
+                </iframe>
+            </div>
+        </section>
+
+        <!-- ================= PAGE: CNE交通資訊 (ETA內嵌畫面) ================= -->
+        <section id="view-eta" class="view-panel child-view-panel space-y-6">
+            <div class="flex items-center justify-between gap-3 bg-gradient-to-br from-[#FFE7CC] via-[#FFF4E5] to-[#FFE0B8] border border-[#FBD38D] rounded-2xl p-4 md:p-5 shadow-[0_2px_14px_rgba(185,28,28,0.10)] flex-wrap">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="p-2.5 md:p-3 bg-white/85 border border-red-200/80 text-[#B91C1C] rounded-xl shadow-sm flex-shrink-0">
+                        <i data-lucide="bus" class="w-7 h-7 md:w-8 md:h-8"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-extrabold text-amber-950">CNE交通資訊</h2>
+                        <p class="text-sm md:text-base text-red-900/75 font-medium">巴士小巴港鐵睇晒 • 撳定位班次即現，撳心收藏</p>
+                    </div>
+                </div>
+                <button onclick="switchView('home')" class="flex items-center gap-1.5 text-sm bg-white/85 hover:bg-white text-[#B91C1C] px-4 py-2 rounded-xl transition-all font-bold border border-red-200/80 active:scale-95 shadow-sm">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    <span>返回首頁</span>
+                </button>
+            </div>
+
+            <p class="text-xs text-red-900/70 leading-relaxed">如果下面個框開唔到，可<a href="https://hk-bus-eta-riverbearai2-1543.vercel.app/" target="_blank" rel="noopener" class="font-bold underline">撳呢度直接開 ETA 網站</a>。</p>
+
+            <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden">
+                <iframe
+                    id="eta-frame"
+                    data-src="https://hk-bus-eta-riverbearai2-1543.vercel.app/"
+                    style="width: 100%; height: calc(100vh - 210px); height: calc(100dvh - 210px); min-height: 520px; border: 0;"
+                    allow="geolocation">
                 </iframe>
             </div>
         </section>
@@ -2824,6 +2854,13 @@
             }
         }
 
+        function loadEtaView() {
+            const frame = document.getElementById('eta-frame');
+            if (frame && !frame.getAttribute('src')) {
+                frame.src = frame.dataset.src;
+            }
+        }
+
         function switchView(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
                 panel.classList.remove('active');
@@ -2847,6 +2884,8 @@
                     calculateQuartersPoints();
                 } else if (viewId === 'board') {
                     loadWalineBoard();
+                } else if (viewId === 'eta') {
+                    loadEtaView();
                 }
 
                 trackViewPageview(viewId);
