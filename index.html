@@ -888,7 +888,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.33</span>
+                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.34</span>
             </div>
         </section>
 
@@ -971,8 +971,6 @@
                     <span>返回首頁</span>
                 </button>
             </div>
-
-            <p class="text-xs text-red-900/70 leading-relaxed">如果下面個框開唔到，可<a href="https://hk-bus-eta-riverbearai2-1543.vercel.app/" target="_blank" rel="noopener" class="font-bold underline">撳呢度直接開 ETA 網站</a>。</p>
 
             <div class="bg-white rounded-3xl border-2 border-slate-200 shadow-sm overflow-hidden">
                 <iframe
@@ -2860,6 +2858,40 @@
                 frame.src = frame.dataset.src;
             }
         }
+
+        // ETA 定位橋接：iOS Safari 唔會為跨域 iframe 彈定位授權，
+        // 所以框入面要位置嗰陣，改由頂層（CNE）攞位置再傳入框。
+        const ETA_ORIGIN = 'https://hk-bus-eta-riverbearai2-1543.vercel.app';
+        let cneLastLocation = null;
+        function postLocationToEta(loc) {
+            const frame = document.getElementById('eta-frame');
+            if (frame && frame.contentWindow) {
+                frame.contentWindow.postMessage({ type: 'cne-set-location', lat: loc.lat, lng: loc.lng, accuracy: loc.accuracy }, ETA_ORIGIN);
+            }
+        }
+        function postLocationErrorToEta() {
+            const frame = document.getElementById('eta-frame');
+            if (frame && frame.contentWindow) {
+                frame.contentWindow.postMessage({ type: 'cne-location-error' }, ETA_ORIGIN);
+            }
+        }
+        window.addEventListener('message', function (e) {
+            if (e.origin !== ETA_ORIGIN || !e.data || typeof e.data.type !== 'string') return;
+            if (e.data.type === 'cne-request-location') {
+                if (!navigator.geolocation) {
+                    postLocationErrorToEta();
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(function (pos) {
+                    cneLastLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude, accuracy: pos.coords.accuracy };
+                    postLocationToEta(cneLastLocation);
+                }, function () {
+                    postLocationErrorToEta();
+                }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 });
+            } else if (e.data.type === 'cne-eta-ready') {
+                if (cneLastLocation) postLocationToEta(cneLastLocation);
+            }
+        });
 
         function switchView(viewId) {
             document.querySelectorAll('.view-panel').forEach(panel => {
