@@ -888,7 +888,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.34</span>
+                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.35</span>
             </div>
         </section>
 
@@ -1408,6 +1408,10 @@
                         崗位名稱（可留空，自動用「崗位 1、2、3…」；崗位數目 = 必須當值人數）
                     </label>
                     <div id="mp-posts" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
+                    <div class="flex items-center gap-2 pt-1">
+                        <label for="mp-rest-name" class="text-sm font-extrabold text-slate-700 whitespace-nowrap">休息欄名稱</label>
+                        <input id="mp-rest-name" type="text" maxlength="12" value="水" class="flex-1 min-w-0 px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-red-600 focus:outline-none text-base bg-slate-50 font-bold text-slate-900" />
+                    </div>
                 </div>
 
                 <div class="space-y-2">
@@ -3754,6 +3758,7 @@
             document.getElementById('mp-names').querySelectorAll('input').forEach(inp => inp.value = '');
             buildMpPosts();
             document.getElementById('mp-posts').querySelectorAll('input').forEach(inp => inp.value = '');
+            document.getElementById('mp-rest-name').value = '水';
             setMpMode('wm');
             document.querySelector('input[name="mp-wm-join"][value="int"]').checked = true;
             mpWmMode = 'int';
@@ -3801,6 +3806,12 @@
                 posts.push(v || ('崗位 ' + (i + 1)));
             });
             return posts;
+        }
+
+        function mpGetRestName() {
+            const el = document.getElementById('mp-rest-name');
+            const v = el ? el.value.trim() : '';
+            return v || '休息';
         }
 
         /* 一水一飯（連續）：鏈式排法 — 每人一整段休息，前半 = 水，後半 = 飯，相連唔分開 */
@@ -4772,13 +4783,14 @@
             const postNamesRaw = mpGetPosts();
             const postNames = [];
             for (let j = 0; j < M; j++) postNames.push(postNamesRaw[j] || ('崗位 ' + (j + 1)));
+            const restName = mpGetRestName();
             let postOf = {};
             const boundSet = new Set([0, G2]);
             blocks.forEach(b => { boundSet.add(b.s); boundSet.add(b.e); });
             const bounds = Array.from(boundSet).sort((a, b) => a - b);
             let segHtml = '';
             const segTxtLines = [];
-            segTxtLines.push('時間｜' + postNames.join('｜') + '｜休息');
+            segTxtLines.push('時間｜' + postNames.join('｜') + '｜' + restName);
             let segRowsHtml = '';
             for (let i = 0; i + 1 < bounds.length; i++) {
                 const a = bounds[i], b = bounds[i + 1];
@@ -4810,7 +4822,7 @@
                 + '<table class="w-full table-fixed md:table-auto text-xs md:text-base font-bold text-slate-700 border-collapse">'
                 + '<thead><tr class="bg-red-50 text-amber-950"><th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">時間</th>'
                 + postNames.map(pn => '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">' + mpEsc(pn) + '</th>').join('')
-                + '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">休息</th></tr></thead><tbody>'
+                + '<th class="px-1 py-2 md:px-3 md:py-2.5 text-left border border-red-100 break-all">' + mpEsc(restName) + '</th></tr></thead><tbody>'
                 + segRowsHtml + '</tbody></table></div>';
             document.getElementById('mp-segment-list').innerHTML = segHtml;
 
