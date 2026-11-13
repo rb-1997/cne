@@ -888,7 +888,7 @@
             </div>
 
             <div class="text-center pt-1 pb-1">
-                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.35</span>
+                <span class="text-xs font-bold text-[#B91C1C]/60 tracking-wide">版本 2.1.36</span>
             </div>
         </section>
 
@@ -1523,7 +1523,32 @@
                                 總檢獲雪茄重量 (克 / g)
                             </label>
                             <input type="number" id="cigar-grams" min="0" placeholder="例如: 30" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
-                            <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">* 免稅額：19支香煙 或 1支雪茄(≤25克)，如旅客同時攜帶兩者，系統會優先自動減去雪茄免稅優惠25克。司機及駕駛者一律沒有豁免。</p>
+                            <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">* 免稅額：19支香煙 或 1支雪茄(≤25克) 或 25克其他煙草；如旅客同時攜帶多種，系統會優先自動減去雪茄免稅優惠25克（其次熟煙、其他煙草）。司機及駕駛者一律沒有豁免。</p>
+                            <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">提示：長逾 90 毫米（唔計濾嘴）嘅香煙，每多 90 毫米即當多一支計。</p>
+                        </div>
+                        <div class="border-t border-slate-200 pt-3">
+                            <button type="button" onclick="toggleCigAdvanced()" id="cig-advanced-btn" class="w-full flex items-center justify-between px-4 py-3 bg-white border-2 border-slate-300 rounded-2xl font-extrabold text-slate-800 text-base hover:border-red-400 transition-colors">
+                                <span>進階：其他應課稅煙草成品</span>
+                                <span id="cig-advanced-arrow" class="text-red-700">▸</span>
+                            </button>
+                            <div id="cig-advanced-panel" class="hidden space-y-4 pt-4">
+                                <div class="space-y-1.5">
+                                    <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                                        <i data-lucide="package" class="w-5 h-5 text-amber-600"></i>
+                                        總檢獲中國熟煙重量 (克 / g)
+                                    </label>
+                                    <input type="number" id="shuyan-grams" min="0" placeholder="例如: 30" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
+                                    <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">稅率：每公斤 HK$811（每克 HK$0.811）</p>
+                                </div>
+                                <div class="space-y-1.5 border-t border-slate-200 pt-3">
+                                    <label class="block text-base font-extrabold text-slate-900 flex items-center gap-1.5">
+                                        <i data-lucide="package" class="w-5 h-5 text-amber-600"></i>
+                                        總檢獲其他製成煙草重量 (克 / g)
+                                    </label>
+                                    <input type="number" id="othertob-grams" min="0" placeholder="例如: 30" class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-2xl focus:ring-2 focus:ring-red-600 focus:outline-none text-lg bg-white font-extrabold text-slate-900">
+                                    <p class="text-xs text-slate-500 font-semibold leading-relaxed mt-1">稅率：每公斤 HK$4,005（每克 HK$4.005）</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1596,6 +1621,8 @@
                                     <strong class="text-red-300">· 第一步 (計算應繳總稅款)：</strong><br>
                                     香煙稅款 ＝ (<span id="step1-cig-sticks">0</span>支 ÷ 1,000) × HK$3,306 ＝ HK$ <span id="step1-cig-tax">0</span><br>
                                     雪茄稅款 ＝ (<span id="step1-cigar-grams">0</span>克 ÷ 1,000) × HK$4,258 ＝ HK$ <span id="step1-cigar-tax">0</span><br>
+                                    中國熟煙稅款 ＝ (<span id="step1-shuyan-grams">0</span>克 ÷ 1,000) × HK$811 ＝ HK$ <span id="step1-shuyan-tax">0</span><br>
+                                    其他製成煙草稅款 ＝ (<span id="step1-other-grams">0</span>克 ÷ 1,000) × HK$4,005 ＝ HK$ <span id="step1-other-tax">0</span><br>
                                     應繳總稅款 ＝ <strong class="text-red-400 text-base font-extrabold">HK$ <span id="step1-tax">0</span></strong>
                                 </p>
                                 <p class="p-3 bg-slate-900/90 rounded-xl border border-red-900/80">
@@ -1613,17 +1640,19 @@
                             <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
                                 <p class="text-xs text-slate-400 font-bold">總檢獲數量</p>
                                 <p class="text-base font-bold text-white mt-1"><span id="res-total-sticks">0</span> 支煙 / <span id="res-total-cigar-grams">0</span>g 雪茄</p>
+                                <p id="res-total-other" class="text-xs text-slate-300 mt-1 hidden"><span id="res-total-shuyan-grams">0</span>g 熟煙 / <span id="res-total-other-grams">0</span>g 其他煙草</p>
                                 <p id="res-driver-tag" class="text-xs text-slate-400 mt-1">一般旅客</p>
                             </div>
                             <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700">
                                 <p class="text-xs text-slate-400 font-bold">應課稅過額支數/克數</p>
                                 <p class="text-base font-bold text-amber-400 mt-1"><span id="res-excess-sticks">0</span> 支煙 / <span id="res-excess-cigar-grams">0</span>g 雪茄</p>
+                                <p id="res-excess-other" class="text-xs text-amber-300/90 mt-1 hidden"><span id="res-excess-shuyan-grams">0</span>g 熟煙 / <span id="res-excess-other-grams">0</span>g 其他煙草</p>
                                 <p id="res-allowance-tag" class="text-xs text-slate-400 mt-1">(優先減去雪茄免稅)</p>
                             </div>
                             <div class="bg-amber-950/90 p-4 rounded-2xl border border-red-700/80 shadow-inner">
                                 <p class="text-xs text-red-300 font-bold">第一步：總共稅款</p>
                                 <p class="text-xl md:text-2xl font-black text-red-400 mt-1">HK$ <span id="res-tax-amount">0</span></p>
-                                <p class="text-xs text-red-200/80 mt-1">(香煙+雪茄稅款)</p>
+                                <p class="text-xs text-red-200/80 mt-1">(香煙+雪茄+其他煙草稅款)</p>
                             </div>
                             <div class="bg-amber-950/90 p-4 rounded-2xl border border-red-700/80 shadow-inner">
                                 <p class="text-xs text-red-300 font-bold">第二步：五倍稅額總數</p>
@@ -1632,12 +1661,20 @@
                             </div>
                         </div>
 
-                        <div class="bg-red-950/90 p-5 rounded-2xl border-2 border-red-500/80 text-center shadow-lg">
+                        <div id="cig-compounding-banner" class="bg-red-950/90 p-5 rounded-2xl border-2 border-red-500/80 text-center shadow-lg">
                             <p class="text-lg md:text-2xl font-black text-red-400 flex items-center justify-center gap-2 flex-wrap">
                                 <i data-lucide="alert-circle" class="w-7 h-7 text-red-500"></i>
                                 <span>Compounding 總罰款：</span>
                                 <span class="text-3xl md:text-4xl text-red-400 font-black tracking-tight">HK$ <span id="res-compounding-total-display">0</span></span>
                             </p>
+                        </div>
+                        <div id="cig-payable-banner" class="hidden bg-blue-950/90 p-5 rounded-2xl border-2 border-blue-500/80 text-center shadow-lg">
+                            <p class="text-lg md:text-2xl font-black text-blue-300 flex items-center justify-center gap-2 flex-wrap">
+                                <i data-lucide="check-circle" class="w-7 h-7 text-blue-400"></i>
+                                <span>紅通道應繳總額：</span>
+                                <span class="text-3xl md:text-4xl text-blue-300 font-black tracking-tight">HK$ <span id="res-payable-total-display">0</span></span>
+                            </p>
+                            <p class="text-sm md:text-base font-bold text-blue-200 mt-2">稅款 HK$ <span id="res-payable-tax">0</span> ＋ 牌照費 HK$ <span id="res-payable-fee">0</span>（稅款 × 10%，最低 $2）</p>
                         </div>
                     </div>
 
@@ -4915,20 +4952,35 @@
         function resetCigCalc() {
             document.getElementById('cig-sticks').value = '';
             document.getElementById('cigar-grams').value = '';
+            document.getElementById('shuyan-grams').value = '';
+            document.getElementById('othertob-grams').value = '';
+            document.getElementById('cig-advanced-panel').classList.add('hidden');
+            document.getElementById('cig-advanced-arrow').innerText = '▸';
             document.querySelector('input[name="is-driver"][value="no"]').checked = true;
             document.querySelector('input[name="cig-declaration"][value="undeclared"]').checked = true;
             document.getElementById('cig-calc-result').classList.add('hidden');
         }
 
+        function toggleCigAdvanced() {
+            const panel = document.getElementById('cig-advanced-panel');
+            const arrow = document.getElementById('cig-advanced-arrow');
+            const hidden = panel.classList.toggle('hidden');
+            arrow.innerText = hidden ? '▸' : '▾';
+        }
+
         function calculateCigDuty() {
             const sticksStr = document.getElementById('cig-sticks').value;
             const gramsStr = document.getElementById('cigar-grams').value;
+            const shuyanStr = document.getElementById('shuyan-grams').value;
+            const otherStr = document.getElementById('othertob-grams').value;
 
             const totalSticks = parseInt(sticksStr, 10) || 0;
             const totalCigarGrams = parseFloat(gramsStr) || 0;
+            const totalShuyanGrams = parseFloat(shuyanStr) || 0;
+            const totalOtherGrams = parseFloat(otherStr) || 0;
 
-            if (totalSticks <= 0 && totalCigarGrams <= 0) {
-                showToast('請輸入有效的檢獲香煙支數或雪茄重量（克）');
+            if (totalSticks <= 0 && totalCigarGrams <= 0 && totalShuyanGrams <= 0 && totalOtherGrams <= 0) {
+                showToast('請輸入有效的檢獲香煙支數或煙草重量（克）');
                 return;
             }
 
@@ -4940,53 +4992,82 @@
 
             const cigTaxRatePer1000 = 3306;
             const cigarTaxRatePer1000g = 4258;
+            const shuyanTaxRatePer1000g = 811;
+            const otherTaxRatePer1000g = 4005;
             const fixedFineRate = 5000;
 
             let excessSticks = 0;
             let excessCigarGrams = 0;
+            let excessShuyanGrams = 0;
+            let excessOtherGrams = 0;
             let allowanceText = "";
 
             if (isDriver) {
                 excessSticks = totalSticks;
                 excessCigarGrams = totalCigarGrams;
+                excessShuyanGrams = totalShuyanGrams;
+                excessOtherGrams = totalOtherGrams;
                 allowanceText = "(駕駛員無免稅優惠)";
             } else {
-                if (totalSticks > 0 && totalCigarGrams <= 0) {
+                const hasNonCig = totalCigarGrams > 0 || totalShuyanGrams > 0 || totalOtherGrams > 0;
+                if (!hasNonCig) {
                     excessSticks = Math.max(0, totalSticks - 19);
-                    excessCigarGrams = 0;
                     allowanceText = "(扣減 19支香煙免稅)";
-                } else if (totalSticks <= 0 && totalCigarGrams > 0) {
-                    excessSticks = 0;
-                    excessCigarGrams = Math.max(0, totalCigarGrams - 25);
-                    allowanceText = "(扣減 25克雪茄免稅)";
                 } else {
                     excessSticks = totalSticks;
-                    excessCigarGrams = Math.max(0, totalCigarGrams - 25);
-                    allowanceText = "(優先扣減 25克雪茄免稅)";
+                    let rem25 = 25;
+                    const useCigar = Math.min(totalCigarGrams, rem25); rem25 -= useCigar;
+                    const useShuyan = Math.min(totalShuyanGrams, rem25); rem25 -= useShuyan;
+                    const useOther = Math.min(totalOtherGrams, rem25);
+                    excessCigarGrams = totalCigarGrams - useCigar;
+                    excessShuyanGrams = totalShuyanGrams - useShuyan;
+                    excessOtherGrams = totalOtherGrams - useOther;
+                    const nonCigTypes = (totalCigarGrams > 0 ? 1 : 0) + (totalShuyanGrams > 0 ? 1 : 0) + (totalOtherGrams > 0 ? 1 : 0);
+                    if (totalSticks <= 0 && nonCigTypes === 1) {
+                        allowanceText = totalCigarGrams > 0 ? "(扣減 25克雪茄免稅)" : (totalShuyanGrams > 0 ? "(扣減 25克熟煙免稅)" : "(扣減 25克其他煙草免稅)");
+                    } else {
+                        allowanceText = "(優先扣減 25克免稅)";
+                    }
                 }
             }
 
             const cigTaxRaw = (excessSticks / 1000) * cigTaxRatePer1000;
             const cigarTaxRaw = (excessCigarGrams / 1000) * cigarTaxRatePer1000g;
+            const shuyanTaxRaw = (excessShuyanGrams / 1000) * shuyanTaxRatePer1000g;
+            const otherTaxRaw = (excessOtherGrams / 1000) * otherTaxRatePer1000g;
 
             const cigTax = Math.round(cigTaxRaw * 10) / 10;
             const cigarTax = Math.round(cigarTaxRaw * 10) / 10;
-            const totalTax = Math.round((cigTaxRaw + cigarTaxRaw) * 10) / 10;
+            const shuyanTax = Math.round(shuyanTaxRaw * 10) / 10;
+            const otherTax = Math.round(otherTaxRaw * 10) / 10;
+            const totalTaxRaw = cigTaxRaw + cigarTaxRaw + shuyanTaxRaw + otherTaxRaw;
+            const totalTax = Math.round(totalTaxRaw * 10) / 10;
 
             let fine5x = 0;
             let compoundingFineTotal = 0;
 
-            if (!isDeclared && (excessSticks > 0 || excessCigarGrams > 0)) {
-                fine5x = Math.round(((cigTaxRaw + cigarTaxRaw) * 5) * 10) / 10;
+            if (!isDeclared && (excessSticks > 0 || excessCigarGrams > 0 || excessShuyanGrams > 0 || excessOtherGrams > 0)) {
+                fine5x = Math.round(totalTaxRaw * 5 * 10) / 10;
                 compoundingFineTotal = fixedFineRate + fine5x;
             } else if (isDeclared) {
                 compoundingFineTotal = 0;
+            }
+
+            let licenceFee = 0;
+            let payableTotal = 0;
+            if (isDeclared && totalTaxRaw > 0) {
+                licenceFee = Math.max(Math.round(totalTaxRaw * 0.1 * 10) / 10, 2);
+                payableTotal = Math.round((totalTax + licenceFee) * 10) / 10;
             }
 
             document.getElementById('step1-cig-sticks').innerText = excessSticks;
             document.getElementById('step1-cig-tax').innerText = cigTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('step1-cigar-grams').innerText = excessCigarGrams;
             document.getElementById('step1-cigar-tax').innerText = cigarTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step1-shuyan-grams').innerText = excessShuyanGrams;
+            document.getElementById('step1-shuyan-tax').innerText = shuyanTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('step1-other-grams').innerText = excessOtherGrams;
+            document.getElementById('step1-other-tax').innerText = otherTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('step1-tax').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
 
             document.getElementById('step2-tax').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
@@ -4996,7 +5077,7 @@
             document.getElementById('step3-totalfine').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
 
             const stepsBox = document.getElementById('compounding-steps-box');
-            if (!isDeclared && (excessSticks > 0 || excessCigarGrams > 0)) {
+            if (!isDeclared && (excessSticks > 0 || excessCigarGrams > 0 || excessShuyanGrams > 0 || excessOtherGrams > 0)) {
                 stepsBox.classList.remove('hidden');
             } else {
                 stepsBox.classList.add('hidden');
@@ -5004,12 +5085,23 @@
 
             document.getElementById('res-total-sticks').innerText = totalSticks;
             document.getElementById('res-total-cigar-grams').innerText = totalCigarGrams;
+            document.getElementById('res-total-shuyan-grams').innerText = totalShuyanGrams;
+            document.getElementById('res-total-other-grams').innerText = totalOtherGrams;
+            document.getElementById('res-total-other').classList.toggle('hidden', totalShuyanGrams <= 0 && totalOtherGrams <= 0);
             document.getElementById('res-excess-sticks').innerText = excessSticks;
             document.getElementById('res-excess-cigar-grams').innerText = excessCigarGrams;
+            document.getElementById('res-excess-shuyan-grams').innerText = excessShuyanGrams;
+            document.getElementById('res-excess-other-grams').innerText = excessOtherGrams;
+            document.getElementById('res-excess-other').classList.toggle('hidden', excessShuyanGrams <= 0 && excessOtherGrams <= 0);
 
             document.getElementById('res-tax-amount').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('res-fine-5x-amount').innerText = fine5x.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
             document.getElementById('res-compounding-total-display').innerText = compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('res-payable-total-display').innerText = payableTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('res-payable-tax').innerText = totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('res-payable-fee').innerText = licenceFee.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+            document.getElementById('cig-compounding-banner').classList.toggle('hidden', isDeclared);
+            document.getElementById('cig-payable-banner').classList.toggle('hidden', !isDeclared);
 
             document.getElementById('res-driver-tag').innerText = isDriver ? '🚗 跨境駕駛員' : '🧳 一般旅客';
             document.getElementById('res-allowance-tag').innerText = allowanceText;
@@ -5029,8 +5121,8 @@
                 riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="check-circle" class="w-5 h-5 text-red-700"></i> 符合法定免稅條件</p><p class="font-medium">攜帶香煙／雪茄數量符合法定免稅條件，可直接經綠色通道入境，免受任何科稅或處罰。</p>`;
             } else if (isDeclared) {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-blue-50 border-blue-200 text-blue-950';
-                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i> 合規申報，無刑事處罰</p><p class="font-medium">旅客／駕駛員已於紅色通道向 CNE 人員作出主動申報。繳清應繳總煙稅（HK$ ${totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}）後即可合法攜帶相關物品入境。</p>`;
-            } else if (!isDeclared && (totalSticks <= 1000 && totalCigarGrams <= 1000)) {
+                riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-blue-600"></i> 合規申報，無刑事處罰</p><p class="font-medium">旅客／駕駛員已於紅色通道向 CNE 人員作出主動申報。繳清應繳總額 HK$ ${payableTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}（稅款 HK$ ${totalTax.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})} ＋ 牌照費 HK$ ${licenceFee.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}）後即可合法攜帶相關物品入境。</p>`;
+            } else if (!isDeclared && (totalSticks <= 1000 && totalCigarGrams <= 1000 && totalShuyanGrams <= 1000 && totalOtherGrams <= 1000)) {
                 riskBox.className = 'p-5 rounded-3xl text-sm md:text-base space-y-2 border-2 bg-amber-50 border-amber-200 text-amber-950';
                 riskBox.innerHTML = `<p class="font-extrabold text-base md:text-lg flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600"></i> 未有申報處罰程序（Compounding 複合罰款）</p><p class="font-medium">因未有向 CNE 人員作出申報，CNE 可根據法例進行 Compounding 處罰程序，發出定額罰款通知書。繳付 Compounding 總罰款 <strong>HK$ ${compoundingFineTotal.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1})}</strong> 後即可免於刑事起訴。</p>`;
             } else {
